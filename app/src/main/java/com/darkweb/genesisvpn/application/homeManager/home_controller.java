@@ -1,30 +1,17 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
-import com.crashlytics.android.Crashlytics;
 import com.darkweb.genesisvpn.R;
-
-import android.util.Log;
 import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
-
-import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
-import com.darkweb.genesisvpn.application.pluginManager.fabricManager;
 import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
 import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
-import com.darkweb.genesisvpn.application.status.status;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,8 +21,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import io.fabric.sdk.android.Fabric;
 
 public class home_controller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -69,7 +54,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
     public void initializeCrashlytics()
     {
-        fabricManager.getInstance().init();
+        //fabricManager.getInstance().init();
     }
 
     public void initializeModel(){

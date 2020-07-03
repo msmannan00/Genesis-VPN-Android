@@ -2,46 +2,39 @@ package com.darkweb.genesisvpn.application.proxyManager;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import com.anchorfree.hydrasdk.HydraSDKConfig;
-import com.anchorfree.hydrasdk.HydraSdk;
-import com.anchorfree.hydrasdk.SessionConfig;
-import com.anchorfree.hydrasdk.SessionInfo;
-import com.anchorfree.hydrasdk.api.AuthMethod;
-import com.anchorfree.hydrasdk.api.ClientInfo;
-import com.anchorfree.hydrasdk.api.data.Country;
-import com.anchorfree.hydrasdk.api.data.ServerCredentials;
-import com.anchorfree.hydrasdk.api.response.User;
-import com.anchorfree.hydrasdk.callbacks.Callback;
-import com.anchorfree.hydrasdk.callbacks.CompletableCallback;
-import com.anchorfree.hydrasdk.callbacks.VpnStateListener;
-import com.anchorfree.hydrasdk.compat.CredentialsCompat;
-import com.anchorfree.hydrasdk.dns.DnsRule;
-import com.anchorfree.hydrasdk.exceptions.HydraException;
-import com.anchorfree.hydrasdk.exceptions.VPNException;
-import com.anchorfree.hydrasdk.vpnservice.VPNState;
-import com.anchorfree.hydrasdk.vpnservice.connectivity.NotificationConfig;
-import com.anchorfree.reporting.TrackingConstants;
-import com.darkweb.genesisvpn.BuildConfig;
-import com.darkweb.genesisvpn.R;
+import com.anchorfree.partner.api.response.AvailableCountries;
+import com.anchorfree.sdk.UnifiedSDK;
+import com.anchorfree.sdk.fireshield.FireshieldCategory;
+import com.anchorfree.sdk.fireshield.FireshieldConfig;
+import com.anchorfree.sdk.rules.TrafficRule;
+import com.anchorfree.vpnsdk.exceptions.VpnException;
+import com.anchorfree.vpnsdk.transporthydra.HydraTransport;
+import com.anchorfree.vpnsdk.vpnservice.credentials.AppPolicy;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.homeManager.home_model;
 import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
 import com.darkweb.genesisvpn.application.serverManager.list_model;
-import com.darkweb.genesisvpn.application.serverManager.logs;
 import com.darkweb.genesisvpn.application.status.status;
-
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static com.darkweb.genesisvpn.application.serverManager.logs.log;
+import com.anchorfree.partner.api.auth.AuthMethod;
+import com.anchorfree.partner.api.data.Country;
+import com.anchorfree.partner.api.response.User;
+import com.anchorfree.reporting.TrackingConstants;
+import com.anchorfree.sdk.SessionConfig;
+import com.anchorfree.sdk.SessionInfo;
+import com.anchorfree.vpnsdk.callbacks.Callback;
+import com.anchorfree.vpnsdk.callbacks.CompletableCallback;
+import com.anchorfree.vpnsdk.callbacks.VpnStateListener;
+import com.anchorfree.vpnsdk.compat.CredentialsCompat;
+import com.anchorfree.vpnsdk.vpnservice.VPNState;
+import com.northghost.caketube.CaketubeTransport;
 
 
 public class proxy_controller {
@@ -57,7 +50,6 @@ public class proxy_controller {
 
     private boolean isLoading = false;
     private static final String CHANNEL_ID = "vpn";
-    private static VPNState currentVpnState = VPNState.IDLE;
 
     private String server_name = strings.emptySTR;
 
@@ -78,10 +70,9 @@ public class proxy_controller {
 
     private void stateUIUpdater()
     {
-        HydraSdk.addVpnListener(new VpnStateListener() {
+        UnifiedSDK.addVpnStateListener(new VpnStateListener() {
             @Override
             public void vpnStateChanged(VPNState vpnState) {
-                currentVpnState = vpnState;
                 if(vpnState.name().equals("IDLE"))
                 {
                     if(status.connection_status != enums.connection_status.connected && status.connection_status != enums.connection_status.reconnecting && status.connection_status != enums.connection_status.restarting)
@@ -109,9 +100,8 @@ public class proxy_controller {
                     //status.connection_status = enums.connection_status.no_status;
                 }
             }
-
             @Override
-            public void vpnError(@NonNull HydraException e) {
+            public void vpnError(@NonNull VpnException e) {
 
             }
         });
@@ -148,9 +138,35 @@ public class proxy_controller {
 
                                 if(status.connection_status == enums.connection_status.restarting)
                                 {
-                                    HydraSdk.restartVpn(createConnectionRequest(), new Callback<Bundle>() {
+
+                                    List<String> bypassDomains = new LinkedList<>();
+                                    bypassDomains.add("*facebook.com");
+                                    bypassDomains.add("*wtfismyip.com");
+
+                                    UnifiedSDK.getInstance().getVPN().restart(new SessionConfig.Builder()
+                                            .withReason(TrackingConstants.GprReasons.M_UI)
+                                            .addDnsRule(TrafficRule.Builder.block().fromAssets(""))
+                                            .addDnsRule(TrafficRule.Builder.proxy().fromAssets(""))
+                                            .addDnsRule(TrafficRule.Builder.vpn().fromAssets(""))
+                                            .addDnsRule(TrafficRule.Builder.vpn().fromDomains(new ArrayList<>()))
+                                            .addDnsRule(TrafficRule.Builder.vpn().fromFile(""))
+                                            .addDnsRule(TrafficRule.Builder.vpn().fromResource(0))
+                                            .addDnsRule(TrafficRule.Builder.bypass().fromDomains(bypassDomains))
+                                            .exceptApps(new ArrayList<>())
+                                            .forApps(new ArrayList<>())
+                                            .withVirtualLocation(server_name)
+                                            .withPolicy(AppPolicy.newBuilder().build())
+                                            .withFireshieldConfig(new FireshieldConfig.Builder()
+                                                    .addCategory(FireshieldCategory.Builder.block(""))
+                                                    .addCategory(FireshieldCategory.Builder.blockAlertPage(""))
+                                                    .addCategory(FireshieldCategory.Builder.bypass(""))
+                                                    .addCategory(FireshieldCategory.Builder.custom("", ""))
+                                                    .addCategory(FireshieldCategory.Builder.proxy(""))
+                                                    .addCategory(FireshieldCategory.Builder.vpn(""))
+                                                    .build())
+                                            .build(), new CompletableCallback() {
                                         @Override
-                                        public void success(@NonNull Bundle bundle) {
+                                        public void complete() {
                                             if( status.connection_status != enums.connection_status.restarting)
                                             {
                                                 status.connection_status = enums.connection_status.no_status;
@@ -168,11 +184,12 @@ public class proxy_controller {
                                         }
 
                                         @Override
-                                        public void failure(HydraException e) {
+                                        public void error(@NonNull VpnException e) {
                                             failureHandler(enums.error_handler.disconnect_fallback);
                                         }
                                     });
                                 }
+
                                 if(status.connection_status == enums.connection_status.connected)
                                 {
                                     status.connection_status = enums.connection_status.no_status;
@@ -187,16 +204,29 @@ public class proxy_controller {
                                 if(status.connection_status == enums.connection_status.connected || status.connection_status == enums.connection_status.restarting || status.connection_status == enums.connection_status.reconnecting)
                                 {
                                     isLoading = true;
-                                    if(!HydraSdk.isLoggedIn())
+                                    if(!UnifiedSDK.getInstance().getBackend().isLoggedIn())
                                     {
                                         connect();
                                     }
                                     else
                                     {
-                                        HydraSdk.startVPN(createConnectionRequest(), new Callback<ServerCredentials>() {
-                                            @Override
-                                            public void success(ServerCredentials serverCredentials) {
+                                        List<String> fallbackOrder = new ArrayList<>();
+                                        fallbackOrder.add(HydraTransport.TRANSPORT_ID);
+                                        fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
+                                        fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
+                                        List<String> bypassDomains = new LinkedList<>();
+                                        bypassDomains.add("*facebook.com");
+                                        bypassDomains.add("*wtfismyip.com");
 
+                                        UnifiedSDK.getInstance().getVPN().start(new SessionConfig.Builder()
+                                                .withReason(TrackingConstants.GprReasons.M_UI)
+                                                .withTransportFallback(fallbackOrder)
+                                                .withTransport(HydraTransport.TRANSPORT_ID)
+                                                .withVirtualLocation(server_name)
+                                                .addDnsRule(TrafficRule.Builder.bypass().fromDomains(bypassDomains))
+                                                .build(), new CompletableCallback() {
+                                            @Override
+                                            public void complete() {
                                                 if(status.connection_status != enums.connection_status.restarting)
                                                 {
                                                     status.connection_status = enums.connection_status.no_status;
@@ -214,7 +244,7 @@ public class proxy_controller {
                                             }
 
                                             @Override
-                                            public void failure(HydraException e) {
+                                            public void error(@NonNull VpnException e) {
                                                 failureHandler(enums.error_handler.disconnect_fallback);
                                             }
                                         });
@@ -222,20 +252,16 @@ public class proxy_controller {
                                 }
                                 else if(status.connection_status == enums.connection_status.unconnected)
                                 {
-                                    if(HydraSdk.isLoggedIn())
+                                    if(UnifiedSDK.getInstance().getBackend().isLoggedIn())
                                     {
-                                        //home_model.getInstance().getHomeInstance().onStopping();
                                         disconnectConnection();
-                                    }
-                                    else
-                                    {
-                                        //home_model.getInstance().getHomeInstance().onDisConnected();
                                     }
                                 }
                             }
                         }
+
                         @Override
-                        public void failure(@NonNull HydraException e) {
+                        public void failure(@NonNull VpnException e) {
                             failureHandler(enums.error_handler.disconnect_fallback);
                         }
                     });
@@ -244,41 +270,18 @@ public class proxy_controller {
         }.start();
     }
 
-    private SessionConfig createConnectionRequest()
-    {
-        List<String> bypassDomains = new LinkedList<>();
-
-        bypassDomains.add("*facebook.com");
-        bypassDomains.add("*wtfismyip.com");
-
-        SessionConfig.Builder builder = new SessionConfig.Builder()
-                .withReason(TrackingConstants.GprReasons.M_UI)
-                .addDnsRule(DnsRule.Builder.bypass().fromDomains(bypassDomains));
-
-        if(!server_name.equals(strings.emptySTR))
-        {
-            builder.withVirtualLocation(server_name);
-        }
-        SessionConfig build_res = builder.build();
-        return build_res;
-    }
-
-    public void resetLoading()
-    {
-        isLoading = false;
-    }
-
     public void closeService()
     {
-            isLoading = true;
-            status.connection_status = enums.connection_status.no_status;
-            HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+        isLoading = true;
+        status.connection_status = enums.connection_status.no_status;
+        UnifiedSDK.getInstance().getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
             @Override
             public void complete() {
             }
 
             @Override
-            public void error(HydraException e) {
+            public void error(@NonNull VpnException e) {
+
             }
         });
     }
@@ -286,31 +289,29 @@ public class proxy_controller {
 
     public void disconnectConnection() {
 
-        HydraSdk.stopVPN(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+        UnifiedSDK.getInstance().getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
             @Override
             public void complete() {
-                //home_model.getInstance().getHomeInstance().onDisConnected();
                 isLoading = false;
-                if(status.connection_status == enums.connection_status.restarting)
+                if(status.connection_status != enums.connection_status.restarting)
                 {
-                    status.connection_status = enums.connection_status.restarting;
-                    isLoading = false;
-                }
-                else if(status.connection_status != enums.connection_status.reconnecting)
-                {
-                    status.connection_status = enums.connection_status.no_status;
-                }
-                else
-                {
-                    status.connection_status = enums.connection_status.connected;
+                    if(status.connection_status != enums.connection_status.reconnecting)
+                    {
+                        status.connection_status = enums.connection_status.no_status;
+                    }
+                    else
+                    {
+                        status.connection_status = enums.connection_status.connected;
+                    }
                 }
             }
 
             @Override
-            public void error(HydraException e) {
+            public void error(@NonNull VpnException e) {
                 isLoading = false;
                 status.connection_status = enums.connection_status.no_status;
             }
+
         });
     }
 
@@ -319,7 +320,6 @@ public class proxy_controller {
         if(enums.error_handler.disconnect_fallback == fallback){
 
             status.connection_status = enums.connection_status.unconnected;
-            //home_model.getInstance().getHomeInstance().onDisConnected();
             status.connection_status = enums.connection_status.no_status;
             isLoading = false;
         }
@@ -328,20 +328,19 @@ public class proxy_controller {
     private void onUpdateFlag()
     {
         Log.i("BREAKER TEXT","BREAKER TEXT");
-        HydraSdk.getVpnState(new Callback<VPNState>() {
+        UnifiedSDK.getVpnState(new Callback<VPNState>() {
             @Override
-            public void success(@NonNull VPNState state) {
-                if (state == VPNState.CONNECTED) {
-                    HydraSdk.getSessionInfo(new Callback<SessionInfo>() {
+            public void success(@NonNull VPNState vpnState) {
+                if (vpnState == VPNState.CONNECTED) {
+                    UnifiedSDK.getStatus(new Callback<SessionInfo>() {
                         @Override
                         public void success(@NonNull SessionInfo sessionInfo) {
-
                             server_name = CredentialsCompat.getServerCountry(sessionInfo.getCredentials());
                             setCurrentFlag();
                         }
 
                         @Override
-                        public void failure(@NonNull HydraException e) {
+                        public void failure(@NonNull VpnException e) {
                             e.printStackTrace();
                         }
                     });
@@ -349,7 +348,7 @@ public class proxy_controller {
             }
 
             @Override
-            public void failure(@NonNull HydraException e) {
+            public void failure(@NonNull VpnException e) {
                 e.printStackTrace();
             }
         });
@@ -357,14 +356,10 @@ public class proxy_controller {
 
     public void chooseServer(Country server)
     {
-        //if(!server_name.equals(server.getCountry()))
-        //{
-            server_name = server.getCountry();
-            isLoading = true;
-            status.connection_status = enums.connection_status.restarting;
-            disconnectConnection();
-        //}
-
+        server_name = server.getCountry();
+        isLoading = true;
+        status.connection_status = enums.connection_status.restarting;
+        disconnectConnection();
     }
 
     private void setCurrentFlag()
@@ -373,19 +368,15 @@ public class proxy_controller {
     }
 
 
-    private void connectToVpn() {
-        createConnectionRequest();
-    }
-
     private void isConnected(Callback<Boolean> callback) {
-        HydraSdk.getVpnState(new Callback<VPNState>() {
+        UnifiedSDK.getVpnState(new Callback<VPNState>() {
             @Override
             public void success(@NonNull VPNState vpnState) {
                 callback.success(vpnState == VPNState.CONNECTED);
             }
 
             @Override
-            public void failure(@NonNull HydraException e) {
+            public void failure(@NonNull VpnException e) {
                 callback.success(false);
             }
         });
@@ -415,7 +406,7 @@ public class proxy_controller {
 
     public void connect() {
         AuthMethod authMethod = AuthMethod.anonymous();
-        HydraSdk.login(authMethod, new Callback<User>() {
+        UnifiedSDK.getInstance().getBackend().login(authMethod, new Callback<User>() {
             @Override
             public void success(User user) {
                 isLoading = false;
@@ -426,7 +417,7 @@ public class proxy_controller {
             }
 
             @Override
-            public void failure(HydraException e) {
+            public void failure(@NonNull VpnException e) {
                 isLoading = false;
             }
         });
@@ -439,22 +430,24 @@ public class proxy_controller {
     }
 
     private void loadServers() {
-        HydraSdk.countries(new Callback<List<Country>>() {
+        UnifiedSDK.getInstance().getBackend().countries(new Callback<AvailableCountries>() {
             @Override
-            public void success(List<Country> countries) {
-                list_model.getInstance().setModel(countries);
+            public void success(@NonNull AvailableCountries availableCountries) {
+                list_model.getInstance().setModel(availableCountries.getCountries());
                 status.servers_loaded = enums.connection_servers.loaded;
             }
 
             @Override
-            public void failure(HydraException e) {
+            public void failure(@NonNull VpnException e) {
+
             }
         });
     }
 
     private void initHydraSdk() {
         createNotificationChannel();
-        SharedPreferences prefs = getPrefs();
+        /*SharedPreferences prefs = getPrefs();
+
         ClientInfo clientInfo = ClientInfo.newBuilder()
                 .baseUrl(prefs.getString(BuildConfig.STORED_HOST_URL_KEY, BuildConfig.BASE_HOST))
                 .carrierId(prefs.getString(BuildConfig.STORED_CARRIER_ID_KEY, BuildConfig.BASE_CARRIER_ID))
@@ -463,20 +456,44 @@ public class proxy_controller {
         NotificationConfig notificationConfig = NotificationConfig.newBuilder()
                 .title(home_model.getInstance().getHomeInstance().getResources().getString(R.string.app_name))
                 .channelId(CHANNEL_ID)
-                .build();
+                .build();*/
 
-        HydraSdk.setLoggingLevel(Log.VERBOSE);
+        UnifiedSDK.setLoggingLevel(Log.VERBOSE);
 
-        HydraSDKConfig config = HydraSDKConfig.newBuilder()
-                .observeNetworkChanges(true) //sdk will handle network changes and start/stop vpn
-                .captivePortal(true) //sdk will handle if user is behind captive portal wifi
-                .moveToIdleOnPause(false)//sdk will report PAUSED state
-                .build();
-        HydraSdk.init(home_model.getInstance().getHomeInstance(), clientInfo, notificationConfig, config);
-    }
+        UnifiedSDK.getInstance().getVPN().updateConfig(new SessionConfig.Builder()
+                .withReason(TrackingConstants.GprReasons.M_UI)
+                .addDnsRule(TrafficRule.Builder.block().fromAssets(""))
+                .addDnsRule(TrafficRule.Builder.bypass().fromAssets(""))
+                .addDnsRule(TrafficRule.Builder.proxy().fromAssets(""))
+                .addDnsRule(TrafficRule.Builder.vpn().fromAssets(""))
+                .addDnsRule(TrafficRule.Builder.vpn().fromDomains(new ArrayList<>()))
+                .addDnsRule(TrafficRule.Builder.vpn().fromFile(""))
+                .addDnsRule(TrafficRule.Builder.vpn().fromResource(0))
+                .exceptApps(new ArrayList<>())
+                .withTransport("")
+                .withSessionId("")
+                .forApps(new ArrayList<>())
+                .withVirtualLocation("")
+                .withPolicy(AppPolicy.newBuilder().build())
+                .withFireshieldConfig(new FireshieldConfig.Builder()
+                        .addCategory(FireshieldCategory.Builder.block(""))
+                        .addCategory(FireshieldCategory.Builder.blockAlertPage(""))
+                        .addCategory(FireshieldCategory.Builder.bypass(""))
+                        .addCategory(FireshieldCategory.Builder.custom("", ""))
+                        .addCategory(FireshieldCategory.Builder.proxy(""))
+                        .addCategory(FireshieldCategory.Builder.vpn(""))
+                        .build())
+                .build(), new CompletableCallback() {
+            @Override
+            public void complete() {
 
-    private SharedPreferences getPrefs() {
-        return home_model.getInstance().getHomeInstance().getSharedPreferences(BuildConfig.SHARED_PREFS, Context.MODE_PRIVATE);
+            }
+
+            @Override
+            public void error(VpnException e) {
+
+            }
+        });
     }
 
     private void createNotificationChannel() {
@@ -497,5 +514,4 @@ public class proxy_controller {
             }
         }
     }
-
 }

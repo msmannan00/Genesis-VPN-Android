@@ -1,17 +1,13 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
 }
 
 
@@ -20,15 +16,15 @@ ext {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 30
+    buildToolsVersion "30"
     defaultConfig {
         applicationId "com.darkweb.genesisvpn"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 9
         versionName "9.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         buildConfigField "String", "BASE_HOST", "\"https://backend.northghost.com\""
         buildConfigField "String", "BASE_CARRIER_ID", "\"afdemo\""
@@ -55,37 +51,39 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
+    }}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "com.android.support:appcompat-v7:${androidSupportLibraryVersion}"
-    implementation "com.android.support:cardview-v7:${androidSupportLibraryVersion}"
-    implementation "com.android.support:recyclerview-v7:${androidSupportLibraryVersion}"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:2.3.1'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
 
     implementation 'com.crowdfire.cfalertdialog:cfalertdialog:1.1.0'
 
-    implementation 'com.google.android.gms:play-services-ads-lite:18.1.1'
+    implementation 'com.google.android.gms:play-services-ads-lite:19.2.0'
 
     /*Crashlytics*/
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar')
 
     implementation 'com.jwang123.flagkit:flagkit:1.0'
+    implementation 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.3.1'
+    implementation 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.3.1'
 
 }

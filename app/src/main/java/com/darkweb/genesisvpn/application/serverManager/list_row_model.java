@@ -1,6 +1,6 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
-import com.anchorfree.hydrasdk.api.data.Country;
+import com.anchorfree.partner.api.data.Country;
 
 public class list_row_model
 {
