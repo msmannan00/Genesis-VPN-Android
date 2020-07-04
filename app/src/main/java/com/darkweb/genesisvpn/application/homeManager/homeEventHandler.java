@@ -3,25 +3,23 @@ package com.darkweb.genesisvpn.application.homeManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
-import android.view.View;
 
-import com.darkweb.genesisvpn.application.aboutManager.about_controller;
+import com.darkweb.genesisvpn.application.aboutManager.aboutController;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
-import com.darkweb.genesisvpn.application.pluginManager.message_manager;
-import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
-import com.darkweb.genesisvpn.application.serverManager.server_controller;
-import com.darkweb.genesisvpn.application.serverManager.server_model;
+import com.darkweb.genesisvpn.application.pluginManager.messageManager;
+import com.darkweb.genesisvpn.application.proxyManager.proxyController;
+import com.darkweb.genesisvpn.application.serverManager.serverController;
 import com.darkweb.genesisvpn.application.status.status;
 
-class home_ehandler
+class homeEventHandler
 {
     /*INITIALIZATION*/
 
-    private static final home_ehandler ourInstance = new home_ehandler();
+    private static final homeEventHandler ourInstance = new homeEventHandler();
     private boolean isUIBlocked = false;
 
-    static home_ehandler getInstance() {
+    static homeEventHandler getInstance() {
         return ourInstance;
     }
 
@@ -39,17 +37,17 @@ class home_ehandler
 
     void privacyPolicy()
     {
-        home_model.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://infogamesolstudios.blogspot.com/p/privacy-policy-function-var-html5.html")));
+        homeModel.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://infogamesolstudios.blogspot.com/p/privacy-policy-function-var-html5.html")));
     }
 
     void onRateUs(){
-        home_model.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.darkweb.genesisvpn")));
+        homeModel.getInstance().getHomeInstance().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.darkweb.genesisvpn")));
     }
 
     void onQuit(){
-        proxy_controller.getInstance().closeService();
-        helperMethods.quit(home_model.getInstance().getHomeInstance());
-        home_model.getInstance().getHomeInstance().moveTaskToBack(true);
+        proxyController.getInstance().onStop();
+        helperMethods.quit(homeModel.getInstance().getHomeInstance());
+        homeModel.getInstance().getHomeInstance().moveTaskToBack(true);
     }
 
     void contactUS()
@@ -62,7 +60,7 @@ class home_ehandler
         {
             resetUIBlock();
             isUIBlocked = true;
-            new Handler().postDelayed(() -> helperMethods.openActivity(about_controller.class), 400);
+            new Handler().postDelayed(() -> helperMethods.openActivity(aboutController.class), 400);
         }
     }
 
@@ -73,11 +71,11 @@ class home_ehandler
             isUIBlocked = true;
             if(status.servers_loaded == enums.connection_servers.loaded)
             {
-                new Handler().postDelayed(() -> helperMethods.openActivity(server_controller.class), delay);
+                new Handler().postDelayed(() -> helperMethods.openActivity(serverController.class), delay);
             }
             else
             {
-                message_manager.getInstance().serverLoading();
+                new Handler().postDelayed(() -> messageManager.getInstance().serverLoading(), delay);
             }
         }
     }
@@ -103,7 +101,7 @@ class home_ehandler
 
     void onStart()
     {
-        home_model.getInstance().getHomeInstance().onStartView();
+        homeModel.getInstance().getHomeInstance().onStartView();
     }
 
 }

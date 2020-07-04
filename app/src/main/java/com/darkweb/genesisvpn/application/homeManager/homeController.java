@@ -10,8 +10,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
-import com.darkweb.genesisvpn.application.pluginManager.preference_manager;
-import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
+import com.darkweb.genesisvpn.application.pluginManager.preferenceManager;
+import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class home_controller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class homeController extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     /*LOCAL VARIABLE DECLARATION*/
 
@@ -31,7 +31,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
     ImageButton flag;
     ImageView connect_loading;
     TextView location_info;
-    home_view_controller viewController;
+    homeViewController viewController;
 
     /*INITIALIZATIONS*/
 
@@ -42,14 +42,14 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
         initializeModel();
         initializeCrashlytics();
-        initializateViews();
+        initializeViews();
         initializeLayout();
         initializeCustomListeners();
 
-        preference_manager.getInstance().initialize();
-        proxy_controller.getInstance().startVPN();
-        proxy_controller.getInstance().autoStart();
+        preferenceManager.getInstance().initialize();
+        proxyController.getInstance().startVPN();
         admanager.getInstance().initialize();
+
     }
 
     public void initializeCrashlytics()
@@ -58,7 +58,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
     }
 
     public void initializeModel(){
-        home_model.getInstance().setHomeInstance(this);
+        homeModel.getInstance().setHomeInstance(this);
     }
 
     public void initializeLayout(){
@@ -67,21 +67,19 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void initializateViews(){
+    public void initializeViews(){
         connect_base = findViewById(R.id.connect_base);
         connect_animator = findViewById(R.id.connect_animator);
         connect_loading = findViewById(R.id.loading);
         flag = findViewById(R.id.flag);
         location_info = findViewById(R.id.location_info);
-
-        viewController = new home_view_controller(connect_base,connect_animator,connect_loading,flag,location_info);
+        viewController = new homeViewController(connect_base,connect_animator,connect_loading,flag,location_info);
     }
 
     /*EVENT HANDLERS DEFAULTS*/
@@ -99,9 +97,7 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
     public void initializeCustomListeners()
     {
-        flag.setOnClickListener(view -> {
-            home_ehandler.getInstance().onServer(50);
-        });
+        flag.setOnClickListener(view -> homeEventHandler.getInstance().onServer(50));
 
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
@@ -127,31 +123,31 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
         if (id == R.id.nav_about)
         {
-            home_ehandler.getInstance().aboutUS();
+            homeEventHandler.getInstance().aboutUS();
         }
         else if (id == R.id.server)
         {
-            home_ehandler.getInstance().onServer(400);
+            homeEventHandler.getInstance().onServer(400);
         }
         else if (id == R.id.nav_share)
         {
-            home_ehandler.getInstance().onShare();
+            homeEventHandler.getInstance().onShare();
         }
         else if (id == R.id.nav_help)
         {
-            home_ehandler.getInstance().contactUS();
+            homeEventHandler.getInstance().contactUS();
         }
         else if (id == R.id.nav_rate)
         {
-            home_ehandler.getInstance().onRateUs();
+            homeEventHandler.getInstance().onRateUs();
         }
         else if (id == R.id.ic_menu_privacy)
         {
-            home_ehandler.getInstance().privacyPolicy();
+            homeEventHandler.getInstance().privacyPolicy();
         }
         else if (id == R.id.nav_quit)
         {
-            home_ehandler.getInstance().onQuit();
+            homeEventHandler.getInstance().onQuit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -163,33 +159,18 @@ public class home_controller extends AppCompatActivity implements NavigationView
 
     public void onStart(View view)
     {
-        home_ehandler.getInstance().onStart();
+        homeEventHandler.getInstance().onStart();
     }
 
     public void onServer(MenuItem item){
-        home_ehandler.getInstance().onServer(400);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //proxy_controller.getInstance().onAppResumed();
-        //status.app_status = enums.app_status.resumed;
-        //proxy_controller.getInstance().onUpdateCheck();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //status.app_status = enums.app_status.paused;
-        //proxy_controller.getInstance().onUpdateCheck();
+        homeEventHandler.getInstance().onServer(400);
     }
 
     /*EVENT VIEW REDIRECTIONS*/
 
     public void onStartView()
     {
-        viewController.onStartView();
+        proxyController.getInstance().triggeredManual();
     }
 
     public void onConnected()
@@ -197,9 +178,9 @@ public class home_controller extends AppCompatActivity implements NavigationView
         viewController.onConnected();
     }
 
-    public void onDisConnected()
+    public void onStopped()
     {
-        viewController.onDisConnected();
+        viewController.onStopped();
     }
 
     public void onConnecting()

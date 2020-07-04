@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".application.aboutManager.about_controller">
+    tools:context=".application.aboutManager.aboutController">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,29 +36,16 @@
             android:layout_marginStart="30dp"
             android:textSize="18.5sp"
             android:layout_gravity="center_vertical"
-            android:text="@string/homepage"
+            android:text="@string/about"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            />
     </LinearLayout>
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="80dp"
-        android:layout_weight="40"
-        android:text="@string/about_about_us"
-        android:textColor="@color/cursor_blue"
-        android:textSize="17.5sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="70dp"
         android:layout_weight="110"
         android:paddingStart="23dp"
         android:paddingEnd="23dp"

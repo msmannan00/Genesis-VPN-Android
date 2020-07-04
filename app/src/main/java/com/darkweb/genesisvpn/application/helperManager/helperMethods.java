@@ -1,35 +1,49 @@
 package com.darkweb.genesisvpn.application.helperManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.net.Uri;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
-import android.util.TypedValue;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.TextView;
-
+import android.telephony.TelephonyManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
-
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.homeManager.home_model;
-
+import com.darkweb.genesisvpn.application.homeManager.homeModel;
 import java.util.Locale;
 
 public class helperMethods
 {
     public static void shareApp() {
-        ShareCompat.IntentBuilder.from(home_model.getInstance().getHomeInstance())
+        ShareCompat.IntentBuilder.from(homeModel.getInstance().getHomeInstance())
                 .setType(strings.sh_type)
                 .setChooserTitle(strings.sh_title)
                 .setSubject(strings.sh_subject)
-                .setText(strings.sh_desc + home_model.getInstance().getHomeInstance().getPackageName())
+                .setText(strings.sh_desc + homeModel.getInstance().getHomeInstance().getPackageName())
                 .startChooser();
+    }
+
+    public static String getUserCountry(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String simCountry = tm.getSimCountryIso();
+            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                return simCountry.toLowerCase(Locale.US);
+            }
+            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+                String networkCountry = tm.getNetworkCountryIso();
+                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
+                    return networkCountry.toLowerCase(Locale.US);
+                }
+            }
+        }
+        catch (Exception e) { }
+        try {
+            String m_country = context.getResources().getConfiguration().locale.getCountry();
+            return m_country;
+        }
+        catch (Exception e) { }
+
+        return "us";
     }
 
     public static void sendEmail()
@@ -39,8 +53,8 @@ public class helperMethods
         intent.setData(Uri.parse(strings.co_type)); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gamesolstudios@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Issue Ticket");
-        if (intent.resolveActivity(home_model.getInstance().getHomeInstance().getPackageManager()) != null) {
-            home_model.getInstance().getHomeInstance().startActivity(intent);
+        if (intent.resolveActivity(homeModel.getInstance().getHomeInstance().getPackageManager()) != null) {
+            homeModel.getInstance().getHomeInstance().startActivity(intent);
         }
     }
 
@@ -49,8 +63,8 @@ public class helperMethods
     }
 
     public static void openActivity( Class<?> cls){
-        Intent myIntent = new Intent(home_model.getInstance().getHomeInstance(), cls);
-        home_model.getInstance().getHomeInstance().startActivity(myIntent);
+        Intent myIntent = new Intent(homeModel.getInstance().getHomeInstance(), cls);
+        homeModel.getInstance().getHomeInstance().startActivity(myIntent);
     }
 
     public static int screenWidth()
@@ -66,48 +80,4 @@ public class helperMethods
             return width;
         }
     }
-
-    public static void screenToFont(TextView textView, int desiredWidth)
-    {
-        Paint paint = new Paint();
-        Rect bounds = new Rect();
-
-        paint.setTypeface(textView.getTypeface());
-        float textSize = textView.getTextSize();
-        paint.setTextSize(textSize);
-        String text = textView.getText().toString();
-        paint.getTextBounds(text, 0, text.length(), bounds);
-
-        while (bounds.width() > desiredWidth)
-        {
-            textSize--;
-            paint.setTextSize(textSize);
-            paint.getTextBounds(text, 0, text.length(), bounds);
-        }
-
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize+30);
-    }
-
-    public static RotateAnimation getRotationAnimation(){
-        RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,0.5f);
-        rotate.setDuration(2000);
-        rotate.setRepeatCount(Animation.INFINITE);
-        return rotate;
-    }
-
-    public static Spannable getScreenText(float size,String text)
-    {
-        Spannable span = new SpannableString(text);
-        span.setSpan(new RelativeSizeSpan(size), 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return span;
-    }
-
-    public static String localeToEmoji(Locale locale)
-    {
-        String countryCode = locale.getCountry();
-        int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
-        int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
-        return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
-    }
-
 }

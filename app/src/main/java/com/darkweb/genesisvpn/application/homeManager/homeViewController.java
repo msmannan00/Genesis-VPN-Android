@@ -1,30 +1,28 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.TypedValue;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
+import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.messages;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
-import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
-import com.darkweb.genesisvpn.application.status.status;
 import com.jwang123.flagkit.FlagKit;
-
 import java.util.Locale;
 
-class home_view_controller {
+class homeViewController {
 
     /*LOCAL VIEW DECLARATION*/
 
@@ -36,15 +34,13 @@ class home_view_controller {
 
     /*LOCAL VARIABLE DECLARATION*/
 
-    private ObjectAnimator scale_connect_animator = null;
-    private ObjectAnimator loading_connect_animator = null;
-    private enums.connection_status buttonStatus = enums.connection_status.unconnected;
+    private enums.vpn_status buttonStatus = enums.vpn_status.IDLE;
     private Handler updateUIHandler = null;
     private String flag_status = "";
 
     /*INITIALIZATIONS*/
 
-    home_view_controller(Button connect_base, Button connect_animator, ImageView connect_loading,ImageButton flag,TextView location_info)
+    homeViewController(Button connect_base, Button connect_animator, ImageView connect_loading, ImageButton flag, TextView location_info)
     {
         this.connect_base = connect_base;
         this.connect_animator = connect_animator;
@@ -63,11 +59,11 @@ class home_view_controller {
         createUpdateUiHandler();
 
         /*FONTS*/
-        home_model.getInstance().getHomeInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        homeModel.getInstance().getHomeInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
         int size = helperMethods.screenWidth()*60/100;
 
-        Typeface custom_font = Typeface.createFromAsset(home_model.getInstance().getHomeInstance().getAssets(),  "fonts/gotham_med.ttf");
+        Typeface custom_font = Typeface.createFromAsset(homeModel.getInstance().getHomeInstance().getAssets(),  "fonts/gotham_med.ttf");
         connect_base.setTypeface(custom_font);
 
         /*WIDTH WITH SCREEN*/
@@ -82,8 +78,8 @@ class home_view_controller {
 
         Handler handler = new Handler();
         handler.post(() -> {
-            home_animation.getInstance().beatAnimation(connect_animator);
-            home_animation.getInstance().rotateAnimation(connect_loading);
+            homeAnimation.getInstance().beatAnimation(connect_animator);
+            homeAnimation.getInstance().rotateAnimation(connect_loading);
         });
 
         connect_base.setText(strings.goText);
@@ -93,84 +89,67 @@ class home_view_controller {
         flag.setAlpha(0f);
 
         ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams)flag.getLayoutParams();
-        lp1.width = helperMethods.screenWidth()*19/100;;
-        lp1.height = helperMethods.screenWidth()*14/100;;
+        lp1.width = helperMethods.screenWidth()*19/100;
+        lp1.height = helperMethods.screenWidth()*14/100;
         flag.setLayoutParams(lp1);
         location_info.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.035f);
+        setStatusBarColor();
 
+    }
+
+    void setStatusBarColor(){
+        Window window = homeModel.getInstance().getHomeInstance().getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(homeModel.getInstance().getHomeInstance().getResources().getColor(R.color.colorPrimary));
     }
 
     /*EVENT TO VIEW HANDLERS*/
 
-    void onStartView()
-    {
-        if(buttonStatus == enums.connection_status.connected)
-        {
-            onStopping();
-            proxy_controller.getInstance().disconnectConnection();
-            buttonStatus = enums.connection_status.stoping;
-        }
-        else if(buttonStatus == enums.connection_status.connecting)
-        {
-            connect_base.setText(strings.stopingText);
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
-            connect_loading.animate().alpha(1);
-            status.connection_status = enums.connection_status.unconnected;
-            buttonStatus = enums.connection_status.stoping;
-        }
-        else if(buttonStatus == enums.connection_status.stoping)
-        {
-            connect_base.setText(strings.connectingText);
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
-            connect_loading.animate().alpha(1);
-            status.connection_status = enums.connection_status.reconnecting;
-            buttonStatus = enums.connection_status.connecting;
-        }
-        else if(buttonStatus == enums.connection_status.unconnected)
-        {
-            connect_base.setText(strings.connectingText);
-            connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.065f);
-            connect_loading.animate().alpha(1);
-            status.connection_status = enums.connection_status.connected;
-            buttonStatus = enums.connection_status.connecting;
-        }
-    }
-
     void onStopping()
     {
-        if(buttonStatus != enums.connection_status.stoping) {
-            buttonStatus = enums.connection_status.stoping;
+        if(buttonStatus != enums.vpn_status.DISCONNECTING) {
+            buttonStatus = enums.vpn_status.DISCONNECTING;
             connect_loading.animate().alpha(1);
             connect_base.setText(strings.stopingText);
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.065f);
         }
     }
+
 
     void onConnected()
     {
-        if(buttonStatus != enums.connection_status.connected) {
+        if(buttonStatus != enums.vpn_status.CONNECTED) {
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.065f);
             connect_base.setText(strings.connectedText);
             connect_loading.animate().alpha(0);
-            buttonStatus = enums.connection_status.connected;
+            buttonStatus = enums.vpn_status.CONNECTED;
         }
     }
 
-    void onDisConnected()
+    void onStopped()
     {
-        if(buttonStatus != enums.connection_status.unconnected) {
+        if(buttonStatus != enums.vpn_status.IDLE) {
             connect_base.setText(strings.goText);
             connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
             connect_loading.animate().alpha(0);
-            buttonStatus = enums.connection_status.unconnected;
+            buttonStatus = enums.vpn_status.IDLE;
         }
+    }
+
+    void onConnecting()
+    {
+        connect_base.setText(strings.connectingText);
+        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX,helperMethods.screenWidth()*0.065f);
+        connect_loading.animate().alpha(1);
+        buttonStatus = enums.vpn_status.CONNECTING_VPN;
     }
 
     void onSetFlag(String location)
     {
         if(!location.equals(strings.emptySTR))
         {
-            flag_status = location;
+            flag_status = location.toLowerCase();
             startPostTask(messages.UPDATE_FLAG);
         }
     }
@@ -181,13 +160,6 @@ class home_view_controller {
         location_info.setText("Unconnected");
     }
 
-    void onConnecting()
-    {
-        connect_base.setText(strings.connectingText);
-        connect_base.setTextSize(TypedValue.COMPLEX_UNIT_PX,helperMethods.screenWidth()*0.065f);
-        connect_loading.animate().alpha(1);
-        buttonStatus = enums.connection_status.connecting;
-    }
     /*ANIMATION VIEW REDIRECTIONS*/
 
 
@@ -203,7 +175,7 @@ class home_view_controller {
     @SuppressLint("HandlerLeak")
     private void createUpdateUiHandler()
     {
-               updateUIHandler = new Handler()
+        updateUIHandler = new Handler()
         {
             @Override
             public void handleMessage(Message msg)
@@ -219,8 +191,8 @@ class home_view_controller {
 
                         Locale obj = new Locale("", flag_status);
 
-                        flag.setBackground(FlagKit.drawableWithFlag(home_model.getInstance().getHomeInstance(), flag_status));
-                        location_info.setText("Powered By | " + obj.getDisplayCountry());
+                        flag.setBackground(FlagKit.drawableWithFlag(homeModel.getInstance().getHomeInstance(), flag_status));
+                        location_info.setText("Connected To | " + obj.getDisplayCountry());
                     }
                 }
             }

@@ -5,16 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.proxyManager.proxy_controller;
+import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.jwang123.flagkit.FlagKit;
 
-public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHolder>
+public class listAdapter extends RecyclerView.Adapter<listAdapter.listViewHolder>
 {
-    list_adapter() {
+    listAdapter() {
     }
 
     @Override
@@ -24,14 +23,14 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull list_adapter.listViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull listAdapter.listViewHolder holder, int position)
     {
-        holder.bindListView(list_model.getInstance().getModel().get(position));
+        holder.bindListView(listModel.getInstance().getModel().get(position));
     }
 
     @Override
     public int getItemCount() {
-        return list_model.getInstance().getModel().size();
+        return listModel.getInstance().getModel().size();
     }
 
     /*View Holder Extensions*/
@@ -46,7 +45,7 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHold
             super(itemView);
         }
 
-        void bindListView(list_row_model model) {
+        void bindListView(listRowModel model) {
 
             heaaderText = itemView.findViewById(R.id.header);
             descriptionText = itemView.findViewById(R.id.description);
@@ -56,11 +55,11 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.listViewHold
             heaaderText.setText(model.getHeader());
             descriptionText.setText(model.getDescription());
 
-            flags.setBackground(FlagKit.drawableWithFlag(server_model.getInstance().getServerInstance(), model.getCountryModel().getCountry()));
+            flags.setBackground(FlagKit.drawableWithFlag(serverModel.getInstance().getServerInstance(), model.getCountryModel().getCountry()));
 
             layout.setOnClickListener(view -> {
-                proxy_controller.getInstance().chooseServer(model.getCountryModel());
-                server_model.getInstance().getServerInstance().onBackPressed(null);
+                proxyController.getInstance().chooseServer(model.getCountryModel());
+                serverModel.getInstance().getServerInstance().onBackPressed(null);
             });
         }
     }

@@ -13,14 +13,23 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <service android:name=".application.helperManager.OnClearFromRecentService" android:stopWithTask="false" />
-        <activity android:name=".application.serverManager.server_controller"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
         <activity
-            android:name=".application.aboutManager.about_controller"
+            android:name=".application.serverManager.serverController"
+            android:icon="@mipmap/ic_launcher"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".application.aboutManager.aboutController"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".application.homeManager.home_controller"
+            android:name=".application.homeManager.homeController"
             android:icon="@mipmap/ic_launcher"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"

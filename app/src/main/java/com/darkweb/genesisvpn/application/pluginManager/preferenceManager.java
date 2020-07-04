@@ -2,30 +2,30 @@ package com.darkweb.genesisvpn.application.pluginManager;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import com.darkweb.genesisvpn.application.homeManager.home_model;
+import com.darkweb.genesisvpn.application.homeManager.homeModel;
 
-public class preference_manager
+public class preferenceManager
 {
     /*Private Declarations*/
 
-    private static final preference_manager ourInstance = new preference_manager();
+    private static final preferenceManager ourInstance = new preferenceManager();
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
 
-    public static preference_manager getInstance()
+    public static preferenceManager getInstance()
     {
         return ourInstance;
     }
 
     /*Initializations*/
 
-    private preference_manager()
+    private preferenceManager()
     {
     }
 
     public void initialize()
     {
-        prefs = PreferenceManager.getDefaultSharedPreferences(home_model.getInstance().getHomeInstance());
+        prefs = PreferenceManager.getDefaultSharedPreferences(homeModel.getInstance().getHomeInstance());
         edit = prefs.edit();
     }
 

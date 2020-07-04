@@ -12,7 +12,7 @@ repositories {
 
 
 ext {
-    androidSupportLibraryVersion = "28.0.0"
+    androidSupportLibraryVersion = "30.0.0"
 }
 
 android {
@@ -27,7 +27,7 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         buildConfigField "String", "BASE_HOST", "\"https://backend.northghost.com\""
-        buildConfigField "String", "BASE_CARRIER_ID", "\"afdemo\""
+        buildConfigField "String", "BASE_CARRIER_ID", "\"0000_genesisvpn\""
         buildConfigField "String", "BASE_OAUTH_METHOD", "\"anonymous\""
 
         buildConfigField "String", "SHARED_PREFS", "\"NORTHGHOST_SHAREDPREFS\""
@@ -49,9 +49,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }}
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

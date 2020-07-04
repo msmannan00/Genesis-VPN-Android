@@ -42,7 +42,8 @@
     <!-- APPLICATION GENERAL -->
 
     <string name="todo">TODO</string>
-    <string name="homepage">Home Page</string>
+    <string name="homepage">Change Location</string>
+    <string name="about">About Us</string>
 
     <!-- SERVER PAGE -->
 

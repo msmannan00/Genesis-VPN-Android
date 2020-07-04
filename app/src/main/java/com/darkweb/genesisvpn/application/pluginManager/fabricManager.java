@@ -1,7 +1,7 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
 import com.crashlytics.android.Crashlytics;
-import com.darkweb.genesisvpn.application.homeManager.home_model;
+import com.darkweb.genesisvpn.application.homeManager.homeModel;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -24,8 +24,8 @@ public class fabricManager
 
     public void init()
     {
-         Fabric.with(home_model.getInstance().getHomeInstance(), new Crashlytics());
-         analyticmanager.getInstance().initialize(home_model.getInstance().getHomeInstance());
+         Fabric.with(homeModel.getInstance().getHomeInstance(), new Crashlytics());
+         analyticmanager.getInstance().initialize(homeModel.getInstance().getHomeInstance());
          analyticmanager.getInstance().logUser();
     }
 }

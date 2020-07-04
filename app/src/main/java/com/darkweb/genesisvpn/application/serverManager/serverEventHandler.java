@@ -2,14 +2,14 @@ package com.darkweb.genesisvpn.application.serverManager;
 
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 
-class server_ehandler
+class serverEventHandler
 {
 
     /*INITIALIZATION*/
 
-    private static final server_ehandler ourInstance = new server_ehandler();
+    private static final serverEventHandler ourInstance = new serverEventHandler();
 
-    static server_ehandler getInstance() {
+    static serverEventHandler getInstance() {
         return ourInstance;
     }
 
@@ -17,6 +17,6 @@ class server_ehandler
 
     void quit()
     {
-        helperMethods.quit(server_model.getInstance().getServerInstance());
+        helperMethods.quit(serverModel.getInstance().getServerInstance());
     }
 }

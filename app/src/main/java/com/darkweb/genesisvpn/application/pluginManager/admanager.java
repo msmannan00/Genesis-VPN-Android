@@ -3,14 +3,13 @@ package com.darkweb.genesisvpn.application.pluginManager;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.aboutManager.about_model;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.homeManager.home_model;
-import com.darkweb.genesisvpn.application.serverManager.server_model;
+import com.darkweb.genesisvpn.application.homeManager.homeModel;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
@@ -36,9 +35,9 @@ public class admanager
 
     public void initialize()
     {
-        if(!preference_manager.getInstance().getBool(keys.ads_disabled,false))
+        if(!preferenceManager.getInstance().getBool(keys.ads_disabled,false))
         {
-            MobileAds.initialize(home_model.getInstance().getHomeInstance(), "ca-app-pub-5074525529134731~1412991199");
+            MobileAds.initialize(homeModel.getInstance().getHomeInstance(), "ca-app-pub-5074525529134731~1412991199");
             mInterstitialHidden_base = initAd("ca-app-pub-5074525529134731/7636560716");
 
             initBannerAds();
@@ -51,7 +50,7 @@ public class admanager
 
     private void initBannerAds()
     {
-        bannerAds = home_model.getInstance().getHomeInstance().findViewById(R.id.adView);
+        bannerAds = homeModel.getInstance().getHomeInstance().findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder()
                 .build();
         bannerAds.loadAd(request);
@@ -59,7 +58,7 @@ public class admanager
 
     private InterstitialAd initAd(String id)
     {
-        InterstitialAd adInstance = new InterstitialAd(home_model.getInstance().getHomeInstance());
+        InterstitialAd adInstance = new InterstitialAd(homeModel.getInstance().getHomeInstance());
         adInstance.setAdUnitId(id);
         adInstance.loadAd(new AdRequest.Builder().build());
 
@@ -84,7 +83,7 @@ public class admanager
         }
     }
 
-    public void adsDisabler()
+    public void adsDisabler(AppCompatActivity m_context)
     {
         adsDisabled = true;
         adDisableCount+=1;
@@ -93,12 +92,12 @@ public class admanager
             if(bannerAds!=null)
             {
                 bannerAds.setVisibility(View.GONE);
-                preference_manager.getInstance().setBool(keys.ads_disabled,true);
-                Toast.makeText(about_model.getInstance().getAboutInstance(), strings.ads_disabled, Toast.LENGTH_SHORT).show();
+                preferenceManager.getInstance().setBool(keys.ads_disabled,true);
+                Toast.makeText(m_context, strings.ads_disabled, Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(about_model.getInstance().getAboutInstance(), strings.ads_already_disabled, Toast.LENGTH_SHORT).show();
+                Toast.makeText(m_context, strings.ads_already_disabled, Toast.LENGTH_SHORT).show();
             }
         }
     }

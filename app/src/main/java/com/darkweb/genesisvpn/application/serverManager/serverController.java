@@ -4,20 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.aboutManager.about_model;
 
-import java.util.ArrayList;
-
-public class server_controller extends AppCompatActivity {
+public class serverController extends AppCompatActivity {
 
     /*LOCAL VARIABLE DECLARATION*/
 
     private RecyclerView listView;
+    private serverViewController viewController;
 
     /*INITIALIZATION*/
 
@@ -28,19 +24,19 @@ public class server_controller extends AppCompatActivity {
         initializeModel();
         initializeViews();
         initializeList();
-        server_model.getInstance().getServerInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     public void initializeModel(){
-        server_model.getInstance().setServerInstance(this);
+        serverModel.getInstance().setServerInstance(this);
     }
 
     public void initializeViews(){
         listView = findViewById(R.id.listview);
+        viewController = new serverViewController(this);
     }
 
     public void initializeList(){
-        list_adapter adapter = new list_adapter();
+        listAdapter adapter = new listAdapter();
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -50,6 +46,6 @@ public class server_controller extends AppCompatActivity {
 
     public void onBackPressed(View view)
     {
-        server_ehandler.getInstance().quit();
+        serverEventHandler.getInstance().quit();
     }
 }

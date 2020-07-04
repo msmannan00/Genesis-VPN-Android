@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".application.aboutManager.about_controller">
+    tools:context=".application.aboutManager.aboutController">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_gravity="center_vertical"
             android:text="@string/homepage"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            />
     </LinearLayout>
 
 

@@ -14,17 +14,17 @@ import android.widget.ImageView;
 
 import com.darkweb.genesisvpn.application.constants.messages;
 
-class home_animation
+class homeAnimation
 {
     /*INITIALIZATIONS*/
 
-    private static final home_animation ourInstance = new home_animation();
-    static home_animation getInstance() {
+    private static final homeAnimation ourInstance = new homeAnimation();
+    static homeAnimation getInstance() {
         return ourInstance;
     }
     private Handler updateUIHandler;
 
-    private home_animation()
+    private homeAnimation()
     {
         createUpdateUiHandler();
     }

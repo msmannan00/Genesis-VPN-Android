@@ -1,40 +1,45 @@
 package com.darkweb.genesisvpn.application.aboutManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.homeManager.home_model;
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
 
-public class about_controller extends AppCompatActivity {
+public class aboutController extends AppCompatActivity {
 
-    /*INITIALIZATION*/
+    /* PRIVATE VARIABLES */
+
+    private aboutViewController m_view_controller;
+    private aboutModel m_model;
+
+    /* INITIALIZATION */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_view);
-        initializeModel();
-        about_model.getInstance().getAboutInstance().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        initializeHandlers();
+        initializeViews();
     }
 
-    public void initializeModel(){
-        about_model.getInstance().setAboutInstance(this);
+    public void initializeViews(){
+        m_view_controller = new aboutViewController(this);
+    }
+
+    public void initializeHandlers(){
+        m_model = new aboutModel(this);
     }
 
     public void adsDisabler(View view)
     {
-        admanager.getInstance().adsDisabler();
+        admanager.getInstance().adsDisabler(this);
     }
 
     /*EVENT HANDLER*/
 
     public void onBackPressed(View view)
     {
-        about_ehandler.getInstance().quit();
+        m_model.quit();
     }
 }
