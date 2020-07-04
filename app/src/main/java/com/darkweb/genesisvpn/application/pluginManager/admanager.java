@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.homeManager.homeModel;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
@@ -33,14 +32,14 @@ public class admanager
     private admanager() {
     }
 
-    public void initialize()
+    public void initialize(AppCompatActivity m_context)
     {
         if(!preferenceManager.getInstance().getBool(keys.ads_disabled,false))
         {
-            MobileAds.initialize(homeModel.getInstance().getHomeInstance(), "ca-app-pub-5074525529134731~1412991199");
-            mInterstitialHidden_base = initAd("ca-app-pub-5074525529134731/7636560716");
+            MobileAds.initialize(m_context, "ca-app-pub-5074525529134731~1412991199");
+            mInterstitialHidden_base = initAd("ca-app-pub-5074525529134731/7636560716", m_context);
 
-            initBannerAds();
+            initBannerAds(m_context);
         }
         else
         {
@@ -48,17 +47,17 @@ public class admanager
         }
     }
 
-    private void initBannerAds()
+    private void initBannerAds(AppCompatActivity m_context)
     {
-        bannerAds = homeModel.getInstance().getHomeInstance().findViewById(R.id.adView);
+        bannerAds = m_context.findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder()
                 .build();
         bannerAds.loadAd(request);
     }
 
-    private InterstitialAd initAd(String id)
+    private InterstitialAd initAd(String id, AppCompatActivity m_context)
     {
-        InterstitialAd adInstance = new InterstitialAd(homeModel.getInstance().getHomeInstance());
+        InterstitialAd adInstance = new InterstitialAd(m_context);
         adInstance.setAdUnitId(id);
         adInstance.loadAd(new AdRequest.Builder().build());
 

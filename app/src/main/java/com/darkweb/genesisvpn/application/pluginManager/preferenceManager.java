@@ -2,7 +2,8 @@ package com.darkweb.genesisvpn.application.pluginManager;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import com.darkweb.genesisvpn.application.homeManager.homeModel;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class preferenceManager
 {
@@ -23,9 +24,9 @@ public class preferenceManager
     {
     }
 
-    public void initialize()
+    public void initialize(AppCompatActivity m_context)
     {
-        prefs = PreferenceManager.getDefaultSharedPreferences(homeModel.getInstance().getHomeInstance());
+        prefs = PreferenceManager.getDefaultSharedPreferences(m_context);
         edit = prefs.edit();
     }
 

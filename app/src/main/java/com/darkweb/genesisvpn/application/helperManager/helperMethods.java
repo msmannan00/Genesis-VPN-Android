@@ -8,17 +8,17 @@ import android.telephony.TelephonyManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.homeManager.homeModel;
+
 import java.util.Locale;
 
 public class helperMethods
 {
-    public static void shareApp() {
-        ShareCompat.IntentBuilder.from(homeModel.getInstance().getHomeInstance())
+    public static void shareApp(AppCompatActivity p_context) {
+        ShareCompat.IntentBuilder.from(p_context)
                 .setType(strings.sh_type)
                 .setChooserTitle(strings.sh_title)
                 .setSubject(strings.sh_subject)
-                .setText(strings.sh_desc + homeModel.getInstance().getHomeInstance().getPackageName())
+                .setText(strings.sh_desc + p_context.getPackageName())
                 .startChooser();
     }
 
@@ -46,15 +46,15 @@ public class helperMethods
         return "us";
     }
 
-    public static void sendEmail()
+    public static void sendEmail(AppCompatActivity m_context)
     {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 "mailto","gamesolstudios@gmail.com", null));
         intent.setData(Uri.parse(strings.co_type)); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gamesolstudios@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Issue Ticket");
-        if (intent.resolveActivity(homeModel.getInstance().getHomeInstance().getPackageManager()) != null) {
-            homeModel.getInstance().getHomeInstance().startActivity(intent);
+        if (intent.resolveActivity(m_context.getPackageManager()) != null) {
+            m_context.startActivity(intent);
         }
     }
 
@@ -62,9 +62,9 @@ public class helperMethods
         activity.finish();
     }
 
-    public static void openActivity( Class<?> cls){
-        Intent myIntent = new Intent(homeModel.getInstance().getHomeInstance(), cls);
-        homeModel.getInstance().getHomeInstance().startActivity(myIntent);
+    public static void openActivity( Class<?> cls, AppCompatActivity m_context){
+        Intent myIntent = new Intent(m_context, cls);
+        m_context.startActivity(myIntent);
     }
 
     public static int screenWidth()

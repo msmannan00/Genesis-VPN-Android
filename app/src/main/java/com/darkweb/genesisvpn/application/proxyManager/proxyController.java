@@ -17,11 +17,12 @@ import com.darkweb.genesisvpn.BuildConfig;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.helperManager.helperMethods;
-import com.darkweb.genesisvpn.application.homeManager.homeModel;
+import com.darkweb.genesisvpn.application.homeManager.homeController;
+import com.darkweb.genesisvpn.application.pluginManager.messageManager;
 import com.darkweb.genesisvpn.application.pluginManager.preferenceManager;
 import com.darkweb.genesisvpn.application.serverManager.listModel;
-import com.darkweb.genesisvpn.application.status.status;
+import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
+import com.darkweb.genesisvpn.application.statusManager.status;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,12 +40,6 @@ import com.anchorfree.vpnsdk.vpnservice.VPNState;
 import com.northghost.caketube.CaketubeTransport;
 
 public class proxyController implements  VpnStateListener{
-    /*INITIALIZATIONS*/
-
-    private static final proxyController ourInstance = new proxyController();
-    public static proxyController getInstance() {
-        return ourInstance;
-    }
 
     /*LOCAL VARIABLE DECLARATIONS*/
 
@@ -52,6 +47,18 @@ public class proxyController implements  VpnStateListener{
     private static final String CHANNEL_ID = "vpn";
     private String server_name = strings.emptySTR;
     private boolean wasServerChanged = false;
+    private homeController m_home_instance;
+    private boolean m_is_ergister_user_error_shown = false;
+
+    /*INITIALIZATIONS*/
+
+    private static final proxyController ourInstance = new proxyController();
+    public static proxyController getInstance() {
+        return ourInstance;
+    }
+    public proxyController(){
+        m_home_instance = sharedControllerManager.getInstance().getHomeController();
+    }
 
     /*HELPER METHODS*/
 
@@ -61,7 +68,7 @@ public class proxyController implements  VpnStateListener{
         if(!preferenceManager.getInstance().getBool(keys.app_initialized_key,false))
         {
             preferenceManager.getInstance().setBool(keys.app_initialized_key,true);
-            homeModel.getInstance().getHomeInstance().onStartView();
+            m_home_instance.onStart(null);
         }
     }
 
@@ -79,15 +86,15 @@ public class proxyController implements  VpnStateListener{
             case IDLE: {
                 Log.i("FUCK3: ",status.vpn_status+"");
                 onStart();
-                homeModel.getInstance().getHomeInstance().onConnecting();
+                m_home_instance.onConnecting();
                 break;
             }
             case CONNECTED: {
                 status.vpn_status = enums.vpn_status.CONNECTED;
                 if(!wasServerChanged){
-                    homeModel.getInstance().getHomeInstance().onStopping();
+                    m_home_instance.onStopping();
                 }else {
-                    homeModel.getInstance().getHomeInstance().onConnecting();
+                    m_home_instance.onConnecting();
                 }
                 onStop();
                 break;
@@ -95,7 +102,7 @@ public class proxyController implements  VpnStateListener{
             case CONNECTING_VPN:{
                 status.vpn_status = enums.vpn_status.DISCONNECTING;
                 if(!wasServerChanged){
-                    homeModel.getInstance().getHomeInstance().onStopping();
+                    m_home_instance.onStopping();
                 }
                 onStop();
                 break;
@@ -103,7 +110,7 @@ public class proxyController implements  VpnStateListener{
             case CONNECTING_CREDENTIALS:{
                 status.vpn_status = enums.vpn_status.DISCONNECTING;
                 if(!wasServerChanged){
-                    homeModel.getInstance().getHomeInstance().onStopping();
+                    m_home_instance.onStopping();
                 }
                 onStop();
                 break;
@@ -111,7 +118,7 @@ public class proxyController implements  VpnStateListener{
             case CONNECTING_PERMISSIONS: {
                 status.vpn_status = enums.vpn_status.DISCONNECTING;
                 if(!wasServerChanged){
-                    homeModel.getInstance().getHomeInstance().onStopping();
+                    m_home_instance.onStopping();
                 }
                 onStop();
                 break;
@@ -134,14 +141,15 @@ public class proxyController implements  VpnStateListener{
             case DISCONNECTING: {
                 status.vpn_status = enums.vpn_status.DISCONNECTING;
                 if(!wasServerChanged){
-                    homeModel.getInstance().getHomeInstance().onStopping();
+                    m_home_instance.onStopping();
                 }
                 break;
             }
             case IDLE: {
                 status.vpn_status = enums.vpn_status.IDLE;
                 if(!wasServerChanged){
-                    homeModel.getInstance().getHomeInstance().onStopped();
+                    m_home_instance.onStopped();
+                    m_home_instance.onHideFlag();
                 }else {
                     wasServerChanged = false;
                     onStart();
@@ -151,13 +159,13 @@ public class proxyController implements  VpnStateListener{
             case CONNECTED: {
                 if(status.vpn_status != enums.vpn_status.DISCONNECTING){
                     status.vpn_status = enums.vpn_status.CONNECTED;
-                    homeModel.getInstance().getHomeInstance().onConnected();
+                    m_home_instance.onConnected();
                 }
                 onUpdateFlag();
                 break;
             }
             case CONNECTING_VPN:{
-                homeModel.getInstance().getHomeInstance().onConnecting();
+                m_home_instance.onConnecting();
                 status.vpn_status = enums.vpn_status.CONNECTING_VPN;
                 break;
             }
@@ -178,7 +186,10 @@ public class proxyController implements  VpnStateListener{
 
     @Override
     public void vpnError(@NonNull VpnException e) {
-
+        if(e.getMessage().equals("NetworkRelatedException")){
+            messageManager.getInstance().internetError(m_home_instance);
+            onStop();
+        }
     }
 
     /* STATE MANAGER */
@@ -246,20 +257,6 @@ public class proxyController implements  VpnStateListener{
         });
     }
 
-    private void isConnected(Callback<Boolean> callback) {
-        UnifiedSDK.getVpnState(new Callback<VPNState>() {
-            @Override
-            public void success(@NonNull VPNState vpnState) {
-                callback.success(vpnState == VPNState.CONNECTED);
-            }
-
-            @Override
-            public void failure(@NonNull VpnException e) {
-                callback.success(false);
-            }
-        });
-    }
-
     /* COUNTRY SERVER MANAGER */
 
     public void chooseServer(Country server)
@@ -272,7 +269,6 @@ public class proxyController implements  VpnStateListener{
     /* First Time Installations & Connection */
 
     public void startVPN() {
-        setDefaultFlag(helperMethods.getUserCountry(homeModel.getInstance().getHomeInstance()));
         initHydraSdk();
         registerUser();
         autoStart();
@@ -301,6 +297,12 @@ public class proxyController implements  VpnStateListener{
 
             @Override
             public void failure(@NonNull VpnException e) {
+                registerUser();
+                if(!m_is_ergister_user_error_shown){
+                    m_is_ergister_user_error_shown = true;
+                    status.servers_loaded = enums.connection_servers.internet_error;
+                    vpnError(e);
+                }
             }
         });
     }
@@ -315,19 +317,19 @@ public class proxyController implements  VpnStateListener{
 
             @Override
             public void failure(@NonNull VpnException e) {
-                e.printStackTrace();
+                loadServers();
             }
         });
     }
 
     private void setDefaultFlag(String m_flag)
     {
-        homeModel.getInstance().getHomeInstance().onSetFlag(m_flag);
+        m_home_instance.onSetFlag(m_flag);
     }
 
     private void setCurrentFlag()
     {
-        homeModel.getInstance().getHomeInstance().onSetFlag(server_name);
+        m_home_instance.onSetFlag(server_name);
     }
 
     private void onUpdateFlag()
@@ -354,13 +356,13 @@ public class proxyController implements  VpnStateListener{
 
             @Override
             public void failure(@NonNull VpnException e) {
-                e.printStackTrace();
+                vpnError(e);
             }
         });
     }
 
     private SharedPreferences getPrefs() {
-        return homeModel.getInstance().getHomeInstance().getSharedPreferences(BuildConfig.SHARED_PREFS, Context.MODE_PRIVATE);
+        return m_home_instance.getSharedPreferences(BuildConfig.SHARED_PREFS, Context.MODE_PRIVATE);
     }
 
     private void createNotificationChannel() {
@@ -372,7 +374,7 @@ public class proxyController implements  VpnStateListener{
                 int importance = NotificationManager.IMPORTANCE_DEFAULT;
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
                 channel.setDescription(description);
-                NotificationManager notificationManager = homeModel.getInstance().getHomeInstance().getSystemService(NotificationManager.class);
+                NotificationManager notificationManager = m_home_instance.getSystemService(NotificationManager.class);
                 notificationManager.createNotificationChannel(channel);
             }
         }

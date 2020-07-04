@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "140745941406",
+    "firebase_url": "https://genesis-vpn.firebaseio.com",
+    "project_id": "genesis-vpn",
+    "storage_bucket": "genesis-vpn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140745941406:android:09f3643c6808975dde768f",
+        "android_client_info": {
+          "package_name": "com.darkweb.genesisvpn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140745941406-4vpuirgutdgbobd51l7180b9betb29he.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtBhrdANUI27NaNexrv0Y57HqIcDF6dkc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140745941406-4vpuirgutdgbobd51l7180b9betb29he.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

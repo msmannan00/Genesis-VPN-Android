@@ -1,4 +1,4 @@
-package com.darkweb.genesisvpn.application.status;
+package com.darkweb.genesisvpn.application.statusManager;
 
 import com.darkweb.genesisvpn.application.constants.enums;
 

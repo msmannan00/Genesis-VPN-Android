@@ -12,6 +12,7 @@ import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService
 import com.darkweb.genesisvpn.application.pluginManager.admanager;
 import com.darkweb.genesisvpn.application.pluginManager.preferenceManager;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
+import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +27,13 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     /*LOCAL VARIABLE DECLARATION*/
 
-    Button connect_base;
-    Button connect_animator;
-    ImageButton flag;
-    ImageView connect_loading;
-    TextView location_info;
-    homeViewController viewController;
+    Button m_connect_base;
+    Button m_connect_animator;
+    ImageButton m_flag;
+    ImageView m_connect_loading;
+    TextView m_location_info;
+    homeViewController m_view_controller;
+    homeModel m_model;
 
     /*INITIALIZATIONS*/
 
@@ -46,9 +48,9 @@ public class homeController extends AppCompatActivity implements NavigationView.
         initializeLayout();
         initializeCustomListeners();
 
-        preferenceManager.getInstance().initialize();
+        preferenceManager.getInstance().initialize(this);
         proxyController.getInstance().startVPN();
-        admanager.getInstance().initialize();
+        admanager.getInstance().initialize(this);
 
     }
 
@@ -58,7 +60,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
     }
 
     public void initializeModel(){
-        homeModel.getInstance().setHomeInstance(this);
+        sharedControllerManager.getInstance().setHomeController(this);
     }
 
     public void initializeLayout(){
@@ -74,12 +76,13 @@ public class homeController extends AppCompatActivity implements NavigationView.
     }
 
     public void initializeViews(){
-        connect_base = findViewById(R.id.connect_base);
-        connect_animator = findViewById(R.id.connect_animator);
-        connect_loading = findViewById(R.id.loading);
-        flag = findViewById(R.id.flag);
-        location_info = findViewById(R.id.location_info);
-        viewController = new homeViewController(connect_base,connect_animator,connect_loading,flag,location_info);
+        m_connect_base = findViewById(R.id.connect_base);
+        m_connect_animator = findViewById(R.id.connect_animator);
+        m_connect_loading = findViewById(R.id.loading);
+        m_flag = findViewById(R.id.flag);
+        m_location_info = findViewById(R.id.location_info);
+        m_view_controller = new homeViewController(m_connect_base, m_connect_animator, m_connect_loading, m_flag, m_location_info,this);
+        m_model = new homeModel(this);
     }
 
     /*EVENT HANDLERS DEFAULTS*/
@@ -97,15 +100,13 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     public void initializeCustomListeners()
     {
-        flag.setOnClickListener(view -> homeEventHandler.getInstance().onServer(50));
-
+        m_flag.setOnClickListener(view -> m_model.onServer(50));
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        //proxy_controller.getInstance().onOrientationChanged();
     }
 
     @Override
@@ -123,31 +124,31 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
         if (id == R.id.nav_about)
         {
-            homeEventHandler.getInstance().aboutUS();
+            m_model.aboutUS();
         }
         else if (id == R.id.server)
         {
-            homeEventHandler.getInstance().onServer(400);
+            m_model.onServer(400);
         }
         else if (id == R.id.nav_share)
         {
-            homeEventHandler.getInstance().onShare();
+            m_model.onShare();
         }
         else if (id == R.id.nav_help)
         {
-            homeEventHandler.getInstance().contactUS();
+            m_model.contactUS();
         }
         else if (id == R.id.nav_rate)
         {
-            homeEventHandler.getInstance().onRateUs();
+            m_model.onRateUs();
         }
         else if (id == R.id.ic_menu_privacy)
         {
-            homeEventHandler.getInstance().privacyPolicy();
+            m_model.privacyPolicy();
         }
         else if (id == R.id.nav_quit)
         {
-            homeEventHandler.getInstance().onQuit();
+            m_model.onQuit();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -159,48 +160,44 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     public void onStart(View view)
     {
-        homeEventHandler.getInstance().onStart();
+        int ss = 3/0;
+        proxyController.getInstance().triggeredManual();
     }
 
     public void onServer(MenuItem item){
-        homeEventHandler.getInstance().onServer(400);
+        m_model.onServer(400);
     }
 
     /*EVENT VIEW REDIRECTIONS*/
 
-    public void onStartView()
-    {
-        proxyController.getInstance().triggeredManual();
-    }
-
     public void onConnected()
     {
-        viewController.onConnected();
+        m_view_controller.onConnected();
     }
 
     public void onStopped()
     {
-        viewController.onStopped();
+        m_view_controller.onStopped();
     }
 
     public void onConnecting()
     {
-        viewController.onConnecting();
+        m_view_controller.onConnecting();
     }
 
     public void onStopping()
     {
-        viewController.onStopping();
+        m_view_controller.onStopping();
     }
 
     public void onSetFlag(String location)
     {
-        viewController.onSetFlag(location);
+        m_view_controller.onSetFlag(location);
     }
 
     public void onHideFlag()
     {
-        viewController.onHideFlag();
+        m_view_controller.onHideFlag();
     }
 
 }

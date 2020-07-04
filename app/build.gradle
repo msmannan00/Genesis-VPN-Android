@@ -6,6 +6,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.crashlytics'
 
 repositories {
 }
@@ -86,5 +87,7 @@ dependencies {
     implementation 'com.jwang123.flagkit:flagkit:1.0'
     implementation 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.3.1'
     implementation 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.3.1'
+    implementation 'com.google.firebase:firebase-analytics:17.4.3'
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
 
 }

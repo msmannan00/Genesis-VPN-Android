@@ -4,9 +4,11 @@ import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 
 class aboutModel
 {
-    /*INITIALIZATION*/
+    /* PRIVATE VARIABLES */
 
     private AppCompatActivity m_context;
+
+    /*INITIALIZATION*/
 
     public aboutModel(AppCompatActivity p_context){
         this.m_context = p_context;

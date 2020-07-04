@@ -5,9 +5,9 @@
 
     <color name="colorPrimary">#264d73</color>
     <color name="colorPrimaryDark">#141526</color>
-    <color name="text_color_v1">#2d5986</color>
-    <color name="light_gray">#3973ac</color>
-    <color name="cursor_blue">#3385ff</color>
+    <color name="text_color_v1">#264d73</color>
+    <color name="light_gray">#264d73</color>
+    <color name="cursor_blue">#264d73</color>
 
     <!-- BLACK COLORS SHADES -->
 

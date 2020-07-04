@@ -9,7 +9,7 @@ public class enums {
 
     public enum connection_servers
     {
-        loaded,not_loaded;
+        loaded,not_loaded,internet_error;
     }
 }
 
