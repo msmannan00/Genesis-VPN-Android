@@ -1,10 +1,6 @@
 package com.darkweb.genesisvpn.application.stateManager;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.homeManager.homeController;
-import com.darkweb.genesisvpn.application.serverManager.serverModel;
 
 public class sharedControllerManager
 {

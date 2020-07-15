@@ -4,27 +4,24 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.anchorfree.partner.api.ClientInfo;
 import com.anchorfree.partner.api.response.AvailableCountries;
 import com.anchorfree.sdk.UnifiedSDK;
-import com.anchorfree.sdk.rules.TrafficRule;
 import com.anchorfree.vpnsdk.exceptions.VpnException;
 import com.anchorfree.vpnsdk.transporthydra.HydraTransport;
+import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.BuildConfig;
-import com.darkweb.genesisvpn.application.constants.enums;
-import com.darkweb.genesisvpn.application.constants.keys;
+import com.darkweb.genesisvpn.application.constants.enums.*;
 import com.darkweb.genesisvpn.application.constants.strings;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.homeManager.homeController;
-import com.darkweb.genesisvpn.application.pluginManager.messageManager;
-import com.darkweb.genesisvpn.application.pluginManager.preferenceManager;
 import com.darkweb.genesisvpn.application.serverManager.listModel;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
-import com.darkweb.genesisvpn.application.statusManager.status;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import com.anchorfree.partner.api.auth.AuthMethod;
 import com.anchorfree.partner.api.data.Country;
@@ -44,91 +41,126 @@ public class proxyController implements  VpnStateListener{
     /*LOCAL VARIABLE DECLARATIONS*/
 
     private UnifiedSDK unifiedSDK = null;
-    private static final String CHANNEL_ID = "vpn";
-    private String server_name = strings.emptySTR;
-    private boolean wasServerChanged = false;
+    private static final String CHANNEL_ID = strings.PC_CHANNEL_ID;
     private homeController m_home_instance;
-    private boolean m_is_ergister_user_error_shown = false;
+    private String server_name = strings.EMPTY_STR;
+
+    /*HELPER VARIABLE DECLARATIONS*/
+
+    private boolean m_is_complete_triggered = false;
+    private boolean m_is_internet_available = true;
+    private boolean m_is_alert_shown = false;
+    private int control_thread_counter = 0;
+    private int last_exeption_counter = 0;
+
+    /*LOCAL STATE VARIALBES*/
+
+    REQUEST m_ui_status = REQUEST.IDLE;
+    REQUEST m_request = REQUEST.IDLE;
+    REQUEST m_vpn_status = REQUEST.IDLE;
+    REGISTERATION m_RegisterationStatus = REGISTERATION.UNREGISTERED;
+    requestHandler m_request_status = new requestHandler();
 
     /*INITIALIZATIONS*/
 
     private static final proxyController ourInstance = new proxyController();
-    public static proxyController getInstance() {
-        return ourInstance;
-    }
+    public static proxyController getInstance() { return ourInstance; }
+
     public proxyController(){
         m_home_instance = sharedControllerManager.getInstance().getHomeController();
     }
 
     /*HELPER METHODS*/
 
-    public void autoStart()
-    {
-        UnifiedSDK.addVpnStateListener(this);
-        if(!preferenceManager.getInstance().getBool(keys.app_initialized_key,false))
-        {
-            preferenceManager.getInstance().setBool(keys.app_initialized_key,true);
-            m_home_instance.onStart(null);
+    public void onStartVPN() {
+        initHydraSdk();
+        vpnControllerThread();
+        serverControlThread();
+        onTriggered(TRIGGER.TOOGLE);
+    }
+
+    public void onTriggered(TRIGGER p_trigger_request){
+
+        if(p_trigger_request == TRIGGER.TOOGLE){
+            switch (m_ui_status) {
+                case IDLE: {
+                    m_ui_status = REQUEST.CONNECTING_VPN;
+                    m_request = REQUEST.CONNECTED;
+                    m_home_instance.onConnecting();
+                    break;
+                }
+                case CONNECTED: {
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                    m_request = REQUEST.IDLE;
+                    break;
+                }
+                case CONNECTING_VPN:{
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                    m_request = REQUEST.IDLE;
+                    break;
+                }
+                case CONNECTING_CREDENTIALS:{
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                    m_request = REQUEST.IDLE;
+                    break;
+                }
+                case CONNECTING_PERMISSIONS: {
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                    m_request = REQUEST.IDLE;
+                    break;
+                }
+                case PAUSED: {
+                    m_ui_status = REQUEST.CONNECTING_VPN;
+                    m_home_instance.onConnecting();
+                    m_request = REQUEST.CONNECTED;
+                    break;
+                }
+                case DISCONNECTING: {
+                    m_ui_status = REQUEST.CONNECTING_VPN;
+                    m_home_instance.onConnecting();
+                    m_request = REQUEST.CONNECTED;
+                    break;
+                }
+                case ERROR: {
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                    m_request = REQUEST.IDLE;
+                    break;
+                }
+                case UNKNOWN: {
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                    m_request = REQUEST.IDLE;
+                    break;
+                }
+            }
+        } else if(p_trigger_request == TRIGGER.CHANGE_SERVER){
+            m_ui_status = REQUEST.CONNECTING_VPN;
+            m_home_instance.onConnecting();
+            m_request = REQUEST.CHANGING_SERVER;
         }
     }
 
-    public void triggeredManual(){
-        wasServerChanged = false;
-        onTriggered();
-    }
-
-    public void onTriggered(){
-        if(status.vpn_status == enums.vpn_status.DISCONNECTING){
-            return;
+    public void onComplete(){
+        if(!m_is_complete_triggered){
+            m_is_complete_triggered = true;
+            if(m_vpn_status == REQUEST.CONNECTED){
+                m_home_instance.onAlertDismiss(null);
+            }
         }
-        Log.i("FUCK1: ",status.vpn_status+"");
-        switch (status.vpn_status) {
+        switch (m_vpn_status) {
             case IDLE: {
-                Log.i("FUCK3: ",status.vpn_status+"");
-                onStart();
-                m_home_instance.onConnecting();
+                m_home_instance.onIdle();
+                m_home_instance.onSetFlag(strings.EMPTY_STR);
                 break;
             }
             case CONNECTED: {
-                status.vpn_status = enums.vpn_status.CONNECTED;
-                if(!wasServerChanged){
-                    m_home_instance.onStopping();
-                }else {
-                    m_home_instance.onConnecting();
-                }
-                onStop();
-                break;
-            }
-            case CONNECTING_VPN:{
-                status.vpn_status = enums.vpn_status.DISCONNECTING;
-                if(!wasServerChanged){
-                    m_home_instance.onStopping();
-                }
-                onStop();
-                break;
-            }
-            case CONNECTING_CREDENTIALS:{
-                status.vpn_status = enums.vpn_status.DISCONNECTING;
-                if(!wasServerChanged){
-                    m_home_instance.onStopping();
-                }
-                onStop();
-                break;
-            }
-            case CONNECTING_PERMISSIONS: {
-                status.vpn_status = enums.vpn_status.DISCONNECTING;
-                if(!wasServerChanged){
-                    m_home_instance.onStopping();
-                }
-                onStop();
-                break;
-            }
-            case PAUSED: {
-                onStart();
-                break;
-            }
-            case DISCONNECTING: {
-                onRestart();
+                m_home_instance.onConnected();
+                onUpdateFlag();
                 break;
             }
         }
@@ -136,49 +168,41 @@ public class proxyController implements  VpnStateListener{
 
     @Override
     public void vpnStateChanged(@NonNull VPNState vpnState) {
-        Log.i("FUCK2: ",vpnState.name()+"---"+status.vpn_status);
         switch (vpnState) {
-            case DISCONNECTING: {
-                status.vpn_status = enums.vpn_status.DISCONNECTING;
-                if(!wasServerChanged){
-                    m_home_instance.onStopping();
-                }
-                break;
-            }
             case IDLE: {
-                status.vpn_status = enums.vpn_status.IDLE;
-                if(!wasServerChanged){
-                    m_home_instance.onStopped();
-                    m_home_instance.onHideFlag();
-                }else {
-                    wasServerChanged = false;
-                    onStart();
-                }
+                m_vpn_status = REQUEST.IDLE;
                 break;
             }
             case CONNECTED: {
-                if(status.vpn_status != enums.vpn_status.DISCONNECTING){
-                    status.vpn_status = enums.vpn_status.CONNECTED;
-                    m_home_instance.onConnected();
-                }
-                onUpdateFlag();
+                m_vpn_status = REQUEST.CONNECTED;
                 break;
             }
             case CONNECTING_VPN:{
-                m_home_instance.onConnecting();
-                status.vpn_status = enums.vpn_status.CONNECTING_VPN;
+                m_vpn_status = REQUEST.CONNECTING_VPN;
                 break;
             }
             case CONNECTING_CREDENTIALS:{
-                status.vpn_status = enums.vpn_status.CONNECTING_CREDENTIALS;
+                m_vpn_status = REQUEST.CONNECTING_CREDENTIALS;
                 break;
             }
             case CONNECTING_PERMISSIONS: {
-                status.vpn_status = enums.vpn_status.CONNECTING_PERMISSIONS;
+                m_vpn_status = REQUEST.CONNECTING_PERMISSIONS;
                 break;
             }
             case PAUSED: {
-                status.vpn_status = enums.vpn_status.PAUSED;
+                m_vpn_status = REQUEST.PAUSED;
+                break;
+            }
+            case DISCONNECTING: {
+                m_vpn_status = REQUEST.DISCONNECTING;
+                break;
+            }
+            case ERROR: {
+                m_vpn_status = REQUEST.ERROR;
+                break;
+            }
+            case UNKNOWN: {
+                m_vpn_status = REQUEST.UNKNOWN;
                 break;
             }
         }
@@ -186,97 +210,351 @@ public class proxyController implements  VpnStateListener{
 
     @Override
     public void vpnError(@NonNull VpnException e) {
-        if(e.getMessage().equals("NetworkRelatedException")){
-            messageManager.getInstance().internetError(m_home_instance);
-            onStop();
-        }
+
     }
 
     /* STATE MANAGER */
     public void onStart(){
-        List<String> fallbackOrder = new ArrayList<>();
-        fallbackOrder.add(HydraTransport.TRANSPORT_ID);
-        fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
-        fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
-        List<String> bypassDomains = new LinkedList<>();
-        bypassDomains.add("*facebook.com");
-        bypassDomains.add("*wtfismyip.com");
-        unifiedSDK.getVPN().start(new SessionConfig.Builder()
-                .withReason(TrackingConstants.GprReasons.M_UI)
-                .withReason(TrackingConstants.GprReasons.M_UI)
-                .withTransportFallback(fallbackOrder)
-                .withTransport(HydraTransport.TRANSPORT_ID)
-                .withVirtualLocation(server_name)
-                .build(), new CompletableCallback() {
-            @Override
-            public void complete() {
-            }
+        if(!m_is_internet_available){
+             return;
+        }
+        control_thread_counter = 0;
+        AsyncTask.execute(() -> {
+            m_request_status.onConnectRequestStart();
+            List<String> fallbackOrder = new ArrayList<>();
+            fallbackOrder.add(HydraTransport.TRANSPORT_ID);
+            fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
+            fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
+            unifiedSDK.getVPN().start(new SessionConfig.Builder()
+                    .withReason(TrackingConstants.GprReasons.M_UI)
+                    .withReason(TrackingConstants.GprReasons.M_UI)
+                    .withTransportFallback(fallbackOrder)
+                    .withTransport(HydraTransport.TRANSPORT_ID)
+                    .withVirtualLocation(server_name)
+                    .build(), new CompletableCallback() {
+                @Override
+                public void complete() {
+                    m_request_status.onConnectRequestComplete();
+                }
 
-            @Override
-            public void error(@NonNull VpnException e) {
-            }
+                @Override
+                public void error(@NonNull VpnException e) {
+                    m_request_status.onError(helperMethods.createErrorMessage(e));
+                    m_request_status.onConnectRequestComplete();
+                    m_is_alert_shown = false;
+                }
+            });
         });
     }
 
     public void onRestart(){
-        List<String> fallbackOrder = new ArrayList<>();
-        fallbackOrder.add(HydraTransport.TRANSPORT_ID);
-        fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
-        fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
-        List<String> bypassDomains = new LinkedList<>();
-        bypassDomains.add("*facebook.com");
-        bypassDomains.add("*wtfismyip.com");
+        if(!m_is_internet_available){
+             return;
+        }
+        control_thread_counter = 0;
+        AsyncTask.execute(() -> {
+            m_request_status.onConnectRequestStart();
+            List<String> fallbackOrder = new ArrayList<>();
+            fallbackOrder.add(HydraTransport.TRANSPORT_ID);
+            fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
+            fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
+            unifiedSDK.getVPN().restart(new SessionConfig.Builder()
+                    .withReason(TrackingConstants.GprReasons.M_UI)
+                    .withReason(TrackingConstants.GprReasons.M_UI)
+                    .withTransportFallback(fallbackOrder)
+                    .withTransport(HydraTransport.TRANSPORT_ID)
+                    .withVirtualLocation(server_name)
+                    .build(), new CompletableCallback() {
+                @Override
+                public void complete() {
+                    m_request_status.onConnectRequestComplete();
+                }
 
-        unifiedSDK.getVPN().restart(new SessionConfig.Builder()
-                .withReason(TrackingConstants.GprReasons.M_UI)
-                .withTransportFallback(fallbackOrder)
-                .withTransport(HydraTransport.TRANSPORT_ID)
-                .withVirtualLocation(server_name)
-                .addDnsRule(TrafficRule.Builder.bypass().fromDomains(bypassDomains))
-                .build(), new CompletableCallback() {
+                @Override
+                public void error(@NonNull VpnException e) {
+                    m_request_status.onConnectRequestComplete();
+                    m_request_status.onError(helperMethods.createErrorMessage(e));
+                    m_is_alert_shown = false;
+                }
+            });
+        });
+    }
+
+    public void onCloseSmooth() {
+            m_home_instance.moveTaskToBack(true);
+            unifiedSDK.getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
             @Override
             public void complete() {
+                m_home_instance.moveTaskToBack(true);
+                m_home_instance.finishAndRemoveTask();
             }
 
             @Override
             public void error(@NonNull VpnException e) {
-           }
+                m_home_instance.moveTaskToBack(true);
+                m_home_instance.finishAndRemoveTask();
+            }
         });
     }
 
-    public void onStop() {
-
+    public void onClose() {
         unifiedSDK.getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
             @Override
             public void complete() {
+                m_home_instance.moveTaskToBack(true);
+                m_home_instance.finishAndRemoveTask();
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
 
             @Override
             public void error(@NonNull VpnException e) {
+                m_home_instance.moveTaskToBack(true);
+                m_home_instance.finishAndRemoveTask();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
+
+    }
+
+    public void onStop() {
+        AsyncTask.execute(() -> {
+            m_request_status.onIdleRequestStart();
+            unifiedSDK.getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+                @Override
+                public void complete() {
+                    m_request_status.onIdleRequestComplete();
+                }
+
+                @Override
+                public void error(@NonNull VpnException e) {
+                    m_request_status.onIdleRequestComplete();
+                    m_request_status.onError(helperMethods.createErrorMessage(e));
+                    m_is_alert_shown = false;
+                }
+            });
+        });
+    }
+
+    public void onRegister(){
+        m_RegisterationStatus = REGISTERATION.REGISTERING;
+        AuthMethod authMethod = AuthMethod.anonymous();
+        unifiedSDK.getBackend().login(authMethod, new Callback<User>() {
+            @Override
+            public void success(User user) {
+                m_RegisterationStatus = REGISTERATION.REGISTERATION_SUCCESS;
+            }
+
+            @Override
+            public void failure(@NonNull VpnException e) {
+                m_RegisterationStatus = REGISTERATION.REGISTERATION_FAILURE;
             }
         });
     }
 
-    /* COUNTRY SERVER MANAGER */
+    public void onForceStop(){
+        if(m_ui_status != REQUEST.IDLE && m_ui_status != REQUEST.DISCONNECTING && m_ui_status != REQUEST.PAUSED)
+        {
+            m_ui_status = REQUEST.DISCONNECTING;
+            m_home_instance.onDisconnecting();
+            m_request = REQUEST.IDLE;
+            onStop();
+        }
+    }
 
-    public void chooseServer(Country server)
+    private void onLoadServer() {
+        m_RegisterationStatus = REGISTERATION.LOADING_SERVER;
+        unifiedSDK.getBackend().countries(new Callback<AvailableCountries>() {
+            @Override
+            public void success(@NonNull AvailableCountries availableCountries) {
+                listModel.getInstance().setModel(availableCountries.getCountries());
+                m_RegisterationStatus = REGISTERATION.LOADING_SERVER_SUCCESS;
+                Tovuti.from(m_home_instance).stop();
+            }
+
+            @Override
+            public void failure(@NonNull VpnException e) {
+                m_RegisterationStatus = REGISTERATION.LOADING_SERVER_FAILURE;
+            }
+        });
+    }
+
+    private void onUpdateFlag()
     {
-        wasServerChanged = true;
+        UnifiedSDK.getStatus(new Callback<SessionInfo>() {
+            @Override
+            public void success(@NonNull SessionInfo sessionInfo) {
+                server_name = CredentialsCompat.getServerCountry(sessionInfo.getCredentials());
+                m_home_instance.onSetFlag(server_name);
+            }
+
+            @Override
+            public void failure(@NonNull VpnException e) {
+            }
+        });
+    }
+
+    public void onChooseServer(Country server)
+    {
         server_name = server.getCountry();
-        onTriggered();
+        onTriggered(TRIGGER.CHANGE_SERVER);
     }
 
     /* First Time Installations & Connection */
 
-    public void startVPN() {
-        initHydraSdk();
-        registerUser();
-        autoStart();
+    public void vpnControllerThread() {
+        new Thread(){
+            public void run(){
+                try {
+                    while (true){
+                        try {
+                            /* PRE TASKS */
+                            sleep(1000);
+                            last_exeption_counter+=1;
+
+                            if(m_request_status.isRequestFailed()){
+                                if(!m_is_alert_shown){
+                                    m_is_alert_shown = true;
+                                    if(m_request_status.getErrorMessage().equals(strings.SE_VPN_PERMISSION) && android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP){
+                                        m_home_instance.onShowAlert(strings.SE_VPN_PERMISSION);
+                                    }
+                                    else if(!m_request_status.getErrorMessage().equals(strings.SE_UNKNOWN_EXCEPTION) && !m_request_status.getErrorMessage().equals(strings.SE_PERMISSION_CANCELLED) && !m_request_status.getErrorMessage().equals("User cancelled vpn start") && !m_request_status.getErrorMessage().equals("User cancelled vpn stop") && !m_request_status.getErrorMessage().contains("wrong state")){
+                                        m_home_instance.onShowAlert(m_request_status.getErrorMessage());
+                                        last_exeption_counter=0;
+                                        sleep(5000);
+                                        last_exeption_counter=5;
+                                    }
+                                    m_request_status.clearReportedError();
+                                }
+                            }
+
+                            if(!m_request_status.isConnectRequestCompleted() && m_request == REQUEST.CONNECTED && m_vpn_status != REQUEST.CONNECTED) {
+                                control_thread_counter += 1;
+                            }else {
+                                control_thread_counter = 0;
+                            }
+
+                            if(control_thread_counter > 60 && m_is_internet_available){
+                                control_thread_counter = 0;
+                                last_exeption_counter=0;
+                                if(!m_request_status.isConnectRequestCompleted() && m_request == REQUEST.CONNECTED && m_vpn_status != REQUEST.CONNECTED && m_request_status.isIdleRequestCompleted()){
+                                    m_home_instance.onShowAlert(strings.SE_VPN_POOR_NETWORK);
+                                    onStop();
+                                }
+                            }
+
+                            /*STATE HANDLER*/
+                            if(m_request == m_vpn_status && (m_vpn_status == REQUEST.CONNECTED || m_vpn_status == REQUEST.IDLE)){
+                                onComplete();
+                            }else {
+                                m_is_complete_triggered = false;
+                                if(m_request_status.isConnectRequestCompleted()) {
+                                    if(m_request == REQUEST.CONNECTING_SERVER) {
+                                        if(m_vpn_status == REQUEST.IDLE){
+                                            m_request = REQUEST.CONNECTED;
+                                            onStart();
+                                        }
+                                    }
+                                    else if (m_request == REQUEST.CONNECTED) {
+                                        if(m_vpn_status != REQUEST.CONNECTED){
+                                            m_home_instance.onConnecting();
+                                            onStart();
+                                        }
+                                    }
+                                    else if(m_request == REQUEST.CHANGING_SERVER){
+                                        if(m_vpn_status == REQUEST.CONNECTED){
+                                            m_request = REQUEST.CONNECTED;
+                                            onRestart();
+                                        }else if(m_vpn_status == REQUEST.IDLE) {
+                                            m_request = REQUEST.CONNECTED;
+                                            onStart();
+                                        }
+                                    }
+                                }
+                                if(m_request_status.isIdleRequestCompleted()){
+                                    if(m_request == REQUEST.IDLE){
+                                        if(m_vpn_status != REQUEST.IDLE && m_vpn_status != REQUEST.DISCONNECTING){
+                                            onStop();
+                                        }
+                                    }
+                                    else if(m_request == REQUEST.CHANGING_SERVER || m_request == REQUEST.CONNECTING_SERVER){
+                                        m_request = REQUEST.CONNECTING_SERVER;
+                                        onStop();
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    public void clearExceptionCounter(){
+        last_exeption_counter = 0;
+    }
+
+    public void serverControlThread() {
+        Tovuti.from(m_home_instance).monitor((connectionType, isConnected, isFast) -> m_is_internet_available = isConnected);
+
+        new Thread(){
+            public void run(){
+                final int[] m_count = {0};
+                try {
+                    sleep(1000);
+                    onRegister();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                while (true){
+                    try {
+                        sleep(5000);
+                        if(last_exeption_counter >=130 && !m_is_internet_available){
+                            last_exeption_counter = 0;
+                            m_home_instance.onShowAlert(strings.SE_INTERNET_CONNECTION_ERROR);
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(m_is_internet_available || m_RegisterationStatus == REGISTERATION.LOADING_SERVER_SUCCESS && m_count[0] < 10) {
+                        if(m_RegisterationStatus != REGISTERATION.LOADING_SERVER_SUCCESS){
+                            if (m_RegisterationStatus != REGISTERATION.LOADING_SERVER_SUCCESS) {
+                                if (!UnifiedSDK.getInstance().getBackend().isLoggedIn() && m_RegisterationStatus != REGISTERATION.REGISTERING) {
+                                    m_RegisterationStatus = REGISTERATION.REGISTERING;
+                                    if (m_RegisterationStatus == REGISTERATION.UNREGISTERED || m_RegisterationStatus == REGISTERATION.REGISTERATION_FAILURE || m_RegisterationStatus == REGISTERATION.INTERNET_ERROR) {
+                                        m_count[0] += 1;
+                                        onRegister();
+                                    }
+                                } else if (m_RegisterationStatus != REGISTERATION.LOADING_SERVER) {
+                                    m_RegisterationStatus = REGISTERATION.REGISTERATION_SUCCESS;
+                                    if (m_RegisterationStatus == REGISTERATION.LOADING_SERVER_FAILURE || m_RegisterationStatus == REGISTERATION.REGISTERATION_SUCCESS || m_RegisterationStatus == REGISTERATION.INTERNET_ERROR) {
+                                        m_RegisterationStatus = REGISTERATION.LOADING_SERVER;
+                                        m_count[0] += 1;
+                                        onLoadServer();
+                                    }
+                                }
+                            }
+                        }
+                        /*REGISTERATION HANDLER*/
+                     }
+                     else {
+                          m_RegisterationStatus = REGISTERATION.INTERNET_ERROR;
+                     }
+                }
+            }
+        }.start();
+    }
+
+    public REGISTERATION isUserRegistered(){
+        return m_RegisterationStatus;
     }
 
     private void initHydraSdk() {
         createNotificationChannel();
-        SharedPreferences prefs = getPrefs();
+        SharedPreferences prefs = m_home_instance.getSharedPreferences(BuildConfig.SHARED_PREFS, Context.MODE_PRIVATE);
 
         ClientInfo clientInfo = ClientInfo.newBuilder()
                 .baseUrl(prefs.getString(BuildConfig.STORED_HOST_URL_KEY, BuildConfig.BASE_HOST))
@@ -285,92 +563,15 @@ public class proxyController implements  VpnStateListener{
         unifiedSDK = UnifiedSDK.getInstance(clientInfo);
         UnifiedSDK.setLoggingLevel(Log.VERBOSE);
         UnifiedSDK.setReconnectionEnabled(false);
-    }
-
-    public void registerUser() {
-        AuthMethod authMethod = AuthMethod.anonymous();
-        unifiedSDK.getBackend().login(authMethod, new Callback<User>() {
-            @Override
-            public void success(User user) {
-                loadServers();
-            }
-
-            @Override
-            public void failure(@NonNull VpnException e) {
-                registerUser();
-                if(!m_is_ergister_user_error_shown){
-                    m_is_ergister_user_error_shown = true;
-                    status.servers_loaded = enums.connection_servers.internet_error;
-                    vpnError(e);
-                }
-            }
-        });
-    }
-
-    private void loadServers() {
-        unifiedSDK.getBackend().countries(new Callback<AvailableCountries>() {
-            @Override
-            public void success(@NonNull AvailableCountries availableCountries) {
-                listModel.getInstance().setModel(availableCountries.getCountries());
-                status.servers_loaded = enums.connection_servers.loaded;
-            }
-
-            @Override
-            public void failure(@NonNull VpnException e) {
-                loadServers();
-            }
-        });
-    }
-
-    private void setDefaultFlag(String m_flag)
-    {
-        m_home_instance.onSetFlag(m_flag);
-    }
-
-    private void setCurrentFlag()
-    {
-        m_home_instance.onSetFlag(server_name);
-    }
-
-    private void onUpdateFlag()
-    {
-        Log.i("BREAKER TEXT","BREAKER TEXT");
-        UnifiedSDK.getVpnState(new Callback<VPNState>() {
-            @Override
-            public void success(@NonNull VPNState vpnState) {
-                if (vpnState == VPNState.CONNECTED) {
-                    UnifiedSDK.getStatus(new Callback<SessionInfo>() {
-                        @Override
-                        public void success(@NonNull SessionInfo sessionInfo) {
-                            server_name = CredentialsCompat.getServerCountry(sessionInfo.getCredentials());
-                            setCurrentFlag();
-                        }
-
-                        @Override
-                        public void failure(@NonNull VpnException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void failure(@NonNull VpnException e) {
-                vpnError(e);
-            }
-        });
-    }
-
-    private SharedPreferences getPrefs() {
-        return m_home_instance.getSharedPreferences(BuildConfig.SHARED_PREFS, Context.MODE_PRIVATE);
+        UnifiedSDK.addVpnStateListener(this);
     }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if(status.vpn_status == enums.vpn_status.CONNECTED)
+            if(m_vpn_status == REQUEST.CONNECTED)
             {
-                CharSequence name = "Sample VPN";
-                String description = "VPN notification";
+                CharSequence name = strings.PC_SAMPLE_VPN;
+                String description = strings.PC_VPN_NOTIFICATION;
                 int importance = NotificationManager.IMPORTANCE_DEFAULT;
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
                 channel.setDescription(description);

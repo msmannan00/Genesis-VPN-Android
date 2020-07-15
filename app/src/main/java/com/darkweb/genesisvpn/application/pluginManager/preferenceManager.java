@@ -1,29 +1,27 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+
 public class preferenceManager
 {
     /*Private Declarations*/
 
-    private static final preferenceManager ourInstance = new preferenceManager();
+    eventObserver.eventListener m_event;
     private SharedPreferences prefs;
     private SharedPreferences.Editor edit;
 
-    public static preferenceManager getInstance()
-    {
-        return ourInstance;
-    }
-
     /*Initializations*/
-
-    private preferenceManager()
-    {
+    public preferenceManager(eventObserver.eventListener p_event){
+        m_event = p_event;
     }
 
+    @SuppressLint("CommitPrefEdits")
     public void initialize(AppCompatActivity m_context)
     {
         prefs = PreferenceManager.getDefaultSharedPreferences(m_context);
@@ -32,28 +30,28 @@ public class preferenceManager
 
     /*Saving Preferences*/
 
-    public void setString(String valueKey, String value)
+    public void setString(String p_valueKey, String p_value)
     {
-        edit.putString(valueKey, value);
+        edit.putString(p_valueKey, p_value);
         edit.commit();
     }
 
-    public void setBool(String valueKey, boolean value)
+    public void setBool(String p_valueKey, boolean p_value)
     {
-        edit.putBoolean(valueKey, value);
+        edit.putBoolean(p_valueKey, p_value);
         edit.commit();
     }
 
     /*Recieving Preferences*/
 
-    public String getString(String valueKey, String valueDefault)
+    public String getString(String p_valueKey, String p_valueDefault)
     {
-        return prefs.getString(valueKey, valueDefault);
+        return prefs.getString(p_valueKey, p_valueDefault);
     }
 
-    public boolean getBool(String valueKey, boolean valueDefault)
+    public boolean getBool(String p_valueKey, boolean p_valueDefault)
     {
-        return prefs.getBoolean(valueKey, valueDefault);
+        return prefs.getBoolean(p_valueKey, p_valueDefault);
     }
 
 }

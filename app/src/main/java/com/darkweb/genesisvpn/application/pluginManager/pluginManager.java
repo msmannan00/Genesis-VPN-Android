@@ -1,0 +1,89 @@
+package com.darkweb.genesisvpn.application.pluginManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import com.darkweb.genesisvpn.application.constants.enums;
+import com.darkweb.genesisvpn.application.constants.keys;
+import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+import java.util.List;
+
+public class pluginManager
+{
+    /*Plugin Insances*/
+    admanager m_ad_manager;
+    analyticmanager m_analytics_manager;
+    preferenceManager m_preference_manager;
+
+    /*Private Variables*/
+    private static final pluginManager ourInstance = new pluginManager();
+
+    /*Initializations*/
+    public static pluginManager getInstance() {
+        return ourInstance;
+    }
+
+    private pluginManager() {
+        m_ad_manager = new admanager(new adCallback());
+        m_analytics_manager = new analyticmanager(new analyticsCallback());
+        m_preference_manager = new preferenceManager(new preferenceCallback());
+    }
+
+    /*EVENT LISTNER CALLBACKS HANDLERS*/
+
+    /*ADVIEW HANDLER*/
+    public void onAdvertTrigger(List<Object> data, enums.AD_ETYPE p_event){
+        if(p_event == enums.AD_ETYPE.INITIALIZE){
+            boolean m_ads_status = m_preference_manager.getBool(keys.ADS_DISABLED,false);;
+            m_ad_manager.initialize((AppCompatActivity)data.get(0), m_ads_status, (com.google.android.gms.ads.AdView)data.get(1));
+        }
+        else if(p_event == enums.AD_ETYPE.DISABLE_ADS){
+            m_ad_manager.adsDisabler((AppCompatActivity)data.get(0));
+        }
+    }
+    public class adCallback implements eventObserver.eventListener{
+        @Override
+        public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)
+        {
+            if(p_event_type == enums.ETYPE.PLUGIN_DISABLE_ADS){
+                m_preference_manager.setBool((String) p_data.get(0),(boolean) p_data.get(1));
+            }
+        }
+    }
+
+    /*ANALYTICS HANDLER*/
+    public void onAnalyticsTrigger(List<Object> data, enums.ANALYTIC_ETYPE p_event){
+        if(p_event == enums.ANALYTIC_ETYPE.INITIALIZE){
+            m_analytics_manager.initialize((AppCompatActivity)data.get(0));
+        }
+    }
+    public class analyticsCallback implements eventObserver.eventListener{
+        @Override
+        public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)
+        {
+        }
+    }
+
+    /*PREFERENCES HANDLER*/
+    public void onPreferenceTrigger(List<Object> data, enums.PREFERENCES_ETYPE p_event){
+        if(p_event == enums.PREFERENCES_ETYPE.INITIALIZE){
+            m_preference_manager.initialize((AppCompatActivity)data.get(0));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.SET_BOOL){
+            m_preference_manager.setBool((String) data.get(0), (boolean) data.get(1));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.SET_STRING){
+            m_preference_manager.setString((String) data.get(0), (String) data.get(1));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.GET_BOOL){
+            m_preference_manager.getBool((String) data.get(0), (boolean) data.get(1));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.GET_STRING){
+            m_preference_manager.getString((String) data.get(0), (String) data.get(1));
+        }
+    }
+    public class preferenceCallback implements eventObserver.eventListener{
+        @Override
+        public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)
+        {
+        }
+    }
+}

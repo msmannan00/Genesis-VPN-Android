@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.darkweb.genesisvpn.R;
@@ -13,7 +14,10 @@ import com.jwang123.flagkit.FlagKit;
 
 public class listAdapter extends RecyclerView.Adapter<listAdapter.listViewHolder>
 {
-    listAdapter() {
+    private AppCompatActivity m_context;
+
+    listAdapter(AppCompatActivity p_context) {
+        this.m_context = p_context;
     }
 
     @Override
@@ -55,11 +59,11 @@ public class listAdapter extends RecyclerView.Adapter<listAdapter.listViewHolder
             heaaderText.setText(model.getHeader());
             descriptionText.setText(model.getDescription());
 
-            flags.setBackground(FlagKit.drawableWithFlag(serverModel.getInstance().getServerInstance(), model.getCountryModel().getCountry()));
+            flags.setBackground(FlagKit.drawableWithFlag(m_context, model.getCountryModel().getCountry()));
 
             layout.setOnClickListener(view -> {
-                proxyController.getInstance().chooseServer(model.getCountryModel());
-                serverModel.getInstance().getServerInstance().onBackPressed(null);
+                proxyController.getInstance().onChooseServer(model.getCountryModel());
+                m_context.onBackPressed();
             });
         }
     }

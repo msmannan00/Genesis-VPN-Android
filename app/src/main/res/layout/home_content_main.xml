@@ -10,12 +10,13 @@
     tools:showIn="@layout/home_app_bar">
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
+        android:id="@+id/banner_ads"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
+        android:elevation="50dp"
         ads:adUnitId="ca-app-pub-5074525529134731/8185518764"
         ads:layout_constraintEnd_toEndOf="parent"
         ads:layout_constraintStart_toStartOf="parent"
@@ -26,49 +27,65 @@
         style="@android:style/TextAppearance.DeviceDefault.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:alpha="0"
         android:background="@xml/connector_drawable_fader"
         android:padding="12dp"
         android:singleLine="true"
+        android:text=""
+        android:elevation="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/connect_base"
+        app:layout_constraintEnd_toEndOf="@+id/connect_base"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/connect_base"
+        app:layout_constraintTop_toTopOf="@+id/connect_base" />
+
+    <Button
+        android:id="@+id/connect_base"
+        android:layout_width="331dp"
+        android:layout_height="334dp"
+        android:background="@xml/connector_drawable"
+        android:onClick="onStart"
+        android:padding="12dp"
+        android:singleLine="true"
+        android:elevation="5dp"
         android:text=""
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adView"
-        app:layout_constraintVertical_bias="0.437" />
+        app:layout_constraintTop_toBottomOf="@+id/banner_ads"
+        app:layout_constraintVertical_bias="0.407" />
 
-    <Button
-        android:id="@+id/connect_base"
-        android:layout_width="331dp"
-        android:layout_height="334dp"
-        android:layout_marginTop="1dp"
-        android:background="@xml/connector_drawable"
-        android:onClick="onStart"
+    <TextView
+        android:id="@+id/connect_label"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:clickable="false"
+        android:elevation="25dp"
         android:padding="12dp"
         android:singleLine="true"
-        android:text="@string/home_go"
+        android:text="@string/home_connecting"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/connect_base"
+        app:layout_constraintEnd_toEndOf="@+id/connect_base"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adView"
-        app:layout_constraintVertical_bias="0.437" />
+        app:layout_constraintStart_toStartOf="@+id/connect_base"
+        app:layout_constraintTop_toTopOf="@+id/connect_base" />
 
     <ImageView
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/connect_base"
+        app:layout_constraintEnd_toEndOf="@+id/connect_base"
         app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adView"
+        app:layout_constraintStart_toStartOf="@+id/connect_base"
+        app:layout_constraintTop_toTopOf="@+id/connect_base"
         app:layout_constraintVertical_bias="0.453"
         app:srcCompat="@drawable/loading" />
 
@@ -78,9 +95,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_marginBottom="10dp"
+        android:contentDescription="@string/todo"
         app:layout_constraintBottom_toTopOf="@+id/location_info"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/location_info"
@@ -92,6 +109,117 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/alert_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDarkAlert"
+        android:elevation="35dp"
+        android:onClick="onAlertDismiss"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/alert_dialog_panel"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_margin="10dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@xml/sc_rounded_corner_warning"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDarkAlert"
+                android:elevation="40dp"
+                android:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@xml/sc_rounded_corner"
+                android:elevation="40dp"
+                android:onClick="onAlertDismiss"
+                android:text="Dismiss"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@xml/sc_rounded_corner"
+                android:elevation="45dp"
+                android:onClick="onAlertStop"
+                android:text="stop"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button2" />
+
+            <TextView
+                android:id="@+id/alert_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:elevation="40dp"
+                android:maxLines="2"
+                android:text="Error Occred | Network Connection Exception"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/alert_title" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="9dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toTopOf="@+id/alert_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.375"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/alert_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="7dp"
+                android:elevation="35dp"
+                android:maxLines="2"
+                android:text="Error Occured"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

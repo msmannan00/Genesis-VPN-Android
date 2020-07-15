@@ -6,32 +6,32 @@ public class listRowModel
 {
     /*Private Variables*/
 
-    private String flag;
-    private String header;
-    private String description;
-    private Country server;
+    private String m_flag;
+    private String m_header;
+    private String m_description;
+    private Country m_server;
 
     /*Initializations*/
 
-    listRowModel(String header, String description, String flag, Country server) {
-        this.flag = flag;
-        this.header = header;
-        this.description = description;
-        this.server = server;
+    listRowModel(String p_header, String p_description, String p_flag, Country p_server) {
+        this.m_flag = p_flag;
+        this.m_header = p_header;
+        this.m_description = p_description;
+        this.m_server = p_server;
     }
 
     /*Variable Getters*/
 
     String getHeader() {
-        return header;
+        return m_header;
     }
     String getDescription() {
-        return description;
+        return m_description;
     }
     public String getFlag() {
-        return flag;
+        return m_flag;
     }
     Country getCountryModel() {
-        return server;
+        return m_server;
     }
 }

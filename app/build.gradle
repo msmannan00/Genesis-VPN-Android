@@ -1,54 +1,73 @@
-buildscript {
-    repositories {
-    }
-
-    dependencies {
-    }
-}
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.crashlytics'
+apply from: 'variables.gradle'
 
-repositories {
-}
-
-
+/*Ext Settings*/
 ext {
-    androidSupportLibraryVersion = "30.0.0"
+    androidSupportLibraryVersion = project.ext.androidSupportLibraryVersion
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30"
+    /*Build Settings*/
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
     defaultConfig {
-        applicationId "com.darkweb.genesisvpn"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 9
-        versionName "9.0"
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        applicationId project.ext.applicationId
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        testInstrumentationRunner project.ext.testInstrumentationRunner
 
-        buildConfigField "String", "BASE_HOST", "\"https://backend.northghost.com\""
-        buildConfigField "String", "BASE_CARRIER_ID", "\"0000_genesisvpn\""
-        buildConfigField "String", "BASE_OAUTH_METHOD", "\"anonymous\""
+        buildConfigField project.ext.K_String, project.ext.K_BASE_HOST, project.ext.V_BASE_HOST
+        buildConfigField project.ext.K_String, project.ext.K_BASE_CARRIER_ID, project.ext.V_BASE_CARRIER_ID
+        buildConfigField project.ext.K_String, project.ext.K_BASE_OAUTH_METHOD, project.ext.V_BASE_OAUTH_METHOD
 
-        buildConfigField "String", "SHARED_PREFS", "\"NORTHGHOST_SHAREDPREFS\""
-        buildConfigField "String", "STORED_HOST_URL_KEY", "\"com.northghost.afvclient.STORED_HOST_KEY\""
-        buildConfigField "String", "STORED_CARRIER_ID_KEY", "\"com.northghost.afvclient.CARRIER_ID_KEY\""
+        buildConfigField project.ext.K_String, project.ext.K_SHARED_PREFS, project.ext.V_SHARED_PREFS
+        buildConfigField project.ext.K_String, project.ext.K_STORED_HOST_URL_KEY, project.ext.V_STORED_HOST_URL_KEY
+        buildConfigField project.ext.K_String, project.ext.K_STORED_CARRIER_ID_KEY, project.ext.V_STORED_CARRIER_ID_KEY
     }
-    signingConfigs {
-        release {
-            keyAlias 'demo'
-            keyPassword 'demodemo'
-            storeFile file("${rootProject.projectDir}/demo.keystore")
-            storePassword 'demodemo'
+    /*ABI Splits : Space Reduction*/
+    flavorDimensions project.ext.dimen
+    productFlavors {
+        arm {
+            versionCode project.ext.arm_vcode
+            versionName project.ext.arm_vname
+            dimension project.ext.dimen
+            ndk {
+                abiFilter project.armeabi
+            }
+        }
+        aarch64 {
+            versionCode project.ext.aarch_vcode
+            versionName project.ext.aarch_vname
+            dimension project.ext.dimen
+            ndk {
+                abiFilter project.arm64
+            }
+        }
+        x86 {
+            versionCode project.ext.x86_vcode
+            versionName project.ext.x86_vname
+            dimension project.ext.dimen
+            ndk {
+                abiFilter project.x86
+            }
+        }
+        x86_64 {
+            versionCode project.ext.x64_vcode
+            versionName project.ext.x64_vname
+            dimension project.ext.dimen
+            ndk {
+                abiFilter project.x64
+            }
         }
     }
+    /*Proguard Rules*/
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled project.ext.minifyEnabled
+            proguardFiles getDefaultProguardFile(project.ext.getDefaultProguardFile), project.ext.proguard_rules_pro
         }
     }
+    /*Compile Java Versions*/
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -56,38 +75,21 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    /*Generic Implementation*/
+    implementation project.ext.fileTree
+    implementation project.ext.androidx
+    implementation project.ext.material
+    implementation project.ext.constraintlayout
 
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    /*VPN Libraries*/
+    implementation project.ext.ads_lite
+    implementation project.ext.hydra
+    implementation project.ext.openvpn
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    /*Analytics and Crashlytics*/
+    implementation project.ext.analytics
 
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
-
-    implementation 'com.crowdfire.cfalertdialog:cfalertdialog:1.1.0'
-
-    implementation 'com.google.android.gms:play-services-ads-lite:19.2.0'
-
-    /*Crashlytics*/
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar')
-
-    implementation 'com.jwang123.flagkit:flagkit:1.0'
-    implementation 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.3.1'
-    implementation 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.3.1'
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
-
+    /*Helper Libraries*/
+    implementation project.ext.flagkit
+    implementation project.ext.networkmanager
 }

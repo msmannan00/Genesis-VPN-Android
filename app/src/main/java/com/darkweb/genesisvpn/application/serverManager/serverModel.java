@@ -1,27 +1,28 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
-public class serverModel
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+
+class serverModel
 {
-    /*INSTANCE DECLARATIONS*/
+    /* PRIVATE VARIABLES */
 
-    private serverController serverInstance;
+    private AppCompatActivity m_context;
+    private eventObserver.eventListener m_event;
 
-    /*INITIALIZATIONS*/
+    /*INITIALIZATION*/
 
-    private static final serverModel ourInstance = new serverModel();
-
-    public static serverModel getInstance() {
-        return ourInstance;
+    public serverModel(AppCompatActivity p_context, eventObserver.eventListener p_event){
+        this.m_context = p_context;
+        m_event = p_event;
     }
 
-    /*INSTANCE GETTERS SETTERS*/
+    /*HANDLERS*/
 
-    serverController getServerInstance(){
-        return serverInstance;
+    void quit()
+    {
+        helperMethods.quit(this.m_context);
     }
-    void setServerInstance(serverController serverInstance){
-        this.serverInstance = serverInstance;
-    }
-
-
 }

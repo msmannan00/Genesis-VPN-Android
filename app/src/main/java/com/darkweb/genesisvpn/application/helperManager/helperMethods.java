@@ -1,60 +1,46 @@
 package com.darkweb.genesisvpn.application.helperManager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.telephony.TelephonyManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
+import com.anchorfree.vpnsdk.exceptions.VpnException;
 import com.darkweb.genesisvpn.application.constants.strings;
-
-import java.util.Locale;
+import static com.darkweb.genesisvpn.application.constants.strings.SE_UNKNOWN_EXCEPTION;
+import static com.darkweb.genesisvpn.application.constants.strings.SE_VPN_PERMISSION;
 
 public class helperMethods
 {
+    public static String createErrorMessage(VpnException p_exception){
+        if(p_exception.getMessage().equals(SE_VPN_PERMISSION)){
+            return SE_VPN_PERMISSION;
+        }
+        else if(p_exception == null || p_exception.getCause() == null || p_exception.getCause().getLocalizedMessage() == null || p_exception.getCause().getLocalizedMessage().equals(strings.EMPTY_STR)){
+            return SE_UNKNOWN_EXCEPTION;
+        }else {
+            return p_exception.getCause().getLocalizedMessage();
+        }
+    }
+
     public static void shareApp(AppCompatActivity p_context) {
         ShareCompat.IntentBuilder.from(p_context)
-                .setType(strings.sh_type)
-                .setChooserTitle(strings.sh_title)
-                .setSubject(strings.sh_subject)
-                .setText(strings.sh_desc + p_context.getPackageName())
+                .setType(strings.SH_TYPE)
+                .setChooserTitle(strings.SH_TITLE)
+                .setSubject(strings.SH_SUBJECT)
+                .setText(strings.SH_DESC + p_context.getPackageName())
                 .startChooser();
     }
 
-    public static String getUserCountry(Context context) {
-        try {
-            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            final String simCountry = tm.getSimCountryIso();
-            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
-                return simCountry.toLowerCase(Locale.US);
-            }
-            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
-                String networkCountry = tm.getNetworkCountryIso();
-                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
-                    return networkCountry.toLowerCase(Locale.US);
-                }
-            }
-        }
-        catch (Exception e) { }
-        try {
-            String m_country = context.getResources().getConfiguration().locale.getCountry();
-            return m_country;
-        }
-        catch (Exception e) { }
-
-        return "us";
-    }
-
-    public static void sendEmail(AppCompatActivity m_context)
+       public static void sendEmail(AppCompatActivity p_context)
     {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","gamesolstudios@gmail.com", null));
-        intent.setData(Uri.parse(strings.co_type)); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gamesolstudios@gmail.com"});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Issue Ticket");
-        if (intent.resolveActivity(m_context.getPackageManager()) != null) {
-            m_context.startActivity(intent);
+                strings.EM_MAIL_TO,strings.EM_EMAIL, null));
+        intent.setData(Uri.parse(strings.CO_TYPE));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{strings.EM_EMAIL});
+        intent.putExtra(Intent.EXTRA_SUBJECT, strings.EM_SUBJECT);
+        if (intent.resolveActivity(p_context.getPackageManager()) != null) {
+            p_context.startActivity(intent);
         }
     }
 
@@ -62,9 +48,13 @@ public class helperMethods
         activity.finish();
     }
 
-    public static void openActivity( Class<?> cls, AppCompatActivity m_context){
-        Intent myIntent = new Intent(m_context, cls);
-        m_context.startActivity(myIntent);
+    public static void quitApplication(AppCompatActivity activity) {
+
+    }
+
+    public static void openActivity( Class<?> p_cls, AppCompatActivity p_context){
+        Intent myIntent = new Intent(p_context, p_cls);
+        p_context.startActivity(myIntent);
     }
 
     public static int screenWidth()

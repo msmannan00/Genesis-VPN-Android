@@ -5,17 +5,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 
 class aboutViewController {
 
     /*LOCAL VARIABLE DECLARATION*/
     private AppCompatActivity m_context;
+    private eventObserver.eventListener m_event;
 
     /*INITIALIZATIONS*/
 
-    public aboutViewController(AppCompatActivity p_context)
+    public aboutViewController(AppCompatActivity p_context, eventObserver.eventListener p_event)
     {
         this.m_context = p_context;
+        m_event = p_event;
         onInitializeView();
     }
 

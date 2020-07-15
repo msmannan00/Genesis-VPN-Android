@@ -1,55 +1,27 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 
-import java.util.UUID;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+import com.flurry.android.FlurryAgent;
 
 public class analyticmanager
 {
     /*Private Variables*/
-
-    private static final analyticmanager ourInstance = new analyticmanager();
-    private String uniqueID = null;
-
-    public static analyticmanager getInstance() {
-        return ourInstance;
-    }
+    eventObserver.eventListener m_event;
 
     /*Initializations*/
-
-    private analyticmanager()
-    {
+    public analyticmanager(eventObserver.eventListener p_event){
+        m_event = p_event;
     }
 
-    public void initialize(Context context)
-    {
-        final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    public void initialize(AppCompatActivity p_context){
+        new FlurryAgent.Builder()
+                .withLogEnabled(true)
+                .build(p_context, "27Z4TFRQ4B49FRRTPP5W");
 
-        if (uniqueID == null)
-        {
-            SharedPreferences sharedPrefs = context.getSharedPreferences(
-                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
-            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = sharedPrefs.edit();
-                editor.putString(PREF_UNIQUE_ID, uniqueID);
-                editor.commit();
-            }
-        }
-    }
-
-    /*Helper Methods*/
-
-    public void logUser()
-    {
-        Crashlytics.setUserIdentifier(uniqueID);
-        Crashlytics.setUserEmail("user@fabric.io");
-        Crashlytics.setUserName(uniqueID);
     }
 
 }

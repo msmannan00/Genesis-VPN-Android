@@ -20,12 +20,12 @@ public class OnClearFromRecentService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        proxyController.getInstance().onStop();
+        proxyController.getInstance().onClose();
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         stopSelf();
-        proxyController.getInstance().onStop();
+        proxyController.getInstance().onClose();
     }
 }

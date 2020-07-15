@@ -1,103 +1,122 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.darkweb.genesisvpn.R;
+import com.androidstudy.networkmanager.Tovuti;
+import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.strings;
+import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class admanager
 {
 
     /*Private Variables*/
-    private static final admanager ourInstance = new admanager();
-    private InterstitialAd mInterstitialHidden_base;
-    private int adDisableCount = 0;
-    private boolean adsDisabled = false;
-    private AdView bannerAds = null;
+    private AdView m_banner_ads = null;
+    private Handler m_failure_handler = new Handler();
+    eventObserver.eventListener m_event;
+
+    /*Local Variables*/
+    private int m_ads_disable_count = 0;
+    private boolean m_ads_disable = false;
 
     /*Initializations*/
-
-    public static admanager getInstance() {
-        return ourInstance;
+    public admanager(eventObserver.eventListener p_event){
+        m_event = p_event;
     }
 
-    private admanager() {
-    }
-
-    public void initialize(AppCompatActivity m_context)
+    public void initialize(AppCompatActivity p_context,boolean p_ads_disabled, com.google.android.gms.ads.AdView p_banner_ads)
     {
-        if(!preferenceManager.getInstance().getBool(keys.ads_disabled,false))
-        {
-            MobileAds.initialize(m_context, "ca-app-pub-5074525529134731~1412991199");
-            mInterstitialHidden_base = initAd("ca-app-pub-5074525529134731/7636560716", m_context);
-
-            initBannerAds(m_context);
-        }
-        else
-        {
-            adsDisabled = true;
+        m_ads_disable = p_ads_disabled;
+        m_banner_ads = p_banner_ads;
+        m_banner_ads.setVisibility(View.GONE);
+        if(!m_ads_disable){
+            Tovuti.from(p_context).monitor((connectionType, isConnected, isFast) -> {
+                if(isConnected){
+                    List<String> testDeviceIds = Collections.singletonList("E6E822D3FE2DC52EE9947D1E042D20A9");
+                    RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+                    MobileAds.setRequestConfiguration(configuration);
+                    MobileAds.initialize(p_context, "ca-app-pub-5074525529134731~1412991199");
+                    initBannerAds();
+                }
+            });
         }
     }
 
-    private void initBannerAds(AppCompatActivity m_context)
+    private void initBannerAds()
     {
-        bannerAds = m_context.findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder()
                 .build();
-        bannerAds.loadAd(request);
+        m_banner_ads.loadAd(request);
+        initializeListener();
     }
 
-    private InterstitialAd initAd(String id, AppCompatActivity m_context)
-    {
-        InterstitialAd adInstance = new InterstitialAd(m_context);
-        adInstance.setAdUnitId(id);
-        adInstance.loadAd(new AdRequest.Builder().build());
+    public void initializeListener(){
+        m_banner_ads.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                m_banner_ads.setVisibility(View.VISIBLE);
+            }
 
-        return adInstance;
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                final Runnable r = () -> {
+                    AdRequest request = new AdRequest.Builder()
+                            .build();
+                    m_banner_ads.loadAd(request);
+                };
+                m_failure_handler.postDelayed(r, 5000);
+            }
+
+            @Override
+            public void onAdOpened() {
+                m_banner_ads.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdClicked() {
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+            }
+
+            @Override
+            public void onAdClosed() {
+            }
+        });
+
     }
 
     /*Helper Methods*/
-
-    public void showAd()
+    public void adsDisabler(AppCompatActivity p_context)
     {
-        if(!adsDisabled)
+        m_ads_disable_count +=1;
+        if(m_ads_disable_count ==10 && !m_ads_disable)
         {
-            if(mInterstitialHidden_base.isLoaded())
+            if(!m_ads_disable)
             {
-                mInterstitialHidden_base.show();
-                mInterstitialHidden_base.loadAd(new AdRequest.Builder().build());
-            }
-            else if(!mInterstitialHidden_base.isLoading())
-            {
-                mInterstitialHidden_base.loadAd(new AdRequest.Builder().build());
-            }
-        }
-    }
-
-    public void adsDisabler(AppCompatActivity m_context)
-    {
-        adsDisabled = true;
-        adDisableCount+=1;
-        if(adDisableCount==10)
-        {
-            if(bannerAds!=null)
-            {
-                bannerAds.setVisibility(View.GONE);
-                preferenceManager.getInstance().setBool(keys.ads_disabled,true);
-                Toast.makeText(m_context, strings.ads_disabled, Toast.LENGTH_SHORT).show();
+                m_ads_disable = true;
+                m_banner_ads.setVisibility(View.GONE);
+                m_event.invokeObserver(Arrays.asList(keys.ADS_DISABLED, true), enums.ETYPE.PLUGIN_DISABLE_ADS);
+                Toast.makeText(p_context, strings.AD_ADS_DISABLED, Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(m_context, strings.ads_already_disabled, Toast.LENGTH_SHORT).show();
+                Toast.makeText(p_context, strings.AD_ADS_ALREADY_DISABLED, Toast.LENGTH_SHORT).show();
             }
+        }else if(m_ads_disable){
+            Toast.makeText(p_context, strings.AD_ADS_ALREADY_DISABLED, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -5,9 +5,11 @@
 
     <color name="colorPrimary">#264d73</color>
     <color name="colorPrimaryDark">#141526</color>
+    <color name="colorPrimaryDarkAlert">#CC141526</color>
     <color name="text_color_v1">#264d73</color>
     <color name="light_gray">#264d73</color>
     <color name="cursor_blue">#264d73</color>
+    <color name="cursor_blue_dark">#204060</color>
 
     <!-- BLACK COLORS SHADES -->
 
@@ -27,5 +29,6 @@
     <color name="green">#009933</color>
     <color name="colorAccent">#D81B60</color>
     <color name="blue_circle">#28CFD9</color>
+    <color name="blue_circle_light">#177d82</color>
 
 </resources>
