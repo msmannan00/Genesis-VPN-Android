@@ -53,11 +53,7 @@ class homeModel
     }
 
     void onQuit(){
-        proxyController.getInstance().onStop();
         status.HAS_APPLICATION_STOPPED = true;
-        new Handler().postDelayed(() -> {
-            proxyController.getInstance().onCloseSmooth();
-        }, 400);
     }
 
     void onContactUS()

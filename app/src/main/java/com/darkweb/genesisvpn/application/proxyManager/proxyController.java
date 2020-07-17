@@ -16,6 +16,7 @@ import com.anchorfree.vpnsdk.transporthydra.HydraTransport;
 import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.BuildConfig;
 import com.darkweb.genesisvpn.application.constants.enums.*;
+import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.homeManager.homeController;
@@ -44,6 +45,7 @@ public class proxyController implements  VpnStateListener{
     private static final String CHANNEL_ID = strings.PC_CHANNEL_ID;
     private homeController m_home_instance;
     private String server_name = strings.EMPTY_STR;
+    NotificationManager notificationManager = null;
 
     /*HELPER VARIABLE DECLARATIONS*/
 
@@ -56,7 +58,7 @@ public class proxyController implements  VpnStateListener{
     /*LOCAL STATE VARIALBES*/
 
     REQUEST m_ui_status = REQUEST.IDLE;
-    REQUEST m_request = REQUEST.IDLE;
+    REQUEST m_request = REQUEST.CONNECTED;
     REQUEST m_vpn_status = REQUEST.IDLE;
     REGISTERATION m_RegisterationStatus = REGISTERATION.UNREGISTERED;
     requestHandler m_request_status = new requestHandler();
@@ -281,39 +283,29 @@ public class proxyController implements  VpnStateListener{
     }
 
     public void onCloseSmooth() {
-            m_home_instance.moveTaskToBack(true);
-            unifiedSDK.getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
+        status.HAS_APPLICATION_STOPPED = true;
+        m_home_instance.moveTaskToBack(true);
+        unifiedSDK.getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
             @Override
             public void complete() {
-                m_home_instance.moveTaskToBack(true);
-                m_home_instance.finishAndRemoveTask();
+                if(status.HAS_APPLICATION_STOPPED){
+                    m_home_instance.finishAndRemoveTask();
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
             }
 
             @Override
             public void error(@NonNull VpnException e) {
-                m_home_instance.moveTaskToBack(true);
-                m_home_instance.finishAndRemoveTask();
+                if(status.HAS_APPLICATION_STOPPED){
+                    m_home_instance.finishAndRemoveTask();
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
             }
         });
     }
 
-    public void onClose() {
-        unifiedSDK.getVPN().stop(TrackingConstants.GprReasons.M_UI, new CompletableCallback() {
-            @Override
-            public void complete() {
-                m_home_instance.moveTaskToBack(true);
-                m_home_instance.finishAndRemoveTask();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-
-            @Override
-            public void error(@NonNull VpnException e) {
-                m_home_instance.moveTaskToBack(true);
-                m_home_instance.finishAndRemoveTask();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-        });
-
+    public void onForceClose() {
+        unifiedSDK.getVPN().stop(null, null);
     }
 
     public void onStop() {
@@ -380,17 +372,19 @@ public class proxyController implements  VpnStateListener{
 
     private void onUpdateFlag()
     {
-        UnifiedSDK.getStatus(new Callback<SessionInfo>() {
-            @Override
-            public void success(@NonNull SessionInfo sessionInfo) {
-                server_name = CredentialsCompat.getServerCountry(sessionInfo.getCredentials());
-                m_home_instance.onSetFlag(server_name);
-            }
+        if(!status.HAS_APPLICATION_STOPPED){
+            UnifiedSDK.getStatus(new Callback<SessionInfo>() {
+                @Override
+                public void success(@NonNull SessionInfo sessionInfo) {
+                    server_name = CredentialsCompat.getServerCountry(sessionInfo.getCredentials());
+                    m_home_instance.onSetFlag(server_name);
+                }
 
-            @Override
-            public void failure(@NonNull VpnException e) {
-            }
-        });
+                @Override
+                public void failure(@NonNull VpnException e) {
+                }
+            });
+        }
     }
 
     public void onChooseServer(Country server)
@@ -415,10 +409,10 @@ public class proxyController implements  VpnStateListener{
                                 if(!m_is_alert_shown){
                                     m_is_alert_shown = true;
                                     if(m_request_status.getErrorMessage().equals(strings.SE_VPN_PERMISSION) && android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP){
-                                        m_home_instance.onShowAlert(strings.SE_VPN_PERMISSION);
+                                        m_home_instance.onShowAlert(strings.SE_VPN_PERMISSION, false);
                                     }
                                     else if(!m_request_status.getErrorMessage().equals(strings.SE_UNKNOWN_EXCEPTION) && !m_request_status.getErrorMessage().equals(strings.SE_PERMISSION_CANCELLED) && !m_request_status.getErrorMessage().equals("User cancelled vpn start") && !m_request_status.getErrorMessage().equals("User cancelled vpn stop") && !m_request_status.getErrorMessage().contains("wrong state")){
-                                        m_home_instance.onShowAlert(m_request_status.getErrorMessage());
+                                        m_home_instance.onShowAlert(m_request_status.getErrorMessage(), false);
                                         last_exeption_counter=0;
                                         sleep(5000);
                                         last_exeption_counter=5;
@@ -437,7 +431,7 @@ public class proxyController implements  VpnStateListener{
                                 control_thread_counter = 0;
                                 last_exeption_counter=0;
                                 if(!m_request_status.isConnectRequestCompleted() && m_request == REQUEST.CONNECTED && m_vpn_status != REQUEST.CONNECTED && m_request_status.isIdleRequestCompleted()){
-                                    m_home_instance.onShowAlert(strings.SE_VPN_POOR_NETWORK);
+                                    m_home_instance.onShowAlert(strings.SE_VPN_POOR_NETWORK, false);
                                     onStop();
                                 }
                             }
@@ -512,9 +506,9 @@ public class proxyController implements  VpnStateListener{
                 while (true){
                     try {
                         sleep(5000);
-                        if(last_exeption_counter >=130 && !m_is_internet_available){
+                        if(last_exeption_counter >=30 && !m_is_internet_available){
                             last_exeption_counter = 0;
-                            m_home_instance.onShowAlert(strings.SE_INTERNET_CONNECTION_ERROR);
+                            m_home_instance.onShowAlert(strings.SE_INTERNET_CONNECTION_ERROR, false);
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -575,7 +569,7 @@ public class proxyController implements  VpnStateListener{
                 int importance = NotificationManager.IMPORTANCE_DEFAULT;
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
                 channel.setDescription(description);
-                NotificationManager notificationManager = m_home_instance.getSystemService(NotificationManager.class);
+                notificationManager = m_home_instance.getSystemService(NotificationManager.class);
                 notificationManager.createNotificationChannel(channel);
             }
         }

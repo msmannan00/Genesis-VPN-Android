@@ -192,9 +192,9 @@ class homeViewController {
         }
     }
 
-    public void onShowAlert(String p_error_message,String p_error_title){
+    public void onShowAlert(String p_error_message,String p_error_title, boolean p_is_forced){
         String m_error = strings.HO_ERROR_OCCURED + p_error_message;
-        if(!m_alert_description.getText().equals(m_error)){
+        if(p_is_forced || !m_alert_description.getText().equals(m_error)){
             m_context.runOnUiThread(() -> {
                 if(m_alert_dialog.getAlpha()<1){
                     m_alert_dialog.animate().cancel();

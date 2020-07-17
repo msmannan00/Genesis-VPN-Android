@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
+import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import com.jwang123.flagkit.FlagKit;
 
 public class listAdapter extends RecyclerView.Adapter<listAdapter.listViewHolder>
@@ -62,7 +63,7 @@ public class listAdapter extends RecyclerView.Adapter<listAdapter.listViewHolder
             flags.setBackground(FlagKit.drawableWithFlag(m_context, model.getCountryModel().getCountry()));
 
             layout.setOnClickListener(view -> {
-                proxyController.getInstance().onChooseServer(model.getCountryModel());
+                sharedControllerManager.getInstance().getHomeController().onChooseServer(model.getCountryModel());
                 m_context.onBackPressed();
             });
         }

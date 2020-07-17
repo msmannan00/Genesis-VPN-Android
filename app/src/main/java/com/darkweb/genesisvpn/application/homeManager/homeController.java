@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import com.anchorfree.partner.api.data.Country;
 import com.darkweb.genesisvpn.R;
 import android.os.Handler;
 import android.view.View;
@@ -48,6 +49,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
     TextView m_alert_title;
     TextView m_alert_description;
     com.google.android.gms.ads.AdView m_banner_ads;
+    proxyController m_proxy_controller;
 
     /*INITIALIZATIONS*/
 
@@ -56,14 +58,34 @@ public class homeController extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_view);
 
+        initializeCrashHandler();
         initializeModel();
         initializeViews();
         initializeLayout();
         initializeCustomListeners();
 
         initializePluginManager();
-        proxyController.getInstance().onStartVPN();
+        m_proxy_controller.onStartVPN();
 
+    }
+
+    public void initializeCrashHandler(){
+         Thread.setDefaultUncaughtExceptionHandler(
+                 (thread, e) -> {
+                     status.HAS_APPLICATION_STOPPED = true;
+                     m_proxy_controller.onForceClose();
+                     homeController.this.finishAndRemoveTask();
+                     new Thread(){
+                         public void run(){
+                             try {
+                                 sleep(500);
+                                 android.os.Process.killProcess(android.os.Process.myPid());
+                             } catch (InterruptedException ex) {
+                                 ex.printStackTrace();
+                             }
+                         }
+                     }.start();
+                 });
     }
 
     public void initializePluginManager()
@@ -75,6 +97,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     public void initializeModel(){
         sharedControllerManager.getInstance().setHomeController(this);
+        m_proxy_controller = proxyController.getInstance();
     }
 
     public void initializeLayout(){
@@ -113,7 +136,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     public void onAlertStop(View view) {
         m_view_controller.onAlertDismiss();
-        proxyController.getInstance().onForceStop();
+        m_proxy_controller.onForceStop();
     }
 
     @Override
@@ -131,8 +154,8 @@ public class homeController extends AppCompatActivity implements NavigationView.
     public void initializeCustomListeners()
     {
         m_flag.setOnClickListener(view -> {
-            proxyController.getInstance().clearExceptionCounter();
-            m_model.onServer(50, proxyController.getInstance().isUserRegistered());
+            m_proxy_controller.clearExceptionCounter();
+            m_model.onServer(50, m_proxy_controller.isUserRegistered());
         });
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         m_connect_base.setOnTouchListener((view, motionEvent) -> {
@@ -143,9 +166,24 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     @Override
     protected void onDestroy() {
-        status.HAS_APPLICATION_STOPPED = true;
-        proxyController.getInstance().onClose();
         super.onDestroy();
+    }
+
+    public void onVPNClose(){
+        m_proxy_controller.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isFinishing()){
+           status.HAS_APPLICATION_STOPPED = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -172,8 +210,8 @@ public class homeController extends AppCompatActivity implements NavigationView.
         }
         else if (id == R.id.server)
         {
-            proxyController.getInstance().clearExceptionCounter();
-            m_model.onServer(400,proxyController.getInstance().isUserRegistered());
+            m_proxy_controller.clearExceptionCounter();
+            m_model.onServer(400,m_proxy_controller.isUserRegistered());
         }
         else if (id == R.id.nav_share)
         {
@@ -193,7 +231,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
         }
         else if (id == R.id.nav_quit)
         {
-            m_model.onQuit();
+            m_proxy_controller.onCloseSmooth();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -205,12 +243,16 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     public void onStart(View view)
     {
-        proxyController.getInstance().onTriggered(TRIGGER.TOOGLE);
+        m_proxy_controller.onTriggered(TRIGGER.TOOGLE);
     }
 
     public void onServer(MenuItem item){
-        proxyController.getInstance().clearExceptionCounter();
-        m_model.onServer(400,proxyController.getInstance().isUserRegistered());
+        m_proxy_controller.clearExceptionCounter();
+        m_model.onServer(400,m_proxy_controller.isUserRegistered());
+    }
+
+    public void onChooseServer(Country server){
+        m_proxy_controller.onChooseServer(server);
     }
 
     /*EVENT VIEW CALLBACK HANDLER*/
@@ -221,7 +263,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
         public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)
         {
             if(p_event_type == enums.ETYPE.HOME_ALERT){
-                new Handler().postDelayed(() -> m_view_controller.onShowAlert((String) p_data.get(0),(String) p_data.get(1)),(int) p_data.get(2));
+                new Handler().postDelayed(() -> m_view_controller.onShowAlert((String) p_data.get(0),(String) p_data.get(1), true),(long) p_data.get(2));
             }
         }
     }
@@ -229,8 +271,8 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     /*EVENT VIEW REDIRECTIONS*/
 
-    public void onShowAlert(String p_error){
-        m_view_controller.onShowAlert(p_error, "Request Failure");
+    public void onShowAlert(String p_error, boolean p_is_forced){
+        m_view_controller.onShowAlert(p_error, "Request Failure", p_is_forced);
     }
 
     public void onConnected()
