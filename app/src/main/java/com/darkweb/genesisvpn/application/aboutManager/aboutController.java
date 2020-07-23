@@ -30,6 +30,7 @@ public class aboutController extends AppCompatActivity {
 
     public void initializeViews(){
         m_view_controller = new aboutViewController(this, new aboutViewCallback());
+
     }
 
     public void initializeModel(){
@@ -47,7 +48,6 @@ public class aboutController extends AppCompatActivity {
     {
         m_model.adsDisabler();
     }
-
 
     /*EVENT LISTNER CALLBACKS HANDLERS*/
 

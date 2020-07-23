@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +28,8 @@ import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.jwang123.flagkit.FlagKit;
 import java.util.Locale;
 
+import static java.lang.StrictMath.round;
+
 class homeViewController {
 
     /*LOCAL VIEW DECLARATION*/
@@ -34,7 +37,7 @@ class homeViewController {
     private Button m_connect_base;
     private Button m_connect_animator;
     private ImageView m_connect_loading;
-    private TextView m_location_info;
+    // private TextView m_location_info;
     private ImageButton m_flag;
     private AppCompatActivity m_context;
     private TextView m_connect_label;
@@ -42,6 +45,8 @@ class homeViewController {
     private ConstraintLayout m_alert_dialog;
     private TextView m_alert_title;
     private TextView m_alert_description;
+    private TextView m_download_speed;
+    private TextView m_upload_speed;
 
     /*LOCAL VARIABLE DECLARATION*/
 
@@ -49,21 +54,24 @@ class homeViewController {
     private Handler m_updateUIHandler = null;
     private String m_flag_status = strings.EMPTY_STR;
     private float m_text_size = 0;
+    private boolean isFlagRemoved = true;
 
     /*INITIALIZATIONS*/
 
-    homeViewController(Button p_connect_base, Button p_connect_animator, ImageView p_connect_loading, ImageButton p_flag, TextView p_location_info, TextView p_connect_label, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, AppCompatActivity p_context)
+    homeViewController(Button p_connect_base, Button p_connect_animator, ImageView p_connect_loading, ImageButton p_flag/*, TextView p_location_info*/, TextView p_connect_label, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, AppCompatActivity p_context, TextView p_download_speed, TextView p_upload_speed)
     {
         this.m_connect_base = p_connect_base;
         this.m_connect_animator = p_connect_animator;
         this.m_connect_loading = p_connect_loading;
-        this.m_location_info = p_location_info;
+        //this.m_location_info = p_location_info;
         this.m_flag = p_flag;
         this.m_connect_label = p_connect_label;
         this.m_context = p_context;
         this.m_alert_dialog = p_alert_dialog;
         this.m_alert_title = p_alert_title;
         this.m_alert_description = p_alert_description;
+        this.m_download_speed = p_download_speed;
+        this.m_upload_speed = p_upload_speed;
         m_connect_animations = new connectAnimation();
 
         initializeConnectStyles();
@@ -99,22 +107,22 @@ class homeViewController {
             m_connect_animations.rotateAnimation(m_connect_loading);
         });
 
-        m_connect_label.setText(strings.HO_CONNECTING);
+        m_connect_label.setText(strings.HO_IDLE);
         ViewCompat.setTranslationZ(m_connect_loading, 15);
-        m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.075f);
+        m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
         m_flag.setAlpha(1f);
+        m_connect_loading.animate().alpha(0);
 
         ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) m_flag.getLayoutParams();
         lp1.width = helperMethods.screenWidth()*19/100;
         lp1.height = helperMethods.screenWidth()*14/100;
         m_flag.setLayoutParams(lp1);
-        m_location_info.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.035f);
+        // m_location_info.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.035f);
         m_flag.setBackground(ContextCompat.getDrawable(m_context, R.drawable.noneflag));
         setStatusBarColor();
         m_alert_dialog.setAlpha(0);
         m_alert_dialog.setVisibility(View.GONE);
         m_alert_title.setTypeface(null, Typeface.BOLD);
-
     }
 
     void setStatusBarColor(){
@@ -194,7 +202,7 @@ class homeViewController {
 
     public void onShowAlert(String p_error_message,String p_error_title, boolean p_is_forced){
         String m_error = strings.HO_ERROR_OCCURED + p_error_message;
-        if(p_is_forced || !m_alert_description.getText().equals(m_error)){
+        if(p_is_forced || !m_alert_description.getText().equals(m_error) && !m_alert_title.getText().equals(strings.AF_NO_APPLICATION_HEADER)){
             m_context.runOnUiThread(() -> {
                 if(m_alert_dialog.getAlpha()<1){
                     m_alert_dialog.animate().cancel();
@@ -230,8 +238,34 @@ class homeViewController {
             m_alert_dialog.setClickable(false);
             ((ConstraintLayout)m_alert_dialog.getChildAt(0)).getChildAt(1).setClickable(false);
             ((ConstraintLayout)m_alert_dialog.getChildAt(0)).getChildAt(2).setClickable(false);
-            m_alert_dialog.animate().setDuration(200).alpha(0).withEndAction(() -> m_alert_dialog.setVisibility(View.GONE));
+            m_alert_dialog.animate().setDuration(200).alpha(0).withEndAction(() -> {
+                m_alert_dialog.setVisibility(View.GONE);
+                m_alert_description.setText("");
+                m_alert_title.setText("");
+            });
         });
+    }
+
+    void onUpdateDownloadSpeed(float val){
+        Log.i("FUCK1:","FUCK1:" + val);
+        val = val / 1000;
+        if(val<1000){
+            m_download_speed.setText(String.format("%.2f", val) + " / kbps");
+        }else {
+            val = val/1000;
+            m_download_speed.setText(String.format("%.2f", val) + " / mbps");
+        }
+    }
+
+    void onUpdateUploadSpeed(float val){
+        Log.i("FUCK2:","FUCK2:" + val);
+        val = val / 1000;
+        if(val<1000){
+            m_upload_speed.setText(String.format("%.2f", val) + " / kbps");
+        }else {
+            val = val/1000;
+            m_upload_speed.setText(String.format("%.2f", val) + " / mbps");
+        }
     }
 
     /*POST UI TASKS*/
@@ -264,10 +298,8 @@ class homeViewController {
                         Locale obj = new Locale(strings.EMPTY_STR, m_flag_status);
                         String location = strings.HO_CONNECTED_TO + obj.getDisplayCountry();
 
-                        if(!location.equals(m_location_info.getText().toString())){
-                            animateFlag(FlagKit.drawableWithFlag(m_context, m_flag_status));
-                            m_location_info.setText(strings.HO_CONNECTED_TO + obj.getDisplayCountry());
-                        }
+                        isFlagRemoved = false;
+                        animateFlag(FlagKit.drawableWithFlag(m_context, m_flag_status));
                     }
                 }
                 else if(msg.what == messages.REMOVE_FLAG)
@@ -277,9 +309,10 @@ class homeViewController {
                         m_flag.animate().alpha(1);
                     }
 
-                    if(!strings.HO_UNCONNECTED.equals(m_location_info.getText().toString())){
+                    if(!isFlagRemoved){
+                        isFlagRemoved = true;
                         animateFlag(m_context.getResources().getDrawable(R.drawable.noneflag));
-                        m_location_info.setText(strings.HO_UNCONNECTED);
+                        // m_location_info.setText(strings.HO_UNCONNECTED);
                     }
                 }
             }

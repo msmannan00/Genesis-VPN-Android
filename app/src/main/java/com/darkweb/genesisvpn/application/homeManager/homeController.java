@@ -12,11 +12,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
+import com.darkweb.genesisvpn.application.constants.constants;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.enums.TRIGGER;
+import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
@@ -29,6 +32,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,17 +41,23 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     /*LOCAL VARIABLE DECLARATION*/
 
+    TextView m_alert_title;
+    // TextView m_location_info;
+    TextView m_connect_label;
+    TextView m_alert_description;
+    TextView m_download_speed;
+    TextView m_upload_speed;
+
     Button m_connect_base;
     Button m_connect_animator;
+
     ImageButton m_flag;
+
     ImageView m_connect_loading;
-    TextView m_location_info;
+
     homeViewController m_view_controller;
     homeModel m_model;
-    TextView m_connect_label;
     ConstraintLayout m_alert_dialog;
-    TextView m_alert_title;
-    TextView m_alert_description;
     com.google.android.gms.ads.AdView m_banner_ads;
     proxyController m_proxy_controller;
 
@@ -70,22 +80,24 @@ public class homeController extends AppCompatActivity implements NavigationView.
     }
 
     public void initializeCrashHandler(){
-         Thread.setDefaultUncaughtExceptionHandler(
-                 (thread, e) -> {
-                     status.HAS_APPLICATION_STOPPED = true;
-                     m_proxy_controller.onForceClose();
-                     homeController.this.finishAndRemoveTask();
-                     new Thread(){
-                         public void run(){
-                             try {
-                                 sleep(500);
-                                 android.os.Process.killProcess(android.os.Process.myPid());
-                             } catch (InterruptedException ex) {
-                                 ex.printStackTrace();
-                             }
-                         }
-                     }.start();
-                 });
+        if(!status.DEVELOPER_MODE){
+            Thread.setDefaultUncaughtExceptionHandler(
+                    (thread, e) -> {
+                        status.HAS_APPLICATION_STOPPED = true;
+                        m_proxy_controller.onForceClose();
+                        homeController.this.finishAndRemoveTask();
+                        new Thread(){
+                            public void run(){
+                                try {
+                                    sleep(500);
+                                    android.os.Process.killProcess(android.os.Process.myPid());
+                                } catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        }.start();
+                    });
+        }
     }
 
     public void initializePluginManager()
@@ -96,6 +108,14 @@ public class homeController extends AppCompatActivity implements NavigationView.
     }
 
     public void initializeModel(){
+        new Thread(){
+            public void run(){
+                constants.INSTALLED_APPS = helperMethods.getUserInstalledApps(homeController.this);
+                constants.SYSTEM_APPS = helperMethods.getSystemInstalledApps(homeController.this);
+                constants.RECENT_LOCATION = helperMethods.getRescentApps(homeController.this);
+                status.DISABLED_APPS = (ArrayList<String>)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, null), enums.PREFERENCES_ETYPE.GET_SET);
+            }
+        }.start();
         sharedControllerManager.getInstance().setHomeController(this);
         m_proxy_controller = proxyController.getInstance();
     }
@@ -116,15 +136,17 @@ public class homeController extends AppCompatActivity implements NavigationView.
         m_connect_base = findViewById(R.id.connect_base);
         m_connect_animator = findViewById(R.id.connect_animator);
         m_connect_loading = findViewById(R.id.loading);
-        m_flag = findViewById(R.id.flag);
+        m_flag = findViewById(R.id.icon);
         m_connect_label = findViewById(R.id.connect_label);
-        m_location_info = findViewById(R.id.location_info);
+        // m_location_info = findViewById(R.id.location_info);
         m_alert_dialog = findViewById(R.id.alert_dialog);
         m_alert_title = findViewById(R.id.alert_title);
         m_alert_description = findViewById(R.id.alert_description);
         m_banner_ads = findViewById(R.id.banner_ads);
+        m_download_speed = findViewById(R.id.p_download);
+        m_upload_speed = findViewById(R.id.p_upload);
 
-        m_view_controller = new homeViewController(m_connect_base, m_connect_animator, m_connect_loading, m_flag, m_location_info, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this);
+        m_view_controller = new homeViewController(m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed);
         m_model = new homeModel(this, new homeModelCallback());
     }
 
@@ -194,7 +216,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_server) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -204,8 +226,13 @@ public class homeController extends AppCompatActivity implements NavigationView.
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_about)
+        if (id == R.id.nav_app)
         {
+            onAppManager(null);
+        }
+        else if (id == R.id.nav_about)
+        {
+            m_view_controller.onAlertDismiss();
             m_model.onAboutUS();
         }
         else if (id == R.id.server)
@@ -215,18 +242,22 @@ public class homeController extends AppCompatActivity implements NavigationView.
         }
         else if (id == R.id.nav_share)
         {
+            m_view_controller.onAlertDismiss();
             m_model.onShare();
         }
         else if (id == R.id.nav_help)
         {
+            m_view_controller.onAlertDismiss();
             m_model.onContactUS();
         }
         else if (id == R.id.nav_rate)
         {
+            m_view_controller.onAlertDismiss();
             m_model.onRateUs();
         }
         else if (id == R.id.ic_menu_privacy)
         {
+            m_view_controller.onAlertDismiss();
             m_model.onPrivacyPolicy();
         }
         else if (id == R.id.nav_quit)
@@ -246,7 +277,22 @@ public class homeController extends AppCompatActivity implements NavigationView.
         m_proxy_controller.onTriggered(TRIGGER.TOOGLE);
     }
 
+    public void onAppManager(MenuItem item){
+        m_view_controller.onAlertDismiss();
+        if(constants.SYSTEM_APPS.size()>0){
+            m_model.onAppManager();
+        }
+    }
+
+    public void onAppManagerClick(View item){
+        m_view_controller.onAlertDismiss();
+        if(constants.SYSTEM_APPS.size()>0){
+            m_model.onAppManager();
+        }
+    }
+
     public void onServer(MenuItem item){
+        m_view_controller.onAlertDismiss();
         m_proxy_controller.clearExceptionCounter();
         m_model.onServer(400,m_proxy_controller.isUserRegistered());
     }
@@ -298,6 +344,14 @@ public class homeController extends AppCompatActivity implements NavigationView.
     public void onSetFlag(String location)
     {
         m_view_controller.onSetFlag(location);
+    }
+
+    public void onUpdateDownloadSpeed(float val){
+        m_view_controller.onUpdateDownloadSpeed(val);
+    }
+
+    public void onUpdateUploadSpeed(float val){
+        m_view_controller.onUpdateUploadSpeed(val);
     }
 
 }

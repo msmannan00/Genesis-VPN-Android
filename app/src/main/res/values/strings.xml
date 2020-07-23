@@ -9,17 +9,20 @@
     <string name="nav_header_subtitle">gamesolstudios@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_servers">Server Location</string>
-    <string name="home_go">GO</string>
+    <string name="action_applications">Applications</string>
+    <string name="home_idle">GO</string>
     <string name="home_connecting">Connecting</string>
     <string name="unconnected_text">Unconnected | Choose Location</string>
 
     <!-- MENU PAGE -->
 
     <string name="menu_share">Share</string>
+    <string name="menu_app">Choose Apps</string>
     <string name="menu_about">About Genesis</string>
     <string name="menu_help">Help</string>
     <string name="menu_rate">Rate US</string>
     <string name="menu_server">Server Location</string>
+    <string name="menu_application">Applications</string>
     <string name="menu_privacy">Privacy Policy</string>
     <string name="menu_quit">Quit</string>
 
@@ -27,23 +30,13 @@
 
     <string name="title_activity_about_controller">about_controller</string>
     <string name="about_about_us">About Us</string>
-    <string name="about_description">Genesis VPN, total free VPN client. Easy to use, one click to connecting VPN. Unlimited bandwidth and unlimited free trial time.
-            \n
-            \n•  Protect your privacy
-            \n•  Unblock geographically restricted websites
-            \n•  No registration required, no settings required
-            \n•  No speed limitation, no bandwidth limitation
-            \n•  One-click to connecting VPN
-            \n•  No root access needed
-            \n•  Encrypts your internet traffic
-            \n•  Top server speed and reliability
-            \n•  Using most secure VPN solution
-            \n\nYou can contact us if you have any queries and we shall try to get back to you as soon as possible</string>
+    <string name="about_description">Genesis VPN, total free VPN client. Easy to use, one click to connecting VPN. Unlimited bandwidth and unlimited free trial time. You can contact us if you have any queries and we shall try to get back to you as soon as possible</string>
 
     <!-- APPLICATION GENERAL -->
 
     <string name="todo">TODO</string>
     <string name="homepage">Change Location</string>
+    <string name="application">Choose Applications</string>
     <string name="about">About Us</string>
 
     <!-- SERVER PAGE -->

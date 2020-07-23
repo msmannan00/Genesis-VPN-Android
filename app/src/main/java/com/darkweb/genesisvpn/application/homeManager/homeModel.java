@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.darkweb.genesisvpn.application.aboutManager.aboutController;
+import com.darkweb.genesisvpn.application.appManager.appController;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.enums.REGISTERATION;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
-import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.serverManager.serverController;
 
 import java.util.Arrays;
@@ -67,6 +68,15 @@ class homeModel
             onResetUIBlock();
             m_isUIBlocked = true;
             new Handler().postDelayed(() -> helperMethods.openActivity(aboutController.class, m_context), 400);
+        }
+    }
+
+    void onAppManager(){
+        if(!m_isUIBlocked)
+        {
+            onResetUIBlock();
+            m_isUIBlocked = true;
+            new Handler().postDelayed(() -> helperMethods.openActivity(appController.class, m_context), 400);
         }
     }
 

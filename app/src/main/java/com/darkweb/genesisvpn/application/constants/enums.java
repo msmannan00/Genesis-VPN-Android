@@ -2,11 +2,16 @@ package com.darkweb.genesisvpn.application.constants;
 
 public class enums {
 
+    public enum SERVER {
+        ALL, RECENT
+    }
+
     public enum REQUEST
     {
         UNKNOWN,
         CONNECTED,
         IDLE,
+        RECONFIGURING,
         PAUSED,
         CONNECTING_CREDENTIALS,
         CONNECTING_PERMISSIONS,
@@ -43,11 +48,13 @@ public class enums {
     public enum AD_ETYPE {
         INITIALIZE, DISABLE_ADS
     }
+
     public enum ANALYTIC_ETYPE {
         INITIALIZE
     }
+
     public enum PREFERENCES_ETYPE {
-        INITIALIZE, SET_STRING, GET_STRING, SET_BOOL, GET_BOOL
+        INITIALIZE, SET_STRING, GET_STRING, SET_BOOL, GET_BOOL, SET_SET, GET_SET
     }
 
 }

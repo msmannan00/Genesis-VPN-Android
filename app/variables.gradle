@@ -64,3 +64,4 @@ project.ext.openvpn = 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.
 project.ext.analytics = 'com.flurry.android:analytics:12.4.0@aar'
 project.ext.flagkit = 'com.jwang123.flagkit:flagkit:1.0'
 project.ext.networkmanager = 'com.github.jumadeveloper:networkmanager:0.0.2'
+

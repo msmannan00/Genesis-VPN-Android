@@ -8,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 public class preferenceManager
 {
     /*Private Declarations*/
@@ -52,6 +56,18 @@ public class preferenceManager
     public boolean getBool(String p_valueKey, boolean p_valueDefault)
     {
         return prefs.getBoolean(p_valueKey, p_valueDefault);
+    }
+
+    public void setSet(String p_valueKey, ArrayList<String> p_value){
+        Set<String> set = new HashSet<>(p_value);
+        edit.putStringSet(p_valueKey, set);
+        edit.commit();
+    }
+
+    public ArrayList<String> getSet(String p_valueKey, ArrayList<String> p_value){
+        Set<String> m_temo_set = new HashSet<>(new ArrayList<>());
+        Set<String> m_response =  prefs.getStringSet(p_valueKey, m_temo_set);
+        return new ArrayList<>(m_response);
     }
 
 }

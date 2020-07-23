@@ -2,7 +2,7 @@ package com.darkweb.genesisvpn.application.serverManager;
 
 import com.anchorfree.partner.api.data.Country;
 
-public class listRowModel
+public class serverListRowModel
 {
     /*Private Variables*/
 
@@ -13,7 +13,7 @@ public class listRowModel
 
     /*Initializations*/
 
-    listRowModel(String p_header, String p_description, String p_flag, Country p_server) {
+    serverListRowModel(String p_header, String p_description, String p_flag, Country p_server) {
         this.m_flag = p_flag;
         this.m_header = p_header;
         this.m_description = p_description;
@@ -22,16 +22,16 @@ public class listRowModel
 
     /*Variable Getters*/
 
-    String getHeader() {
+    public String getHeader() {
         return m_header;
     }
-    String getDescription() {
+    public String getDescription() {
         return m_description;
     }
     public String getFlag() {
         return m_flag;
     }
-    Country getCountryModel() {
+    public Country getCountryModel() {
         return m_server;
     }
 }

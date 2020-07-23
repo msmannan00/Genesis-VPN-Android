@@ -6,23 +6,29 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.anchorfree.partner.api.ClientInfo;
 import com.anchorfree.partner.api.response.AvailableCountries;
 import com.anchorfree.sdk.UnifiedSDK;
 import com.anchorfree.vpnsdk.exceptions.VpnException;
+import com.anchorfree.vpnsdk.transporthydra.HydraResource;
 import com.anchorfree.vpnsdk.transporthydra.HydraTransport;
 import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.BuildConfig;
+import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.enums.*;
+import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.homeManager.homeController;
-import com.darkweb.genesisvpn.application.serverManager.listModel;
+import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
+import com.darkweb.genesisvpn.application.serverManager.serverListModel;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.anchorfree.partner.api.auth.AuthMethod;
 import com.anchorfree.partner.api.data.Country;
@@ -49,16 +55,21 @@ public class proxyController implements  VpnStateListener{
 
     /*HELPER VARIABLE DECLARATIONS*/
 
-    private boolean m_is_complete_triggered = false;
+    private boolean m_is_complete_triggered = true;
     private boolean m_is_internet_available = true;
     private boolean m_is_alert_shown = false;
     private int control_thread_counter = 0;
     private int last_exeption_counter = 0;
+    private long m_download_speed = 0;
+    private long m_upload_speed = 0;
+    private long m_download_speed_current = 0;
+    private long m_upload_speed_current = 0;
+    private boolean m_is_complete = false;
 
     /*LOCAL STATE VARIALBES*/
 
     REQUEST m_ui_status = REQUEST.IDLE;
-    REQUEST m_request = REQUEST.CONNECTED;
+    REQUEST m_request = REQUEST.IDLE;
     REQUEST m_vpn_status = REQUEST.IDLE;
     REGISTERATION m_RegisterationStatus = REGISTERATION.UNREGISTERED;
     requestHandler m_request_status = new requestHandler();
@@ -78,7 +89,34 @@ public class proxyController implements  VpnStateListener{
         initHydraSdk();
         vpnControllerThread();
         serverControlThread();
-        onTriggered(TRIGGER.TOOGLE);
+        initVPNCallListener();
+        initTrafficListener();
+    }
+
+    public void initTrafficListener(){
+        UnifiedSDK.addTrafficListener((l, l1) -> {
+            m_download_speed = l1;
+            m_upload_speed = l;
+        });
+
+        Handler handler = new Handler();
+        new Thread(){
+            public void run(){
+                try {
+                    while (true){
+                        sleep(1000);
+                        handler.post(() -> {
+                            m_home_instance.onUpdateDownloadSpeed(((m_download_speed - m_download_speed_current)));
+                            m_home_instance.onUpdateUploadSpeed(((m_upload_speed - m_upload_speed_current)));
+                            m_download_speed_current = m_download_speed;
+                            m_upload_speed_current = m_upload_speed;
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     public void onTriggered(TRIGGER p_trigger_request){
@@ -153,17 +191,17 @@ public class proxyController implements  VpnStateListener{
             if(m_vpn_status == REQUEST.CONNECTED){
                 m_home_instance.onAlertDismiss(null);
             }
-        }
-        switch (m_vpn_status) {
-            case IDLE: {
-                m_home_instance.onIdle();
-                m_home_instance.onSetFlag(strings.EMPTY_STR);
-                break;
-            }
-            case CONNECTED: {
-                m_home_instance.onConnected();
-                onUpdateFlag();
-                break;
+            switch (m_vpn_status) {
+                case IDLE: {
+                    m_home_instance.onIdle();
+                    m_home_instance.onSetFlag(strings.EMPTY_STR);
+                    break;
+                }
+                case CONNECTED: {
+                    m_home_instance.onConnected();
+                    onUpdateFlag();
+                    break;
+                }
             }
         }
     }
@@ -196,6 +234,11 @@ public class proxyController implements  VpnStateListener{
                 break;
             }
             case DISCONNECTING: {
+                if(m_vpn_status == REQUEST.CONNECTED){
+                    m_request = REQUEST.IDLE;
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    m_home_instance.onDisconnecting();
+                }
                 m_vpn_status = REQUEST.DISCONNECTING;
                 break;
             }
@@ -215,7 +258,22 @@ public class proxyController implements  VpnStateListener{
 
     }
 
+    public void onAppsFiltered(){
+        if(m_vpn_status == REQUEST.CONNECTED && m_request == REQUEST.CONNECTED){
+            onRestart();
+        }else if(m_vpn_status != REQUEST.CONNECTED && m_request == REQUEST.CONNECTED){
+            onStop();
+        }
+    }
+
     /* STATE MANAGER */
+    public void initVPNCallListener(){
+        UnifiedSDK.addVpnCallListener(parcelable -> {
+            if (parcelable instanceof HydraResource){
+            }
+        });
+    }
+
     public void onStart(){
         if(!m_is_internet_available){
              return;
@@ -232,6 +290,7 @@ public class proxyController implements  VpnStateListener{
                     .withReason(TrackingConstants.GprReasons.M_UI)
                     .withTransportFallback(fallbackOrder)
                     .withTransport(HydraTransport.TRANSPORT_ID)
+                    .exceptApps(status.DISABLED_APPS)
                     .withVirtualLocation(server_name)
                     .build(), new CompletableCallback() {
                 @Override
@@ -265,6 +324,7 @@ public class proxyController implements  VpnStateListener{
                     .withReason(TrackingConstants.GprReasons.M_UI)
                     .withTransportFallback(fallbackOrder)
                     .withTransport(HydraTransport.TRANSPORT_ID)
+                    .exceptApps(status.DISABLED_APPS)
                     .withVirtualLocation(server_name)
                     .build(), new CompletableCallback() {
                 @Override
@@ -358,7 +418,8 @@ public class proxyController implements  VpnStateListener{
         unifiedSDK.getBackend().countries(new Callback<AvailableCountries>() {
             @Override
             public void success(@NonNull AvailableCountries availableCountries) {
-                listModel.getInstance().setModel(availableCountries.getCountries());
+                ArrayList<String> m_recent = (ArrayList<String>) pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.RECENT_COUNTRIES, null), enums.PREFERENCES_ETYPE.GET_SET);
+                serverListModel.getInstance().setCountryModel(availableCountries.getCountries(), m_recent);
                 m_RegisterationStatus = REGISTERATION.LOADING_SERVER_SUCCESS;
                 Tovuti.from(m_home_instance).stop();
             }
@@ -432,6 +493,7 @@ public class proxyController implements  VpnStateListener{
                                 last_exeption_counter=0;
                                 if(!m_request_status.isConnectRequestCompleted() && m_request == REQUEST.CONNECTED && m_vpn_status != REQUEST.CONNECTED && m_request_status.isIdleRequestCompleted()){
                                     m_home_instance.onShowAlert(strings.SE_VPN_POOR_NETWORK, false);
+                                    m_request = REQUEST.RECONFIGURING;
                                     onStop();
                                 }
                             }

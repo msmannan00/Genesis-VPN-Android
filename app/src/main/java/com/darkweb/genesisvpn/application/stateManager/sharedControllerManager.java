@@ -1,6 +1,7 @@
 package com.darkweb.genesisvpn.application.stateManager;
 
 import com.darkweb.genesisvpn.application.homeManager.homeController;
+import com.darkweb.genesisvpn.application.serverManager.serverController;
 
 public class sharedControllerManager
 {
@@ -8,6 +9,7 @@ public class sharedControllerManager
     /*LOCAL VARIABLE DECLARATION*/
 
     homeController m_home_controller;
+    serverController m_server_controller;
 
     /*INITIALIZATIONS*/
 
@@ -23,6 +25,12 @@ public class sharedControllerManager
     }
     public homeController getHomeController(){
         return this.m_home_controller;
+    }
+    public void setServerController(serverController p_server_controller){
+        this.m_server_controller = p_server_controller;
+    }
+    public serverController getServerController(){
+        return this.m_server_controller;
     }
 
 }

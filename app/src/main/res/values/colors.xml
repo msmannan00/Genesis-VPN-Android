@@ -3,13 +3,13 @@
 
     <!-- BLUE COLORS SHADES -->
 
-    <color name="colorPrimary">#264d73</color>
-    <color name="colorPrimaryDark">#141526</color>
+    <color name="colorPrimary">#041e49</color>
+    <color name="colorPrimaryDark">#031737</color>
     <color name="colorPrimaryDarkAlert">#CC141526</color>
-    <color name="text_color_v1">#264d73</color>
-    <color name="light_gray">#264d73</color>
-    <color name="cursor_blue">#264d73</color>
-    <color name="cursor_blue_dark">#204060</color>
+    <color name="text_color_v1">#031737</color>
+    <color name="light_gray">#031737</color>
+    <color name="cursor_blue">#031737</color>
+    <color name="cursor_blue_dark">#031737</color>
 
     <!-- BLACK COLORS SHADES -->
 
@@ -30,5 +30,14 @@
     <color name="colorAccent">#D81B60</color>
     <color name="blue_circle">#28CFD9</color>
     <color name="blue_circle_light">#177d82</color>
+    <color name="tab_select">#66c2ff</color>
+
+    <color name="blue_circle_clear">#00177d82</color>
+
+    <color name="mat_black">#6B2A2A2A</color>
+    <color name="mat_alpha">#D9031737</color>
+    <color name="mat">#031737</color>
+    <color name="mat_v2">#1d2e49</color>
+    <color name="mat_v3">#1d2e49</color>
 
 </resources>

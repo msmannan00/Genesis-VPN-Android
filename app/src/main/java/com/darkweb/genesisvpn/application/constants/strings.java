@@ -33,6 +33,13 @@ public class strings
     public static String HO_TRANSITION_NAME_PAUSE = "pause";
     public static String HO_ERROR_OCCURED = "Error Occured | ";
 
+    /*APPLICATION FILTER*/
+
+    public static String AF_NO_APPLICATION_HEADER = "Application Not Found";
+    public static String AF_NO_APPLICATION_MESSAGE = "No installed application found on Device. Install something and comeback later";
+    public static String AF_CONNECTED = "connected";
+    public static String AF_UNCONNECTED = "unconnected";
+
     /*SERVER LOADING MESSAGE*/
 
     public static String SE_SERVER_MESSAGE_DESC = "Please wait while we configure server data for you. It might take few seconds";

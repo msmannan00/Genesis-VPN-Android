@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class pluginManager
@@ -63,7 +65,7 @@ public class pluginManager
     }
 
     /*PREFERENCES HANDLER*/
-    public void onPreferenceTrigger(List<Object> data, enums.PREFERENCES_ETYPE p_event){
+    public Object onPreferenceTrigger(List<Object> data, enums.PREFERENCES_ETYPE p_event){
         if(p_event == enums.PREFERENCES_ETYPE.INITIALIZE){
             m_preference_manager.initialize((AppCompatActivity)data.get(0));
         }
@@ -74,12 +76,21 @@ public class pluginManager
             m_preference_manager.setString((String) data.get(0), (String) data.get(1));
         }
         else if(p_event == enums.PREFERENCES_ETYPE.GET_BOOL){
-            m_preference_manager.getBool((String) data.get(0), (boolean) data.get(1));
+            return m_preference_manager.getBool((String) data.get(0), (boolean) data.get(1));
         }
         else if(p_event == enums.PREFERENCES_ETYPE.GET_STRING){
-            m_preference_manager.getString((String) data.get(0), (String) data.get(1));
+            return m_preference_manager.getString((String) data.get(0), (String) data.get(1));
         }
+        else if(p_event == enums.PREFERENCES_ETYPE.SET_SET){
+             m_preference_manager.setSet((String) data.get(0), (ArrayList<String>) data.get(1));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.GET_SET){
+            return m_preference_manager.getSet((String) data.get(0), (ArrayList<String>) data.get(1));
+        }
+
+        return null;
     }
+
     public class preferenceCallback implements eventObserver.eventListener{
         @Override
         public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)

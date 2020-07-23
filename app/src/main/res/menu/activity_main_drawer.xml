@@ -9,6 +9,10 @@
             android:icon="@xml/ic_menu_about"
             android:title="@string/menu_about" />
         <item
+            android:id="@+id/nav_app"
+            android:icon="@xml/ic_android_apps"
+            android:title="@string/menu_app" />
+        <item
             android:id="@+id/server"
             android:icon="@xml/ic_menu_server"
             android:title="@string/menu_server" />

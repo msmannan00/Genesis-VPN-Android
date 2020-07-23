@@ -92,4 +92,6 @@ dependencies {
     /*Helper Libraries*/
     implementation project.ext.flagkit
     implementation project.ext.networkmanager
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }

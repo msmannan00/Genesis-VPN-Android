@@ -1,12 +1,23 @@
 package com.darkweb.genesisvpn.application.helperManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import com.anchorfree.vpnsdk.exceptions.VpnException;
+import com.darkweb.genesisvpn.application.appManager.appListRowModel;
 import com.darkweb.genesisvpn.application.constants.strings;
+
+import org.apache.commons.lang3.text.WordUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import static com.darkweb.genesisvpn.application.constants.strings.SE_UNKNOWN_EXCEPTION;
 import static com.darkweb.genesisvpn.application.constants.strings.SE_VPN_PERMISSION;
 
@@ -70,4 +81,77 @@ public class helperMethods
             return width;
         }
     }
+
+    public static String convertToCamelHump(String text) {
+        return WordUtils.capitalizeFully(text, ' ', '.');
+    }
+
+    public static ArrayList<appListRowModel> getSystemInstalledApps(Context p_context){
+        ArrayList<appListRowModel> m_list_model = new ArrayList<>();
+        List<PackageInfo> packs = p_context.getPackageManager().getInstalledPackages(0);
+        for (int i = 0; i < packs.size(); i++) {
+            PackageInfo m_package = packs.get(i);
+            if (!m_package.packageName.equals(p_context.getPackageName()) && isSystemPackage(m_package)) {
+                try {
+                    String appName = convertToCamelHump(m_package.applicationInfo.loadLabel(p_context.getPackageManager()).toString());
+                    Drawable icon = m_package.applicationInfo.loadIcon(p_context.getPackageManager());
+                    String packages = m_package.applicationInfo.packageName;
+                    appListRowModel row_model = new appListRowModel(appName,packages,icon);
+                    m_list_model.add(row_model);
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        Collections.sort(m_list_model);
+        return m_list_model;
+    }
+
+    public static ArrayList<appListRowModel> getUserInstalledApps(Context p_context){
+        ArrayList<appListRowModel> m_list_model = new ArrayList<>();
+        List<PackageInfo> packs = p_context.getPackageManager().getInstalledPackages(0);
+        for (int i = 0; i < packs.size(); i++) {
+            PackageInfo m_package = packs.get(i);
+            if (!m_package.packageName.equals(p_context.getPackageName()) && !isSystemPackage(m_package)) {
+                try {
+                    String appName = convertToCamelHump(m_package.applicationInfo.loadLabel(p_context.getPackageManager()).toString());
+                    Drawable icon = m_package.applicationInfo.loadIcon(p_context.getPackageManager());
+                    String packages = m_package.applicationInfo.packageName;
+                    appListRowModel row_model = new appListRowModel(appName,packages,icon);
+                    m_list_model.add(row_model);
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        Collections.sort(m_list_model);
+        return m_list_model;
+    }
+
+    public static ArrayList<appListRowModel> getRescentApps(Context p_context){
+        ArrayList<appListRowModel> m_list_model = new ArrayList<>();
+        List<PackageInfo> packs = p_context.getPackageManager().getInstalledPackages(0);
+        for (int i = 0; i < packs.size(); i++) {
+            PackageInfo m_package = packs.get(i);
+            if (!m_package.packageName.equals(p_context.getPackageName()) && isSystemPackage(m_package)) {
+                try {
+                    String appName = convertToCamelHump(m_package.applicationInfo.loadLabel(p_context.getPackageManager()).toString());
+                    Drawable icon = m_package.applicationInfo.loadIcon(p_context.getPackageManager());
+                    String packages = m_package.applicationInfo.packageName;
+                    appListRowModel row_model = new appListRowModel(appName,packages,icon);
+                    m_list_model.add(row_model);
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        Collections.sort(m_list_model);
+        return m_list_model;
+    }
+
+
+    public static boolean isSystemPackage(PackageInfo pkgInfo) {
+        return (pkgInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+    }
+
 }
