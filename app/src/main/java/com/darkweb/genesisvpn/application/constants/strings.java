@@ -32,6 +32,7 @@ public class strings
     public static String HO_TRANSITION_NAME_START = "start";
     public static String HO_TRANSITION_NAME_PAUSE = "pause";
     public static String HO_ERROR_OCCURED = "Error Occured | ";
+    public static String HO_IP_LOCATION = "https://whatismycountry.com/";
 
     /*APPLICATION FILTER*/
 
@@ -55,6 +56,7 @@ public class strings
     /*ADS MESSAGES*/
 
     public static String AD_ADS_DISABLED = "Ads Disabled Successfully";
+    public static String AD_ADS_FAILED = "Invalid Promotion Code";
     public static String AD_ADS_ALREADY_DISABLED = "Ads Already Disabled";
 
     /*EMAIL*/

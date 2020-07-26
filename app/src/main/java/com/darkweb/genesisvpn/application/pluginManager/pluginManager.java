@@ -32,7 +32,7 @@ public class pluginManager
     /*EVENT LISTNER CALLBACKS HANDLERS*/
 
     /*ADVIEW HANDLER*/
-    public void onAdvertTrigger(List<Object> data, enums.AD_ETYPE p_event){
+    public Object onAdvertTrigger(List<Object> data, enums.AD_ETYPE p_event){
         if(p_event == enums.AD_ETYPE.INITIALIZE){
             boolean m_ads_status = m_preference_manager.getBool(keys.ADS_DISABLED,false);;
             m_ad_manager.initialize((AppCompatActivity)data.get(0), m_ads_status, (com.google.android.gms.ads.AdView)data.get(1));
@@ -40,7 +40,12 @@ public class pluginManager
         else if(p_event == enums.AD_ETYPE.DISABLE_ADS){
             m_ad_manager.adsDisabler((AppCompatActivity)data.get(0));
         }
+        else if(p_event == enums.AD_ETYPE.AD_STATUS){
+            return m_ad_manager.isAdDisabled();
+        }
+        return null;
     }
+
     public class adCallback implements eventObserver.eventListener{
         @Override
         public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)

@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.darkweb.genesisvpn">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -41,6 +44,13 @@
             android:name=".application.aboutManager.aboutController"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".application.promotionManager.promotionController"
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".application.settingManager.settingController"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".application.homeManager.homeController"
             android:icon="@mipmap/ic_launcher"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -59,8 +69,15 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5074525529134731~1412991199"/>
-    </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+        <receiver android:enabled="true" android:name="com.darkweb.genesisvpn.application.helperManager.BootUpReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+    </application>
 
 </manifest>

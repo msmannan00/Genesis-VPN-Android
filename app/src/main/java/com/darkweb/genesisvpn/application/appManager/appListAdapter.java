@@ -1,5 +1,6 @@
 package com.darkweb.genesisvpn.application.appManager;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.strings;
 import java.util.ArrayList;
@@ -18,16 +21,53 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
     private AppCompatActivity m_context;
     private ArrayList<String> m_disabled_packages;
     private ArrayList<appListRowModel> m_app_model = new ArrayList<>();
+    private ArrayList<appListRowModel> m_app_model_async;
+    private ViewPager2 m_pager;
 
-    appListAdapter(AppCompatActivity p_context, ArrayList<String> p_disabled_packages, ArrayList<appListRowModel> p_app_model) {
+    appListAdapter(AppCompatActivity p_context, ArrayList<String> p_disabled_packages, ArrayList<appListRowModel> p_app_model, ViewPager2 p_pager) {
         this.m_context = p_context;
+        m_pager = p_pager;
         m_disabled_packages = p_disabled_packages;
-        updateList(p_app_model);
+        m_app_model_async = p_app_model;
+        updateAsync();
     }
 
-    public void updateList(ArrayList<appListRowModel> p_app_model){
-        m_app_model.clear();
-        m_app_model.addAll(p_app_model);
+    public void updateAsync(){
+        m_pager.animate().cancel();
+        m_pager.animate().setDuration(300).alpha(0).withEndAction(() -> m_pager.setVisibility(View.INVISIBLE));
+        new Thread(){
+            public void run(){
+                try {
+                    sleep(400);
+                    for(int counter=0;counter<m_app_model_async.size();counter++){
+                        int finalCounter = counter;
+                        m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                            m_app_model.add(m_app_model_async.get(finalCounter));
+                            appListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
+                        },(long) 0));
+
+                        if(counter==20){
+                            m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                                m_pager.setVisibility(View.VISIBLE);
+                                m_pager.animate().cancel();
+                                m_pager.setAlpha(0);
+                                m_pager.animate().setDuration(250).alpha(1);
+                            },(long) 0));
+
+                        }
+                        sleep(0);
+                    }
+                    m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        m_pager.setVisibility(View.VISIBLE);
+                        m_pager.animate().cancel();
+                        m_pager.setAlpha(0);
+                        m_pager.animate().setDuration(250).alpha(1);
+                    },(long) 0));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     @Override

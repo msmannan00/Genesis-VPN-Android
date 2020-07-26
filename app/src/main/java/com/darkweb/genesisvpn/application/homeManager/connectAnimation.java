@@ -42,7 +42,7 @@ class connectAnimation
                 PropertyValuesHolder.ofFloat(strings.HA_ALPHA, 0f)
         );
 
-        circularGrow.setStartDelay(1500);
+        circularGrow.setStartDelay(0);
         circularGrow.setDuration(1500);
         circularGrow.start();
 

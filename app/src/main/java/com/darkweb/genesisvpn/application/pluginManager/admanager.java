@@ -27,7 +27,6 @@ public class admanager
     eventObserver.eventListener m_event;
 
     /*Local Variables*/
-    private int m_ads_disable_count = 0;
     private boolean m_ads_disable = false;
 
     /*Initializations*/
@@ -98,11 +97,14 @@ public class admanager
 
     }
 
+    public boolean isAdDisabled(){
+        return m_ads_disable;
+    }
+
     /*Helper Methods*/
     public void adsDisabler(AppCompatActivity p_context)
     {
-        m_ads_disable_count +=1;
-        if(m_ads_disable_count ==10 && !m_ads_disable)
+        if(!m_ads_disable)
         {
             if(!m_ads_disable)
             {

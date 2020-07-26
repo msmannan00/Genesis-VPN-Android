@@ -1,13 +1,9 @@
 package com.darkweb.genesisvpn.application.appManager;
 
-import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Handler;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -33,6 +29,7 @@ public class appController extends AppCompatActivity {
     private TabLayout m_tab_layout;
     private ViewPager2 m_pager;
     public Drawable[] m_tabs = new Drawable[3];
+    appViewPageAdapter adapter;
 
     /*INITIALIZATION*/
 
@@ -55,7 +52,7 @@ public class appController extends AppCompatActivity {
     private void initViewPager() {
         appViewPageAdapter adapter = new appViewPageAdapter(this, m_list_model);
         m_pager.setAdapter(adapter);
-
+        appFragment.m_pager = m_pager;
         new TabLayoutMediator(m_tab_layout, m_pager, (tab, position) -> tab.setIcon(m_tabs[position])).attach();
     }
 
@@ -83,7 +80,7 @@ public class appController extends AppCompatActivity {
         if(!status.DISABLED_APPS.equals(m_list_model.getModel())){
             status.DISABLED_APPS.clear();
             status.DISABLED_APPS.addAll(m_list_model.getModel());
-            proxyController.getInstance().onAppsFiltered();
+            proxyController.getInstance().onSettingChanged();
 
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, status.DISABLED_APPS), enums.PREFERENCES_ETYPE.SET_SET);
         }

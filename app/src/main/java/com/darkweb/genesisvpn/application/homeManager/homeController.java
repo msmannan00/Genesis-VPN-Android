@@ -73,7 +73,6 @@ public class homeController extends AppCompatActivity implements NavigationView.
         initializeViews();
         initializeLayout();
         initializeCustomListeners();
-
         initializePluginManager();
         m_proxy_controller.onStartVPN();
 
@@ -105,6 +104,21 @@ public class homeController extends AppCompatActivity implements NavigationView.
         pluginManager.getInstance().onPreferenceTrigger(Collections.singletonList(this), enums.PREFERENCES_ETYPE.INITIALIZE);
         pluginManager.getInstance().onAdvertTrigger(Arrays.asList(this, m_banner_ads), enums.AD_ETYPE.INITIALIZE);
         pluginManager.getInstance().onAnalyticsTrigger(Collections.singletonList(this), enums.ANALYTIC_ETYPE.INITIALIZE);
+
+        status.AUTO_CONNECT = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_CONNECT, false), enums.PREFERENCES_ETYPE.GET_BOOL);
+        status.AUTO_OPTIMAL_LOCATION = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_OPTIMAL_LOCATION, true), enums.PREFERENCES_ETYPE.GET_BOOL);
+        status.AUTO_START = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_START, false), enums.PREFERENCES_ETYPE.GET_BOOL);
+        status.DISABLED_APPS = (ArrayList<String>)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, null), enums.PREFERENCES_ETYPE.GET_SET);
+        status.DEFAULT_SERVER = (String) pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, ""), enums.PREFERENCES_ETYPE.GET_STRING);
+
+        boolean m_connection_type = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_RESET, false), enums.PREFERENCES_ETYPE.GET_BOOL);
+        if(m_connection_type){
+            status.CONNECTION_TYPE = 1;
+        }else {
+            status.CONNECTION_TYPE = 0;
+        }
+
+        m_view_controller = new homeViewController(m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed);
     }
 
     public void initializeModel(){
@@ -112,8 +126,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
             public void run(){
                 constants.INSTALLED_APPS = helperMethods.getUserInstalledApps(homeController.this);
                 constants.SYSTEM_APPS = helperMethods.getSystemInstalledApps(homeController.this);
-                constants.RECENT_LOCATION = helperMethods.getRescentApps(homeController.this);
-                status.DISABLED_APPS = (ArrayList<String>)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, null), enums.PREFERENCES_ETYPE.GET_SET);
+                constants.STARRED_APPS = helperMethods.getStarredApps(homeController.this);
             }
         }.start();
         sharedControllerManager.getInstance().setHomeController(this);
@@ -146,7 +159,6 @@ public class homeController extends AppCompatActivity implements NavigationView.
         m_download_speed = findViewById(R.id.p_download);
         m_upload_speed = findViewById(R.id.p_upload);
 
-        m_view_controller = new homeViewController(m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed);
         m_model = new homeModel(this, new homeModelCallback());
     }
 
@@ -201,6 +213,7 @@ public class homeController extends AppCompatActivity implements NavigationView.
         if(!isFinishing()){
            status.HAS_APPLICATION_STOPPED = false;
         }
+        m_model.onResetUIBlock();
     }
 
     @Override
@@ -230,6 +243,14 @@ public class homeController extends AppCompatActivity implements NavigationView.
         {
             onAppManager(null);
         }
+        else if (id == R.id.nav_ip_address)
+        {
+            m_model.onLocation(400);
+        }
+        else if (id == R.id.nav_promotion)
+        {
+            onPromotion(null);
+        }
         else if (id == R.id.nav_about)
         {
             m_view_controller.onAlertDismiss();
@@ -239,6 +260,10 @@ public class homeController extends AppCompatActivity implements NavigationView.
         {
             m_proxy_controller.clearExceptionCounter();
             m_model.onServer(400,m_proxy_controller.isUserRegistered());
+        }
+        else if (id == R.id.setting)
+        {
+            onSettingManager(null);
         }
         else if (id == R.id.nav_share)
         {
@@ -272,6 +297,22 @@ public class homeController extends AppCompatActivity implements NavigationView.
 
     /*EVENT HANDLERS OVERRIDE*/
 
+    public void onPromotion(View view){
+        m_view_controller.onAlertDismiss();
+        m_model.onPromotion(400);
+    }
+
+    public void onSettingManager(MenuItem item){
+        m_model.onSettings(400);
+    }
+    public void onSettingManagerClick(View view){
+        m_view_controller.onAlertDismiss();
+        m_model.onSettings(0);
+    }
+    public void onOpenSettings(int m_delay){
+        m_model.onSettings(m_delay);
+    }
+
     public void onStart(View view)
     {
         m_proxy_controller.onTriggered(TRIGGER.TOOGLE);
@@ -280,14 +321,14 @@ public class homeController extends AppCompatActivity implements NavigationView.
     public void onAppManager(MenuItem item){
         m_view_controller.onAlertDismiss();
         if(constants.SYSTEM_APPS.size()>0){
-            m_model.onAppManager();
+            m_model.onAppManager(500);
         }
     }
 
     public void onAppManagerClick(View item){
         m_view_controller.onAlertDismiss();
         if(constants.SYSTEM_APPS.size()>0){
-            m_model.onAppManager();
+            m_model.onAppManager(0);
         }
     }
 

@@ -2,7 +2,7 @@ package com.darkweb.genesisvpn.application.serverManager;
 
 import com.anchorfree.partner.api.data.Country;
 
-public class serverListRowModel
+public class serverListRowModel implements Comparable<serverListRowModel>
 {
     /*Private Variables*/
 
@@ -33,5 +33,14 @@ public class serverListRowModel
     }
     public Country getCountryModel() {
         return m_server;
+    }
+
+    @Override
+    public int compareTo(serverListRowModel listRowModel) {
+        if (listRowModel.getHeader() == null || listRowModel.getHeader() == null) {
+            return 0;
+        }else {
+            return m_header.compareTo(listRowModel.getHeader());
+        }
     }
 }

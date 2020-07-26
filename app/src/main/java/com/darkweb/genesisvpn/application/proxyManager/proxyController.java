@@ -86,11 +86,16 @@ public class proxyController implements  VpnStateListener{
     /*HELPER METHODS*/
 
     public void onStartVPN() {
+        sharedControllerManager.getInstance().setProxyController(this);
         initHydraSdk();
         vpnControllerThread();
         serverControlThread();
         initVPNCallListener();
         initTrafficListener();
+
+        if(status.AUTO_CONNECT){
+            onTriggered(TRIGGER.TOOGLE);
+        }
     }
 
     public void initTrafficListener(){
@@ -258,7 +263,7 @@ public class proxyController implements  VpnStateListener{
 
     }
 
-    public void onAppsFiltered(){
+    public void onSettingChanged(){
         if(m_vpn_status == REQUEST.CONNECTED && m_request == REQUEST.CONNECTED){
             onRestart();
         }else if(m_vpn_status != REQUEST.CONNECTED && m_request == REQUEST.CONNECTED){
@@ -276,10 +281,25 @@ public class proxyController implements  VpnStateListener{
 
     public void onStart(){
         if(!m_is_internet_available){
-             return;
+            return;
         }
         control_thread_counter = 0;
         AsyncTask.execute(() -> {
+            String m_transport;
+            if(status.CONNECTION_TYPE == 1){
+                m_transport = CaketubeTransport.TRANSPORT_ID_TCP;
+            }else {
+                m_transport = CaketubeTransport.TRANSPORT_ID_UDP;
+            }
+
+            if(server_name.equals(strings.EMPTY_STR)){
+                if(status.DEFAULT_SERVER.equals(strings.EMPTY_STR)){
+                    server_name = UnifiedSDK.COUNTRY_OPTIMAL;
+                }else {
+                    server_name = status.DEFAULT_SERVER;
+                }
+            }
+
             m_request_status.onConnectRequestStart();
             List<String> fallbackOrder = new ArrayList<>();
             fallbackOrder.add(HydraTransport.TRANSPORT_ID);
@@ -287,10 +307,10 @@ public class proxyController implements  VpnStateListener{
             fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
             unifiedSDK.getVPN().start(new SessionConfig.Builder()
                     .withReason(TrackingConstants.GprReasons.M_UI)
-                    .withReason(TrackingConstants.GprReasons.M_UI)
                     .withTransportFallback(fallbackOrder)
                     .withTransport(HydraTransport.TRANSPORT_ID)
                     .exceptApps(status.DISABLED_APPS)
+                    .keepVpnOnReconnect(true)
                     .withVirtualLocation(server_name)
                     .build(), new CompletableCallback() {
                 @Override
@@ -310,21 +330,37 @@ public class proxyController implements  VpnStateListener{
 
     public void onRestart(){
         if(!m_is_internet_available){
-             return;
+            return;
         }
         control_thread_counter = 0;
         AsyncTask.execute(() -> {
+            String m_transport;
+            if(status.CONNECTION_TYPE == 1){
+                m_transport = CaketubeTransport.TRANSPORT_ID_TCP;
+            }else {
+                m_transport = CaketubeTransport.TRANSPORT_ID_UDP;
+            }
+
+            if(server_name.equals(strings.EMPTY_STR)){
+                if(status.DEFAULT_SERVER.equals(strings.EMPTY_STR)){
+                    server_name = UnifiedSDK.COUNTRY_OPTIMAL;
+                }else {
+                    server_name = status.DEFAULT_SERVER;
+                }
+            }
+
             m_request_status.onConnectRequestStart();
             List<String> fallbackOrder = new ArrayList<>();
             fallbackOrder.add(HydraTransport.TRANSPORT_ID);
             fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
             fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
             unifiedSDK.getVPN().restart(new SessionConfig.Builder()
-                    .withReason(TrackingConstants.GprReasons.M_UI)
+                    .withVirtualLocation(UnifiedSDK.COUNTRY_OPTIMAL)
                     .withReason(TrackingConstants.GprReasons.M_UI)
                     .withTransportFallback(fallbackOrder)
-                    .withTransport(HydraTransport.TRANSPORT_ID)
+                    .withTransport(CaketubeTransport.TRANSPORT_ID_TCP)
                     .exceptApps(status.DISABLED_APPS)
+                    .keepVpnOnReconnect(true)
                     .withVirtualLocation(server_name)
                     .build(), new CompletableCallback() {
                 @Override

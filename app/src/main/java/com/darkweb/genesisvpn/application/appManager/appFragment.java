@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.constants;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
@@ -25,6 +27,7 @@ public class appFragment extends Fragment {
     }
 
     public static appListModel m_list_model;
+    public static ViewPager2 m_pager;
     public static appFragment getInstance(int count){
         Bundle args = new Bundle();
         args.putInt(ARGS_KEY, count);
@@ -55,8 +58,13 @@ public class appFragment extends Fragment {
             m_list_view.setLayoutManager(new LinearLayoutManager(sharedControllerManager.getInstance().getHomeController()));
             appListAdapter adapter;
 
+            new Thread(){
+                public void run(){
+
+                }
+            }.start();
             if(count == 0){
-                adapter = new appListAdapter(sharedControllerManager.getInstance().getHomeController(), m_list_model.getModel(), constants.SYSTEM_APPS);
+                adapter = new appListAdapter(sharedControllerManager.getInstance().getHomeController(), m_list_model.getModel(), constants.SYSTEM_APPS, m_pager);
                 m_list_view.setAdapter(adapter);
 
                 if(constants.SYSTEM_APPS.size()<=0){
@@ -66,7 +74,7 @@ public class appFragment extends Fragment {
                 }
             }
             else if(count == 1){
-                adapter = new appListAdapter(sharedControllerManager.getInstance().getHomeController(), m_list_model.getModel(), constants.INSTALLED_APPS);
+                adapter = new appListAdapter(sharedControllerManager.getInstance().getHomeController(), m_list_model.getModel(), constants.INSTALLED_APPS, m_pager);
                 m_list_view.setAdapter(adapter);
 
                 if(constants.INSTALLED_APPS.size()<=0){
@@ -76,10 +84,10 @@ public class appFragment extends Fragment {
                 }
             }
             else if(count == 2){
-                adapter = new appListAdapter(sharedControllerManager.getInstance().getHomeController(), m_list_model.getModel(), constants.RECENT_LOCATION);
+                adapter = new appListAdapter(sharedControllerManager.getInstance().getHomeController(), m_list_model.getModel(), constants.STARRED_APPS, m_pager);
                 m_list_view.setAdapter(adapter);
 
-                if(constants.RECENT_LOCATION.size()<=0){
+                if(constants.STARRED_APPS.size()<=0){
                     m_list_view.setAlpha(0);
                 }else {
                     m_list_view.setAlpha(1);

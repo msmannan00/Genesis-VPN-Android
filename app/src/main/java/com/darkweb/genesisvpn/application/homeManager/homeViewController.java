@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.messages;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
@@ -107,11 +108,21 @@ class homeViewController {
             m_connect_animations.rotateAnimation(m_connect_loading);
         });
 
-        m_connect_label.setText(strings.HO_IDLE);
+        if(status.AUTO_CONNECT){
+            m_connect_label.setText(strings.HO_CONNECTING);
+            m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.075f);
+            m_text = strings.HO_CONNECTING;
+            m_connect_loading.animate().alpha(1);
+        }
+        else {
+            m_connect_label.setText(strings.HO_IDLE);
+            m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
+            m_text = strings.HO_IDLE;
+            m_connect_loading.animate().alpha(0);
+        }
+
         ViewCompat.setTranslationZ(m_connect_loading, 15);
-        m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
         m_flag.setAlpha(1f);
-        m_connect_loading.animate().alpha(0);
 
         ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) m_flag.getLayoutParams();
         lp1.width = helperMethods.screenWidth()*19/100;

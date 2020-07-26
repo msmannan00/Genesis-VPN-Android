@@ -12,19 +12,19 @@ import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
-import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class serverController extends AppCompatActivity {
 
     /*LOCAL VARIABLE DECLARATION*/
 
+    private boolean isRequestTypeResponse = false;
     private RecyclerView m_list_view;
     private serverViewController m_view_controller;
     private serverModel m_model;
@@ -39,10 +39,16 @@ public class serverController extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.server_view);
+        initBundle();
         initializeDrawable();
         initializeModel();
         initializeViews();
         initViewPager();
+    }
+
+    public void initBundle(){
+        isRequestTypeResponse = getIntent().getBooleanExtra(keys.REQUEST_TYPE, false);
+        serverFragment.m_type_response = isRequestTypeResponse;
     }
 
     public void initializeDrawable()
@@ -53,6 +59,7 @@ public class serverController extends AppCompatActivity {
 
     private void initViewPager() {
         serverViewPageAdapter adapter = new serverViewPageAdapter(this, m_list_model);
+        serverFragment.m_pager = m_pager;
         m_pager.setAdapter(adapter);
 
         new TabLayoutMediator(m_tab_layout, m_pager, (tab, position) -> tab.setIcon(m_tabs[position])).attach();
@@ -80,14 +87,18 @@ public class serverController extends AppCompatActivity {
 
     public void onBackPressed(View view)
     {
-        if(!m_list_model.getRecentModel().equals(status.RECENT_SERVERS)){
-            status.RECENT_SERVERS.clear();
-            status.RECENT_SERVERS.addAll(m_list_model.getRecentModel());
-            ArrayList<String> m_recent_name = new ArrayList<>();
-            for(int counter=0;counter<status.RECENT_SERVERS.size();counter++){
-                m_recent_name.add(status.RECENT_SERVERS.get(counter).getHeader());
+        if(isRequestTypeResponse){
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
+        }else {
+            if(!m_list_model.getRecentModel().equals(status.RECENT_SERVERS)){
+                status.RECENT_SERVERS.clear();
+                status.RECENT_SERVERS.addAll(m_list_model.getRecentModel());
+                ArrayList<String> m_recent_name = new ArrayList<>();
+                for(int counter=0;counter<status.RECENT_SERVERS.size();counter++){
+                    m_recent_name.add(status.RECENT_SERVERS.get(counter).getHeader());
+                }
+                pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.RECENT_COUNTRIES, m_recent_name), enums.PREFERENCES_ETYPE.SET_SET);
             }
-            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.RECENT_COUNTRIES, m_recent_name), enums.PREFERENCES_ETYPE.SET_SET);
         }
         m_model.quit();
     }

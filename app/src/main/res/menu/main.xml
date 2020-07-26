@@ -13,4 +13,10 @@
         android:title="@string/action_applications"
         android:onClick="onAppManager"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_setting"
+        android:orderInCategory="100"
+        android:title="@string/action_setting"
+        android:onClick="onSettingManager"
+        app:showAsAction="never" />
 </menu>

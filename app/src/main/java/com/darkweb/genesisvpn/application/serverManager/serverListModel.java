@@ -1,10 +1,12 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
 import com.anchorfree.partner.api.data.Country;
+import com.darkweb.genesisvpn.application.appManager.appListRowModel;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,8 +37,8 @@ public class serverListModel
             }
             m_country_model.add(row_model);
         }
+        Collections.sort(m_country_model);
     }
-
     public ArrayList<serverListRowModel> getCountryModel()
     {
         return m_country_model;
@@ -52,4 +54,18 @@ public class serverListModel
         return m_recent_model;
     }
 
+    public void addModel(serverListRowModel p_model)
+    {
+        for(int counter=0;counter<m_recent_model.size() && counter<m_recent_model.size();counter++){
+            if(p_model.getHeader().equals(m_recent_model.get(counter).getHeader())){
+                m_recent_model.remove(counter);
+                m_recent_model.add(0,p_model);
+                return;
+            }
+        }
+        m_recent_model.add(0,p_model);
+        if(m_recent_model.size()>5){
+            m_recent_model.remove(5);
+        }
+    }
 }

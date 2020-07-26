@@ -46,7 +46,7 @@ public class enums {
     }
 
     public enum AD_ETYPE {
-        INITIALIZE, DISABLE_ADS
+        INITIALIZE, DISABLE_ADS, AD_STATUS
     }
 
     public enum ANALYTIC_ETYPE {

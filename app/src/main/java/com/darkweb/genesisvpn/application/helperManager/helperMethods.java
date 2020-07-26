@@ -4,9 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import com.anchorfree.vpnsdk.exceptions.VpnException;
@@ -34,6 +40,11 @@ public class helperMethods
         }
     }
 
+    public static void onOpenURL(AppCompatActivity p_context, String p_link){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(p_link));
+        p_context.startActivity(browserIntent);
+    }
+
     public static void shareApp(AppCompatActivity p_context) {
         ShareCompat.IntentBuilder.from(p_context)
                 .setType(strings.SH_TYPE)
@@ -43,7 +54,17 @@ public class helperMethods
                 .startChooser();
     }
 
-       public static void sendEmail(AppCompatActivity p_context)
+    public static void hideKeyboard(AppCompatActivity context) {
+        View view = context.findViewById(android.R.id.content);
+        if (view != null)
+        {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static void sendEmail(AppCompatActivity p_context)
     {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 strings.EM_MAIL_TO,strings.EM_EMAIL, null));
@@ -59,12 +80,14 @@ public class helperMethods
         activity.finish();
     }
 
-    public static void quitApplication(AppCompatActivity activity) {
-
-    }
-
     public static void openActivity( Class<?> p_cls, AppCompatActivity p_context){
         Intent myIntent = new Intent(p_context, p_cls);
+        p_context.startActivity(myIntent);
+    }
+
+    public static void openActivityWithBundle( Class<?> p_cls, AppCompatActivity p_context, String p_key, Boolean p_value){
+        Intent myIntent = new Intent(p_context, p_cls);
+        myIntent.putExtra(p_key, p_value);
         p_context.startActivity(myIntent);
     }
 
@@ -128,12 +151,25 @@ public class helperMethods
         return m_list_model;
     }
 
-    public static ArrayList<appListRowModel> getRescentApps(Context p_context){
+    public static ArrayList<appListRowModel> getStarredApps(Context p_context){
         ArrayList<appListRowModel> m_list_model = new ArrayList<>();
-        List<PackageInfo> packs = p_context.getPackageManager().getInstalledPackages(0);
+        List<PackageInfo> packs = p_context.getPackageManager().getInstalledPackages(PackageManager.GET_PERMISSIONS);
         for (int i = 0; i < packs.size(); i++) {
             PackageInfo m_package = packs.get(i);
-            if (!m_package.packageName.equals(p_context.getPackageName()) && isSystemPackage(m_package)) {
+
+            if (m_package.requestedPermissions == null)
+                continue;
+            boolean internetPermission = false;
+            for (String permission : m_package.requestedPermissions) {
+
+                if (TextUtils.equals(permission, android.Manifest.permission.INTERNET)) {
+                    internetPermission = true;
+                    break;
+                }
+            }
+
+            if (!m_package.packageName.equals(p_context.getPackageName()) && (isSystemPackage(m_package) && (m_package.packageName.equals("com.android.chrome") || m_package.packageName.equals("com.google.android.apps.docs") || m_package.packageName.equals("com.google.android.googlequicksearchbox") || m_package.packageName.equals("com.android.vending") || m_package.packageName.equals("com.google.android.apps.maps") || m_package.packageName.equals("com.android.mms") || m_package.packageName.equals("com.google.android.apps.photos") || m_package.packageName.equals("com.google.android.youtube"))
+            || (!isSystemPackage(m_package) && (internetPermission)))) {
                 try {
                     String appName = convertToCamelHump(m_package.applicationInfo.loadLabel(p_context.getPackageManager()).toString());
                     Drawable icon = m_package.applicationInfo.loadIcon(p_context.getPackageManager());

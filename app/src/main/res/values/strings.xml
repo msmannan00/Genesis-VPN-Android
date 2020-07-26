@@ -10,6 +10,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_servers">Server Location</string>
     <string name="action_applications">Applications</string>
+    <string name="action_setting">Settings</string>
     <string name="home_idle">GO</string>
     <string name="home_connecting">Connecting</string>
     <string name="unconnected_text">Unconnected | Choose Location</string>
@@ -17,11 +18,14 @@
     <!-- MENU PAGE -->
 
     <string name="menu_share">Share</string>
-    <string name="menu_app">Choose Apps</string>
+    <string name="menu_app">Proxy Filter</string>
     <string name="menu_about">About Genesis</string>
+    <string name="menu_promotion">Promotion Code</string>
+    <string name="menu_location">IP Address &amp; Location</string>
     <string name="menu_help">Help</string>
     <string name="menu_rate">Rate US</string>
     <string name="menu_server">Server Location</string>
+    <string name="menu_setting">Settings</string>
     <string name="menu_application">Applications</string>
     <string name="menu_privacy">Privacy Policy</string>
     <string name="menu_quit">Quit</string>
@@ -32,12 +36,28 @@
     <string name="about_about_us">About Us</string>
     <string name="about_description">Genesis VPN, total free VPN client. Easy to use, one click to connecting VPN. Unlimited bandwidth and unlimited free trial time. You can contact us if you have any queries and we shall try to get back to you as soon as possible</string>
 
+    <!-- PROMOTION PAGE -->
+
+    <string name="promotion_header">Promotion Code</string>
+    <string name="promotion_description">Genesis VPN service is completely free. We only earn money from banner advertisement to maintain our server. If you are also disturbed by this, you can remove advert by the promotion code we distributed to you</string>
+
     <!-- APPLICATION GENERAL -->
 
     <string name="todo">TODO</string>
     <string name="homepage">Change Location</string>
-    <string name="application">Choose Applications</string>
+    <string name="application">Proxy Filter</string>
     <string name="about">About Us</string>
+    <string name="promotion">Promotion</string>
+    <string name="settings">Settings</string>
+    <string name="udp_text">UDP</string>
+    <string name="tcp_text">TCP</string>
+    <string name="tcp_info">TCP Mode for games and browsing</string>
+    <string name="udp_info">UDP Mode for video streaming</string>
+    <string name="connection_header">VPN Sock Mode</string>
+    <string name="auto_connect_info">Auto-connect to VPN on app launch</string>
+    <string name="auto_connect_header">Connect on app launch</string>
+    <string name="auto_start_desc">Auto-connect to VPN on Android startup</string>
+    <string name="auto_start_header">Connect on startup</string>
 
     <!-- SERVER PAGE -->
 

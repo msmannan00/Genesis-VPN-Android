@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.status;
@@ -26,6 +28,9 @@ public class serverFragment extends Fragment {
     }
 
     public static serverListModel m_list_model;
+    public static ViewPager2 m_pager;
+    public static boolean m_type_response;
+
     public static serverFragment getInstance(int count){
         Bundle args = new Bundle();
         args.putInt(ARGS_KEY, count);
@@ -57,7 +62,7 @@ public class serverFragment extends Fragment {
             serverListAdapter adapter;
 
             if(count == 0){
-                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getCountryModel(), enums.SERVER.ALL);
+                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getCountryModel(), enums.SERVER.ALL, m_pager, m_type_response);
                 m_list_view.setAdapter(adapter);
 
                 if(m_list_model.getCountryModel().size()<=0){
@@ -67,7 +72,7 @@ public class serverFragment extends Fragment {
                 }
             }
             else if(count == 1){
-                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getRecentModel(), enums.SERVER.RECENT);
+                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getRecentModel(), enums.SERVER.RECENT, m_pager, m_type_response);
                 m_list_view.setAdapter(adapter);
 
                 if(status.RECENT_SERVERS.size()<=0){

@@ -1,0 +1,133 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="onClearPromotionEditText"
+    android:background="@color/mat"
+    tools:context=".application.promotionManager.promotionController">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:onClick="onClearPromotionEditText"
+        android:layout_gravity="center_vertical"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/home"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/todo"
+            android:onClick="onBackPressed"
+            android:padding="3.5dp"
+            android:scaleType="fitCenter"
+            android:src="@xml/nav_arrow_back"
+            android:tint="@color/white" />
+
+        <TextView
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="-1dp"
+            android:text="@string/promotion"
+            android:textColor="@color/white"
+            android:textSize="15.5sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:onClick="onClearPromotionEditText"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_weight="110"
+        android:background="@color/mat"
+        android:justificationMode="inter_word"
+        android:paddingEnd="23dp"
+        android:text="@string/promotion"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="110"
+        android:onClick="onClearPromotionEditText"
+        android:background="@color/mat"
+        android:paddingStart="15dp"
+        android:paddingEnd="23dp"
+        android:text="@string/promotion_description"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="19dp"
+        android:paddingStart="0dp"
+        android:onClick="onClearPromotionEditText"
+        android:paddingEnd="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:srcCompat="@mipmap/splashlogo" />
+
+    <EditText
+        android:id="@+id/m_promotion_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="Enter promotion code"
+        android:popupElevation="5dp"
+        android:inputType="textPersonName"
+        android:background="@xml/sc_generic_input"
+        android:maxLines="1"
+        android:paddingStart="20dp"
+        android:paddingEnd="15dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:onClick="adsDisabler"
+        android:background="@xml/sc_rounded_corner_white"
+        android:text="Submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/m_promotion_edit_text" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

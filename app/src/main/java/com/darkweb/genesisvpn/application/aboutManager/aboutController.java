@@ -7,8 +7,6 @@ import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
-import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
-import java.util.Collections;
 import java.util.List;
 
 public class aboutController extends AppCompatActivity {
@@ -44,11 +42,6 @@ public class aboutController extends AppCompatActivity {
         m_model.quit();
     }
 
-    public void adsDisabler(View view)
-    {
-        m_model.adsDisabler();
-    }
-
     /*EVENT LISTNER CALLBACKS HANDLERS*/
 
     public class aboutModelCallback implements eventObserver.eventListener{
@@ -56,11 +49,7 @@ public class aboutController extends AppCompatActivity {
         @Override
         public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)
         {
-            if(p_event_type.equals(enums.ETYPE.ABOUT_ADS_REMOVE_CLICK))
-            {
-                pluginManager.getInstance().onAdvertTrigger(Collections.singletonList(aboutController.this),enums.AD_ETYPE.DISABLE_ADS);
-            }
-            else if(p_event_type.equals(enums.ETYPE.GENERIC_QUIT))
+            if(p_event_type.equals(enums.ETYPE.GENERIC_QUIT))
             {
                 helperMethods.quit(aboutController.this);
             }
