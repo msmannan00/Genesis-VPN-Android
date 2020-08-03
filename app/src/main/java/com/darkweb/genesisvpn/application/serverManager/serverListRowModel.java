@@ -34,6 +34,9 @@ public class serverListRowModel implements Comparable<serverListRowModel>
     public Country getCountryModel() {
         return m_server;
     }
+    public void setCountryModel(Country p_model) {
+        m_server = p_model;
+    }
 
     @Override
     public int compareTo(serverListRowModel listRowModel) {

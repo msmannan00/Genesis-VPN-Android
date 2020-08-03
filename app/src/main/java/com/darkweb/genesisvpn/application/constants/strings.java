@@ -33,6 +33,14 @@ public class strings
     public static String HO_TRANSITION_NAME_PAUSE = "pause";
     public static String HO_ERROR_OCCURED = "Error Occured | ";
     public static String HO_IP_LOCATION = "https://whatismycountry.com/";
+    public static String HO_SPEED_TEST = "https://www.speedtest.net/";
+    public static String HO_CONNECTION_TITLE_TCP = "TCP Connection Info";
+    public static String HO_CONNECTION_TITLE_UDP = "UDP Connection Info";
+    public static String HO_CONNECTION_TITLE_AUTO = "Automatic Connection Info";
+    public static String HO_CONNECTION_TCP =  "Use TCP connection in case if you are only interested in browsing or click TCP button to toggle";
+    public static String HO_CONNECTION_UDP =  "Use UDP connection in case if you are only interested in video streaming or click UDP button to toggle";
+    public static String HO_CONNECTION_AUTO = "Use AUTO connection if you are interested on both browsing and streaming or click AUTO button to toggle";
+    public static String OPTIMAL_SERVER = "optimal_server";
 
     /*APPLICATION FILTER*/
 
@@ -55,9 +63,12 @@ public class strings
 
     /*ADS MESSAGES*/
 
-    public static String AD_ADS_DISABLED = "Ads Disabled Successfully";
-    public static String AD_ADS_FAILED = "Invalid Promotion Code";
-    public static String AD_ADS_ALREADY_DISABLED = "Ads Already Disabled";
+    public static String AD_ADS_DISABLED_TITLE = "Congradulations";
+    public static String AD_ADS_DISABLED = "Ads Disabled Successfully. Now you can enjoy our premium version of apps withour advertisement";
+    public static String AD_ADS_FAILED = "Promotion Request Failure. If promotion code is valid please contact us so we can look into it";
+    public static String AD_ADS_FAILED_TITLE = "Invalid Promotion Code";
+    public static String AD_ADS_ALREADY_DISABLED_TITLE = "INFO";
+    public static String AD_ADS_ALREADY_DISABLED = "Ads Already Disabled. Now you can enjoy our premium version of apps withour advertisement";
 
     /*EMAIL*/
 
@@ -75,7 +86,7 @@ public class strings
     /*COUNTRY SERVER CONTROLLERS*/
 
     public static String CS_COUNTRY_CODE = "Country Code | ";
-    public static String CS_RELAY_SERVERS = "Fast Relay Servers | ";
+    public static String CS_RELAY_SERVERS = "Server Speed | ";
 
     /*PROXY CONTROLLERS*/
 

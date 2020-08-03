@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_server"
-        android:orderInCategory="100"
-        android:title="@string/action_servers"
-        android:onClick="onServer"
-        app:showAsAction="never" />
+    <group >
+        <item
+            android:id="@+id/action_server"
+            android:onClick="onServer"
+            android:orderInCategory="100"
+            android:title="@string/action_servers"
+            app:showAsAction="never" />
+    </group>
     <item
         android:id="@+id/action_applications"
         android:orderInCategory="100"

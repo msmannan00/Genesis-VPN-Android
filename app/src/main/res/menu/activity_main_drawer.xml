@@ -7,46 +7,62 @@
         <item
             android:id="@+id/nav_about"
             android:icon="@xml/ic_menu_about"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_about" />
         <item
             android:id="@+id/nav_app"
             android:icon="@xml/ic_android_apps"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_app" />
         <item
             android:id="@+id/server"
             android:icon="@xml/ic_menu_server"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_server" />
         <item
             android:id="@+id/setting"
-            android:icon="@xml/ic_menu_setting"
+            android:icon="@xml/ic_menu_settings"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_setting" />
         <item
             android:id="@+id/nav_promotion"
             android:icon="@xml/ic_baseline_shopping"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_promotion" />
         <item
             android:id="@+id/nav_ip_address"
             android:icon="@xml/ic_baseline_location"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_location" />
+        <item
+            android:id="@+id/speed_test"
+            android:icon="@xml/ic_baseline_speed"
+            android:onClick="onNavigationItem"
+            android:title="@string/menu_speed" />
         <item
             android:id="@+id/nav_share"
             android:icon="@xml/ic_menu_share"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_share" />
         <item
             android:id="@+id/nav_help"
             android:icon="@xml/ic_menu_help"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_help" />
         <item
             android:id="@+id/nav_rate"
             android:icon="@xml/ic_menu_rate"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_rate" />
         <item
             android:id="@+id/ic_menu_privacy"
             android:icon="@xml/ic_menu_privacy"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_privacy" />
         <item
             android:id="@+id/nav_quit"
             android:icon="@xml/ic_menu_exit"
+            android:onClick="onNavigationItem"
             android:title="@string/menu_quit" />
     </group>
 

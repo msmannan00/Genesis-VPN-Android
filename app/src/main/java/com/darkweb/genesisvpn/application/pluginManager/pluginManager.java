@@ -1,9 +1,12 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
+import android.content.Context;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
+import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,9 @@ public class pluginManager
         else if(p_event == enums.AD_ETYPE.AD_STATUS){
             return m_ad_manager.isAdDisabled();
         }
+        else if(p_event == enums.AD_ETYPE.SHOW_ADVERT){
+            m_ad_manager.initBannerAds();
+        }
         return null;
     }
 
@@ -52,6 +58,12 @@ public class pluginManager
         {
             if(p_event_type == enums.ETYPE.PLUGIN_DISABLE_ADS){
                 m_preference_manager.setBool((String) p_data.get(0),(boolean) p_data.get(1));
+            }
+            else if(p_event_type == enums.ETYPE.ON_ADVERT_INITIALIZED){
+                sharedControllerManager.getInstance().getHomeController().onStartBeatAnimation();
+            }
+            else if(p_event_type == enums.ETYPE.ON_ADVERT_ALERT){
+                sharedControllerManager.getInstance().getPromotionController().onShowAlert((String) p_data.get(0), (String) p_data.get(1));
             }
         }
     }
@@ -72,16 +84,22 @@ public class pluginManager
     /*PREFERENCES HANDLER*/
     public Object onPreferenceTrigger(List<Object> data, enums.PREFERENCES_ETYPE p_event){
         if(p_event == enums.PREFERENCES_ETYPE.INITIALIZE){
-            m_preference_manager.initialize((AppCompatActivity)data.get(0));
+            m_preference_manager.initialize((Context)data.get(0));
         }
         else if(p_event == enums.PREFERENCES_ETYPE.SET_BOOL){
             m_preference_manager.setBool((String) data.get(0), (boolean) data.get(1));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.SET_INT){
+            m_preference_manager.setInt((String) data.get(0), (int) data.get(1));
         }
         else if(p_event == enums.PREFERENCES_ETYPE.SET_STRING){
             m_preference_manager.setString((String) data.get(0), (String) data.get(1));
         }
         else if(p_event == enums.PREFERENCES_ETYPE.GET_BOOL){
             return m_preference_manager.getBool((String) data.get(0), (boolean) data.get(1));
+        }
+        else if(p_event == enums.PREFERENCES_ETYPE.GET_INT){
+            return m_preference_manager.getInt((String) data.get(0), (int) data.get(1));
         }
         else if(p_event == enums.PREFERENCES_ETYPE.GET_STRING){
             return m_preference_manager.getString((String) data.get(0), (String) data.get(1));

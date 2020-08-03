@@ -3,12 +3,16 @@ package com.darkweb.genesisvpn.application.settingManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.appManager.appController;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
@@ -23,16 +27,23 @@ import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.darkweb.genesisvpn.application.constants.strings.SE_SERVER_MESSAGE_DESC;
+
 public class settingController extends AppCompatActivity {
 
     /* PRIVATE VIEWS */
 
-    Switch m_auto_connect;
-    Switch m_auto_start;
-    Switch m_auto_optimal_location;
-    RadioButton m_udp_connection;
-    RadioButton m_tcp_connection;
-    ImageView m_default_server;
+    private Switch m_auto_connect;
+    private Switch m_auto_start;
+    private Switch m_auto_optimal_location;
+    private RadioButton m_udp_connection;
+    private RadioButton m_tcp_connection;
+    private RadioButton m_def_connection;
+    private ImageView m_default_server;
+    private LinearLayout m_default_server_layout;
+    private ConstraintLayout m_alert_dialog;
+    private TextView m_alert_title;
+    private TextView m_alert_description;
 
     /* PRIVATE VARIABLES */
 
@@ -50,7 +61,7 @@ public class settingController extends AppCompatActivity {
     }
 
     public void initializeViews(){
-        m_view_controller = new settingViewController(this, new settingViewCallback(), m_auto_connect, m_auto_start, m_udp_connection, m_tcp_connection, m_default_server, m_auto_optimal_location);
+        m_view_controller = new settingViewController(this, new settingViewCallback(), m_auto_connect, m_auto_start, m_udp_connection, m_tcp_connection, m_default_server, m_auto_optimal_location, m_default_server_layout, m_def_connection, m_alert_dialog,m_alert_title, m_alert_description);
     }
 
     public void initializeModel(){
@@ -59,8 +70,13 @@ public class settingController extends AppCompatActivity {
         m_auto_start = findViewById(R.id.p_auto_start);
         m_udp_connection = findViewById(R.id.m_udp_connection);
         m_tcp_connection = findViewById(R.id.m_tcp_connection);
+        m_def_connection = findViewById(R.id.m_def_connection);
         m_default_server = findViewById(R.id.p_default_server);
         m_auto_optimal_location = findViewById(R.id.p_auto_optimal_location);
+        m_default_server_layout = findViewById(R.id.default_server_layout);
+        m_alert_dialog = findViewById(R.id.alert_dialog);
+        m_alert_title = findViewById(R.id.alert_title);
+        m_alert_description = findViewById(R.id.alert_description);
     }
 
     @Override
@@ -73,7 +89,12 @@ public class settingController extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        onBackPressed(null);
+        if(m_view_controller.isAlertViewShwoing()){
+            m_view_controller.onAlertDismiss();
+        }
+        else {
+            onBackPressed(null);
+        }
     }
 
     public void onBackPressed(View view){
@@ -89,14 +110,19 @@ public class settingController extends AppCompatActivity {
             status.AUTO_START = m_auto_start.isChecked();
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_START, status.AUTO_START), enums.PREFERENCES_ETYPE.SET_BOOL);
         }
-        if(status.CONNECTION_TYPE == 0 && m_tcp_connection.isChecked()){
+        if(status.CONNECTION_TYPE != 1 && m_tcp_connection.isChecked()){
             status.CONNECTION_TYPE = 1;
-            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_RESET, true), enums.PREFERENCES_ETYPE.SET_BOOL);
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 1), enums.PREFERENCES_ETYPE.SET_INT);
             sharedControllerManager.getInstance().getProxyController().onSettingChanged();
         }
-        else if(status.CONNECTION_TYPE == 1 && m_udp_connection.isChecked()){
+        else if(status.CONNECTION_TYPE != 0 && m_udp_connection.isChecked()){
             status.CONNECTION_TYPE = 0;
-            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_RESET, false), enums.PREFERENCES_ETYPE.SET_BOOL);
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 0), enums.PREFERENCES_ETYPE.SET_INT);
+            sharedControllerManager.getInstance().getProxyController().onSettingChanged();
+        }
+        else if(status.CONNECTION_TYPE != 2 && m_def_connection.isChecked()){
+            status.CONNECTION_TYPE = 2;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 2), enums.PREFERENCES_ETYPE.SET_INT);
             sharedControllerManager.getInstance().getProxyController().onSettingChanged();
         }
         m_model.quit();
@@ -112,24 +138,41 @@ public class settingController extends AppCompatActivity {
 
     public void onAutoDefaultServer(View view){
         m_auto_optimal_location.toggle();
-        status.AUTO_OPTIMAL_LOCATION = m_auto_optimal_location.isChecked();
-        m_view_controller.onUpdateFlag();
+        m_view_controller.onDefaultServerToggle(m_auto_optimal_location.isChecked());
     }
 
     public void onChangeDefaultServer(View view){
         if(proxyController.getInstance().isUserRegistered() == enums.REGISTERATION.LOADING_SERVER_SUCCESS){
             helperMethods.openActivityWithBundle(serverController.class, this, keys.REQUEST_TYPE, true);
+        }else{
+            m_view_controller.onShowAlert(SE_SERVER_MESSAGE_DESC, strings.SE_REQUEST_INITIALIZING, false);
         }
     }
 
     public void onChangeConnectionType(View view){
-        if(m_tcp_connection.isChecked()){
-            m_tcp_connection.setChecked(false);
+        if(view.getId() == R.id.connection1){
             m_udp_connection.setChecked(true);
-        }else {
-            m_tcp_connection.setChecked(true);
-            m_udp_connection.setChecked(false);
+            m_tcp_connection.setChecked(false);
+            m_def_connection.setChecked(false);
         }
+        else if(view.getId() == R.id.connection2){
+            m_udp_connection.setChecked(false);
+            m_tcp_connection.setChecked(true);
+            m_def_connection.setChecked(false);
+        }
+        else {
+            m_udp_connection.setChecked(false);
+            m_tcp_connection.setChecked(false);
+            m_def_connection.setChecked(true);
+        }
+    }
+
+    public void onAlertDismissSettings(View view) {
+        m_view_controller.onAlertDismiss();
+    }
+
+    public void onProxyFilter(View view) {
+        helperMethods.openActivityWithBundle(appController.class, this, keys.REQUEST_TYPE, true);
     }
 
     /*EVENT LISTNER CALLBACKS HANDLERS*/

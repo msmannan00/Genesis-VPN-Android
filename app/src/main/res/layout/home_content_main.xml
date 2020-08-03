@@ -9,18 +9,103 @@
     tools:context=".application.homeManager.homeController"
     tools:showIn="@layout/home_app_bar">
 
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
+        android:id="@+id/m_linear_layout_bar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/home"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="0dp"
+            android:background="@xml/sc_ripple_default"
+            android:contentDescription="@string/todo"
+            android:onClick="onOpenDrawer"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@xml/ic_baseline_menu"
+            android:tint="@color/white" />
+
+        <TextView
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="-1dp"
+            android:text="@string/dashboard"
+            android:textColor="@color/white"
+            android:textSize="15.5sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/colorPrimary"
+            android:gravity="right"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded">
+
+            <ImageButton
+                android:id="@+id/menu_settings"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@xml/sc_ripple_default"
+                android:contentDescription="@string/todo"
+                android:gravity="center_vertical"
+                android:onClick="onSettingManagerClick"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@xml/ic_menu_settings"
+                android:tint="@color/white" />
+
+            <ImageButton
+                android:id="@+id/menu_limited"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="0dp"
+                android:layout_marginBottom="0dp"
+                android:background="@xml/sc_ripple_default"
+                android:contentDescription="@string/todo"
+                android:gravity="center_vertical"
+                android:onClick="onOptionMenu"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@xml/ic_baseline_drag_indicator"
+                android:tint="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <com.google.android.gms.ads.AdView
         android:id="@+id/banner_ads"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:elevation="50dp"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-5074525529134731/8185518764"
-        ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintStart_toStartOf="parent"
-        ads:layout_constraintTop_toTopOf="parent" />
+        android:translationZ="100dp"
+        app:adSize="SMART_BANNER"
+        app:adUnitId="ca-app-pub-5074525529134731/8185518764"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar" />
 
     <Button
         android:id="@+id/connect_animator"
@@ -29,7 +114,23 @@
         android:layout_height="wrap_content"
         android:alpha="0"
         android:background="@xml/connector_drawable_fader"
-        android:elevation="1dp"
+        android:padding="12dp"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/connect_base"
+        app:layout_constraintEnd_toEndOf="@+id/connect_base"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@+id/connect_base"
+        app:layout_constraintTop_toTopOf="@+id/connect_base" />
+
+    <Button
+        android:id="@+id/connect_animator_initial"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:background="@xml/connector_drawable_fader"
         android:padding="12dp"
         android:singleLine="true"
         android:text=""
@@ -42,21 +143,21 @@
 
     <Button
         android:id="@+id/connect_base"
-        android:layout_width="331dp"
-        android:layout_height="334dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:background="@xml/connector_drawable"
-        android:elevation="5dp"
         android:onClick="onStart"
         android:padding="12dp"
         android:singleLine="true"
         android:text=""
         android:textColor="@color/white"
+        android:translationZ="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/banner_ads"
-        app:layout_constraintVertical_bias="0.407" />
+        app:layout_constraintVertical_bias="0.37" />
 
     <TextView
         android:id="@+id/connect_label"
@@ -65,11 +166,11 @@
         android:layout_height="wrap_content"
         android:alpha="1"
         android:clickable="false"
-        android:elevation="25dp"
         android:padding="12dp"
         android:singleLine="true"
         android:text="@string/home_idle"
         android:textColor="@color/white"
+        android:translationZ="120dp"
         app:layout_constraintBottom_toBottomOf="@+id/connect_base"
         app:layout_constraintEnd_toEndOf="@+id/connect_base"
         app:layout_constraintHorizontal_bias="0.498"
@@ -82,6 +183,7 @@
         android:layout_height="wrap_content"
         android:alpha="0"
         android:contentDescription="@string/todo"
+        android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/connect_base"
         app:layout_constraintEnd_toEndOf="@+id/connect_base"
         app:layout_constraintHorizontal_bias="0.496"
@@ -90,82 +192,115 @@
         app:layout_constraintVertical_bias="0.453"
         app:srcCompat="@drawable/loading" />
 
-    <!-- <TextView
-        android:id="@+id/location_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginBottom="18dp"
-        android:text="@string/unconnected_text"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" /> -->
+    <ImageView
+        android:id="@+id/m_speed_base"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="170dp"
+        android:alpha="1"
+        android:background="@xml/connector_drawable_speed"
+        android:contentDescription="@string/todo"
+        android:onClick="onSpeedClick"
+        android:padding="12dp"
+        android:translationZ="35dp"
+        app:layout_constraintStart_toStartOf="@+id/loading"
+        app:layout_constraintTop_toTopOf="@+id/loading" />
 
     <ImageButton
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="28dp"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/no_flag_default"
         android:contentDescription="@string/todo"
+        android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
-        android:id="@+id/icon2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="19dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="onAppManagerClick"
-        android:contentDescription="@string/todo"
-        android:src="@xml/ic_baseline_apps"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageButton
-        android:id="@+id/icon3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="88dp"
-        android:layout_marginBottom="28dp"
-        android:contentDescription="@string/todo"
-        android:onClick="onSettingManagerClick"
-        android:src="@xml/ic_menu_setting"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/p_download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="41dp"
-        android:text="100"
+    <Button
+        android:id="@+id/m_connection_toggle"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="7dp"
+        android:background="@xml/sc_rounded_corner_cyan"
+        android:onClick="onConnectionToggle"
+        android:text="@string/tcp_default"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner_ads" />
-
-    <TextView
-        android:id="@+id/p_upload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:layout_marginEnd="39dp"
-        android:text="100"
-        android:textColor="@color/white"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/banner_ads" />
 
+    <ImageButton
+        android:id="@+id/m_connection_toggle_info"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="5dp"
+        android:background="@xml/sc_rounded_corner_cyan"
+        android:contentDescription="@string/todo"
+        android:onClick="onConnectionInfo"
+        android:src="@xml/ic_baseline_info"
+        app:layout_constraintEnd_toStartOf="@+id/m_connection_toggle"
+        app:layout_constraintTop_toBottomOf="@+id/banner_ads" />
+
+    <TextView
+        android:id="@+id/p_upload"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="45dp"
+        android:paddingTop="8dp"
+
+        android:paddingBottom="8dp"
+        android:text="@string/upload_text_default"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:translationZ="1500dp"
+        app:layout_constraintStart_toStartOf="@+id/m_speed_base"
+        app:layout_constraintTop_toTopOf="@+id/m_speed_base" />
+
+    <TextView
+        android:id="@+id/p_download"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:paddingTop="8dp"
+
+        android:paddingBottom="8dp"
+        android:text="@string/download_text_default"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:translationZ="1500dp"
+        app:layout_constraintStart_toStartOf="@+id/p_upload"
+        app:layout_constraintTop_toTopOf="@+id/m_speed_base" />
+
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar">
+
+    </LinearLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/alert_dialog"
+        android:id="@+id/home_alert_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mat_alpha"
-        android:elevation="35dp"
         android:onClick="onAlertDismiss"
+        android:translationZ="2000dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -174,7 +309,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/alert_dialog_panel"
+            android:id="@+id/home_alert_dialog_panel"
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_margin="10dp"
@@ -190,7 +325,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:elevation="40dp"
                 android:enabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -201,47 +335,46 @@
                 android:id="@+id/button2"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="10dp"
                 android:background="@xml/sc_rounded_corner"
-                android:elevation="40dp"
                 android:onClick="onAlertDismiss"
-                android:text="Dismiss"
+                android:text="@string/alert_dismiss"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/m_stop_alert_btn"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="10dp"
                 android:background="@xml/sc_rounded_corner"
-                android:elevation="45dp"
                 android:onClick="onAlertStop"
-                android:text="stop"
+                android:text="@string/alert_stop"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button2" />
 
             <TextView
-                android:id="@+id/alert_description"
+                android:id="@+id/home_alert_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="19dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:elevation="40dp"
                 android:maxLines="2"
-                android:text="Error Occred | Network Connection Exception"
+                android:text="@string/alert_default_message"
                 android:textColor="@color/text_color_v1"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/alert_title" />
+                app:layout_constraintTop_toBottomOf="@+id/home_alert_title" />
 
             <View
                 android:layout_width="match_parent"
@@ -250,26 +383,24 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="9dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toTopOf="@+id/alert_description"
+                app:layout_constraintBottom_toTopOf="@+id/home_alert_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.375"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/alert_title"
+                android:id="@+id/home_alert_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="7dp"
-                android:elevation="35dp"
                 android:maxLines="2"
-                android:text="Error Occured"
+                android:text="@string/alert_title"
                 android:textColor="@color/text_color_v1"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

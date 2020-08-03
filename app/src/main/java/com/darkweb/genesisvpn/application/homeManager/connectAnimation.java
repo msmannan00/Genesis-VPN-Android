@@ -20,9 +20,10 @@ class connectAnimation
 {
     /*INITIALIZATIONS*/
 
+    private int m_default_size;
     private Handler updateUIHandler;
     private ObjectAnimator circularGrow;
-    private Object target;
+    private Object m_target;
 
     public connectAnimation()
     {
@@ -34,15 +35,15 @@ class connectAnimation
     @SuppressLint("ObjectAnimatorBinding")
     void beatAnimation(Object p_target)
     {
-        this.target = p_target;
+        m_default_size = ((Button) p_target).getWidth();
+        this.m_target = p_target;
         circularGrow = ObjectAnimator.ofPropertyValuesHolder(
                 p_target,
                 PropertyValuesHolder.ofFloat(strings.HA_SCALE_X, 1.3f),
                 PropertyValuesHolder.ofFloat(strings.HA_SCALE_Y, 1.3f),
                 PropertyValuesHolder.ofFloat(strings.HA_ALPHA, 0f)
         );
-
-        circularGrow.setStartDelay(0);
+        circularGrow.setStartDelay(1500);
         circularGrow.setDuration(1500);
         circularGrow.start();
 
@@ -50,14 +51,22 @@ class connectAnimation
         setListerner(circularGrow,messages.CIRCULAR_GROW_FINISH,messages.CIRCULAR_GROW_STARTED);
     }
 
+    public void stopCircularGlowAnimator(){
+        circularGrow.removeAllListeners();
+        circularGrow.end();
+    }
+
+    ImageView m_support;
     @SuppressLint("ObjectAnimatorBinding")
-    void rotateAnimation(Object p_target)
+    void rotateAnimation(Object p_target, ImageView p_support)
     {
+        m_support = p_support;
         RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(3000);
+        rotate.setDuration(2700);
         rotate.setFillAfter(true);
         rotate.setInterpolator(new LinearInterpolator());
         rotate.setRepeatCount(Animation.INFINITE);
+        m_target = p_target;
         ((ImageView) p_target).startAnimation(rotate);
     }
 
@@ -68,13 +77,18 @@ class connectAnimation
             p_animation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                Button btn = (Button) target;
+                if(m_support !=null){
+                    m_support.setTranslationZ(35);
+                }
+                Button btn = (Button) m_target;
                 if(btn!=null && btn.getTransitionName().equals(strings.HA_PAUSE)){
                     btn.setVisibility(View.INVISIBLE);
                 }else {
                     btn.setVisibility(View.VISIBLE);
                 }
                 startPostTask(p_on_start);
+                ((Button) m_target).setWidth(m_default_size);
+                ((Button) m_target).setHeight(m_default_size);
             }
 
             @Override
@@ -84,12 +98,10 @@ class connectAnimation
 
             @Override
             public void onAnimationCancel(Animator animator) {
-
             }
 
             @Override
             public void onAnimationRepeat(Animator animator) {
-
             }
         });
     }

@@ -87,6 +87,17 @@ public class appController extends AppCompatActivity {
         m_model.quit();
     }
 
+    public void onReset(View view) {
+        if(m_pager.getVisibility() == View.VISIBLE && m_pager.getAlpha() == 1){
+            m_list_model.getModel().clear();
+            status.DISABLED_APPS.clear();
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, status.DISABLED_APPS), enums.PREFERENCES_ETYPE.SET_SET);
+            m_pager.getAdapter().notifyDataSetChanged();
+            m_pager.invalidate();
+            initViewPager();
+        }
+    }
+
     /*EVENT LISTNER CALLBACKS HANDLERS*/
 
     public class appModelCallback implements eventObserver.eventListener{

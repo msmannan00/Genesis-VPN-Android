@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="oval">
-            <stroke android:color="@color/blue_circle" android:width="4dp" />
-            <solid android:color="@color/mat"/>
-        </shape>
-    </item>
-</selector>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/mat_v3" android:radius="100dp">
+    <selector>
+        <item>
+            <shape android:shape="oval">
+                <stroke android:color="@color/blue_circle" android:width="4dp" />
+                <solid android:color="@color/mat"/>
+            </shape>
+        </item>
+    </selector>
+</ripple>

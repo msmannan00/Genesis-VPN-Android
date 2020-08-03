@@ -46,4 +46,9 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
     </style>
 
+    <style name="popup_window_animation">
+        <item name="android:windowEnterAnimation">@anim/popup_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/popup_anim_out</item>
+    </style>
+
 </resources>

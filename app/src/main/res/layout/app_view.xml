@@ -34,6 +34,7 @@
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:weightSum="10"
             android:layout_gravity="center_vertical"
             android:background="@color/colorPrimary"
             android:orientation="horizontal"
@@ -43,15 +44,14 @@
 
             <ImageButton
                 android:id="@+id/home"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@xml/sc_ripple_default"
+                android:layout_marginStart="3dp"
                 android:contentDescription="@string/todo"
                 android:onClick="onBackPressed"
-                android:padding="3.5dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="11dp"
                 android:scaleType="fitCenter"
                 android:src="@xml/nav_arrow_back"
                 android:tint="@color/white" />
@@ -63,9 +63,22 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="-1dp"
+                android:layout_weight="9"
                 android:text="@string/application"
                 android:textColor="@color/white"
                 android:textSize="15.5sp" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="0dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/blue_circle_clear"
+                android:layout_height="wrap_content"
+                android:src="@xml/ic_baseline_reset"
+                android:layout_marginEnd="10dp"
+                android:onClick="onReset"
+                android:layout_weight="1"/>
+
         </LinearLayout>
 
         <LinearLayout

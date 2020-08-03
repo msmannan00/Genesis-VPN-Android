@@ -1,6 +1,7 @@
 package com.darkweb.genesisvpn.application.appManager;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +24,18 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
     private ArrayList<appListRowModel> m_app_model = new ArrayList<>();
     private ArrayList<appListRowModel> m_app_model_async;
     private ViewPager2 m_pager;
+    boolean isLoaded = false;
 
     appListAdapter(AppCompatActivity p_context, ArrayList<String> p_disabled_packages, ArrayList<appListRowModel> p_app_model, ViewPager2 p_pager) {
         this.m_context = p_context;
         m_pager = p_pager;
         m_disabled_packages = p_disabled_packages;
         m_app_model_async = p_app_model;
+        m_pager.setVisibility(View.INVISIBLE);
         updateAsync();
     }
 
     public void updateAsync(){
-        m_pager.animate().cancel();
-        m_pager.animate().setDuration(300).alpha(0).withEndAction(() -> m_pager.setVisibility(View.INVISIBLE));
         new Thread(){
             public void run(){
                 try {
@@ -46,23 +47,29 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                             appListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
                         },(long) 0));
 
-                        if(counter==20){
+                        if(!isLoaded && counter==20 && m_pager.getVisibility() == View.INVISIBLE){
+                            isLoaded = true;
                             m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                                 m_pager.setVisibility(View.VISIBLE);
                                 m_pager.animate().cancel();
                                 m_pager.setAlpha(0);
                                 m_pager.animate().setDuration(250).alpha(1);
-                            },(long) 0));
+                            },(long) 400));
+                            Log.i("DUCK1", "DIC");
 
                         }
                         sleep(0);
                     }
-                    m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
-                        m_pager.setVisibility(View.VISIBLE);
-                        m_pager.animate().cancel();
+                    if(!isLoaded){
                         m_pager.setAlpha(0);
-                        m_pager.animate().setDuration(250).alpha(1);
-                    },(long) 0));
+                        m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                            m_pager.setVisibility(View.VISIBLE);
+                            m_pager.animate().cancel();
+                            m_pager.setAlpha(0);
+                            m_pager.animate().setDuration(250).alpha(1);
+                        },(long) 400));
+                        Log.i("DUCK2", "DIC");
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

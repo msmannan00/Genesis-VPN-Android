@@ -1,6 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -22,12 +21,13 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:background="@color/colorPrimary"
+            android:background="@color/blue_circle_clear"
             android:layout_width="58dp"
             android:layout_height="45dp"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="5dp"
-            tools:srcCompat="@tools:sample/avatars[0]" />
+            android:src="@xml/ic_baseline_star"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/todo" />
 
         <LinearLayout
             android:id="@+id/item_container"
@@ -45,11 +45,11 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Temp Header"
+                android:text="@string/temp_header"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -58,15 +58,29 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginLeft="1dp"
                 android:layout_marginTop="-1dp"
+                android:layout_marginEnd="1dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:singleLine="false"
-                android:text="com.temp.body"
+                android:text="@string/com_temp_body"
                 android:textColor="@color/white"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                tools:ignore="SmallSp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/tick"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="15dp"
+            android:alpha="1"
+            android:contentDescription="@string/todo"
+            android:src="@xml/ic_baseline_check"
+            android:translationZ="111dp" />
 
     </LinearLayout>
 

@@ -4,18 +4,18 @@
 
     <stroke
         android:width="2dp"
-        android:color="#ffc107" />
+        android:color="@color/tab_select" />
 
     <corners
-        android:bottomLeftRadius="7dp"
-        android:bottomRightRadius="7dp"
-        android:topLeftRadius="7dp"
-        android:topRightRadius="7dp"/>
+        android:bottomLeftRadius="3dp"
+        android:bottomRightRadius="3dp"
+        android:topLeftRadius="3dp"
+        android:topRightRadius="3dp"/>
 
     <padding
-        android:bottom="7dp"
-        android:top="7dp"
-        android:left="7dp"
-        android:right="7dp"/>
+        android:bottom="5dp"
+        android:top="5dp"
+        android:left="5dp"
+        android:right="5dp"/>
 
 </shape>

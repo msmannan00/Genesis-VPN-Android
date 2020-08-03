@@ -2,8 +2,16 @@ package com.darkweb.genesisvpn.application.constants;
 
 public class enums {
 
+    public enum VPN_UPDATE {
+        UPDATED, UPDATING, NOT_UPDATED
+    }
+
     public enum SERVER {
         ALL, RECENT
+    }
+
+    public enum HOME_COMMANDS {
+        ON_CONNECTED, ON_CONNECTING, ON_IDLE, ON_DISCONNECTING, INITIALIZE, AUTO_CONNECT, UPDATE_DOWNLOAD_SPEED, UPDATE_UPLOAD_SPEED, ON_ALERT_DISMISS, ON_CLEAR_FLAG, ON_MOVE_TASK_BACK, ON_FINISH_TASK, ON_SET_FLAG, ON_SHOW_ALERT
     }
 
     public enum REQUEST
@@ -19,7 +27,7 @@ public class enums {
         DISCONNECTING,
         CHANGING_SERVER,
         CONNECTING_SERVER,
-        ERROR;
+        ERROR
     }
     public enum TRIGGER
     {
@@ -42,11 +50,14 @@ public class enums {
         ABOUT_ADS_REMOVE_CLICK,
         HOME_ALERT,
         GENERIC_QUIT,
-        PLUGIN_DISABLE_ADS
+        PLUGIN_DISABLE_ADS,
+        SHOW_ADVERT,
+        ON_ADVERT_INITIALIZED,
+        ON_ADVERT_ALERT,
     }
 
     public enum AD_ETYPE {
-        INITIALIZE, DISABLE_ADS, AD_STATUS
+        INITIALIZE, DISABLE_ADS, AD_STATUS, SHOW_ADVERT
     }
 
     public enum ANALYTIC_ETYPE {
@@ -54,7 +65,7 @@ public class enums {
     }
 
     public enum PREFERENCES_ETYPE {
-        INITIALIZE, SET_STRING, GET_STRING, SET_BOOL, GET_BOOL, SET_SET, GET_SET
+        INITIALIZE, SET_STRING, GET_STRING, SET_BOOL, GET_BOOL, SET_SET, GET_SET, SET_INT, GET_INT
     }
 
 }

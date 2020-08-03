@@ -104,6 +104,14 @@ class homeModel
         }
     }
 
+    void onSpeedTest(int m_delay){
+        if(!m_isUIBlocked)
+        {
+            m_isUIBlocked = true;
+            new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_SPEED_TEST), m_delay);
+        }
+    }
+
     void onServer(long p_delay, REGISTERATION p_registeration_status){
         if(!m_isUIBlocked)
         {

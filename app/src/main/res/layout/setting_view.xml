@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mat"
+    tools:context=".application.settingManager.settingController">
+
+    <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mat"
@@ -26,15 +33,14 @@
 
             <ImageButton
                 android:id="@+id/home"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/todo"
                 android:onClick="onBackPressed"
-                android:padding="3.5dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@xml/sc_ripple_default"
+                android:layout_marginStart="3dp"
+                android:padding="11dp"
                 android:scaleType="fitCenter"
                 android:src="@xml/nav_arrow_back"
                 android:tint="@color/white" />
@@ -63,19 +69,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:background="@xml/linear_layout_ripple"
+                android:onClick="onAutoStart"
+                android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:onClick="onAutoConnect"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="80"
-                    android:paddingTop="15dp"
                     android:orientation="vertical"
+                    android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -84,13 +91,14 @@
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="false"
                         android:layout_marginBottom="5dp"
+                        android:clickable="false"
                         android:paddingStart="15dp"
                         android:text="@string/auto_start_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
+
                     <TextView
                         android:id="@+id/textView10"
                         android:layout_width="wrap_content"
@@ -100,24 +108,25 @@
                         android:paddingStart="15dp"
                         android:text="@string/auto_start_desc"
                         android:textColor="@color/mat_text"
-                        android:textSize="11sp"
+                        android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
                 </LinearLayout>
+
                 <Switch
-                    android:id="@+id/p_auto_connect"
+                    android:id="@+id/p_auto_start"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="20"
+                    android:checked="false"
                     android:clickable="false"
-                    android:thumbTint="@color/white"
                     android:scaleX="0.85"
                     android:scaleY="0.85"
-                    android:layout_marginEnd="5dp"
-                    android:checked="false"
                     android:theme="@style/SCBSwitch"
                     android:thumb="@xml/bg_thumb"
-                    android:track="@xml/bg_switch_states"
-                    android:layout_weight="20" />
+                    android:thumbTint="@color/white"
+                    android:track="@xml/bg_switch_states" />
             </LinearLayout>
 
             <View
@@ -131,10 +140,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@xml/linear_layout_ripple"
+                android:onClick="onAutoConnect"
                 android:orientation="horizontal"
                 android:weightSum="100"
-                android:background="@xml/linear_layout_ripple"
-                android:onClick="onAutoStart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -143,8 +152,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="80"
-                    android:paddingTop="15dp"
                     android:orientation="vertical"
+                    android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -153,13 +162,14 @@
                         android:id="@+id/textView11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="false"
                         android:layout_marginBottom="5dp"
+                        android:clickable="false"
                         android:paddingStart="15dp"
                         android:text="@string/auto_connect_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
+
                     <TextView
                         android:id="@+id/textView24"
                         android:layout_width="wrap_content"
@@ -169,25 +179,25 @@
                         android:paddingStart="15dp"
                         android:text="@string/auto_connect_info"
                         android:textColor="@color/mat_text"
-                        android:textSize="11sp"
+                        android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
                 </LinearLayout>
 
                 <Switch
-                    android:id="@+id/p_auto_start"
+                    android:id="@+id/p_auto_connect"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:thumbTint="@color/white"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="20"
+                    android:checked="false"
                     android:clickable="false"
                     android:scaleX="0.85"
                     android:scaleY="0.85"
-                    android:checked="false"
                     android:theme="@style/SCBSwitch"
-                    android:layout_marginEnd="5dp"
                     android:thumb="@xml/bg_thumb"
-                    android:track="@xml/bg_switch_states"
-                    android:layout_weight="20" />
+                    android:thumbTint="@color/white"
+                    android:track="@xml/bg_switch_states" />
             </LinearLayout>
 
             <View
@@ -201,21 +211,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal"
                 android:weightSum="100"
-                android:background="@xml/linear_layout_ripple"
-                android:onClick="onChangeConnectionType"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="65"
-                    android:paddingTop="15dp"
-                    android:orientation="vertical"
                     android:clickable="false"
+                    android:orientation="vertical"
+                    android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
@@ -224,70 +232,137 @@
                         android:id="@+id/textView15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="false"
                         android:layout_marginBottom="10dp"
+                        android:clickable="false"
                         android:paddingStart="15dp"
                         android:text="@string/connection_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
-                    <TextView
-                        android:id="@+id/textView17"
-                        android:layout_width="wrap_content"
+
+                    <LinearLayout
+                        android:id="@+id/connection1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:background="@xml/linear_layout_ripple"
                         android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/udp_info"
-                        android:textColor="@color/mat_text"
-                        android:textSize="11sp"
-                        tools:ignore="RtlSymmetry,SmallSp" />
-                    <TextView
-                        android:id="@+id/textView16"
-                        android:layout_width="wrap_content"
+                        android:onClick="onChangeConnectionType"
+                        android:orientation="horizontal"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:weightSum="10"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <TextView
+                            android:id="@+id/textView17"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="9"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/udp_info"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+
+                        <RadioButton
+                            android:id="@+id/m_udp_connection"
+                            android:layout_width="58dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|end"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/white"
+                            android:clickable="false"
+                            android:layoutDirection="rtl"
+                            android:text="@string/udp_text"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/connection2"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
+                        android:background="@xml/linear_layout_ripple"
                         android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/tcp_info"
-                        android:textColor="@color/mat_text"
-                        android:textSize="11sp"
-                        tools:ignore="RtlSymmetry,SmallSp" />
+                        android:onClick="onChangeConnectionType"
+                        android:orientation="horizontal"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:weightSum="10"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="9"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/tcp_info"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+
+                        <RadioButton
+                            android:id="@+id/m_tcp_connection"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|end"
+                            android:layout_weight="1"
+                            android:buttonTint="@color/white"
+                            android:layoutDirection="rtl"
+                            android:clickable="false"
+                            android:text="@string/tcp_text"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/connection3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@xml/linear_layout_ripple"
+                        android:clickable="false"
+                        android:onClick="onChangeConnectionType"
+                        android:orientation="horizontal"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:weightSum="10"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_weight="8"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/connection_default_info"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+
+                        <RadioButton
+                            android:id="@+id/m_def_connection"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|end"
+                            android:layout_marginStart="0dp"
+                            android:layout_weight="2"
+                            android:clickable="false"
+                            android:buttonTint="@color/white"
+                            android:checked="true"
+                            android:layoutDirection="rtl"
+                            android:text="@string/connection_auto"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
                 </LinearLayout>
-
-                <RadioGroup
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/blue_circle_clear"
-                    android:layout_weight="35"
-                    android:orientation="horizontal"
-                    android:paddingTop="5dp">
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <RadioButton
-                        android:id="@+id/m_udp_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/white"
-                        android:text="@string/udp_text"
-                        android:textColor="@color/white" />
-
-                    <RadioButton
-                        android:id="@+id/m_tcp_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/white"
-                        android:checked="true"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="13dp"
-                        android:text="@string/tcp_text"
-                        android:textColor="@color/white"/>
-                </RadioGroup>
 
             </LinearLayout>
 
@@ -301,9 +376,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@xml/linear_layout_ripple"
-                android:onClick="onChangeDefaultServer"
+                android:onClick="onProxyFilter"
                 android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -313,7 +388,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="80"
+                    android:layout_weight="90"
                     android:orientation="vertical"
                     android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -321,48 +396,54 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                     <TextView
-                        android:id="@+id/textView19"
+                        android:id="@+id/textView30"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="Default Location"
+                        android:text="@string/application_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/textView22"
+                        android:id="@+id/textView29"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="Set custom server as default which works best for your location"
+                        android:text="@string/application_info"
                         android:textColor="@color/mat_text"
-                        android:textSize="11sp"
+                        android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
                 </LinearLayout>
-
                 <ImageView
-                    android:id="@+id/p_default_server"
+                    android:id="@+id/imageView3"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
-                    android:layout_weight="20"
-                    android:checked="false"
+                    android:layout_weight="10"
                     android:clickable="false"
-                    android:src="@drawable/no_flag_default"
+                    android:src="@xml/ic_baseline_arrow_forward"
                     android:scaleX="0.85"
                     android:scaleY="0.85"
                     android:theme="@style/SCBSwitch"
                     android:thumb="@xml/bg_thumb"
                     android:thumbTint="@color/white"
-                    android:track="@xml/bg_switch_states" />
-
+                    android:track="@xml/bg_switch_states"
+                    android:contentDescription="@string/todo" />
             </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="0dp"
+                android:background="@color/mat_v3"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -386,6 +467,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                     <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:clickable="false"
+                        android:paddingStart="15dp"
+                        android:text="@string/smart_vpn"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        tools:ignore="RtlSymmetry" />
+
+                    <TextView
                         android:id="@+id/textView25"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -394,7 +487,7 @@
                         android:paddingStart="15dp"
                         android:text="Automatically set optimal location"
                         android:textColor="@color/mat_text"
-                        android:textSize="11sp"
+                        android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
                 </LinearLayout>
 
@@ -416,7 +509,7 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/view"
+                android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="0dp"
@@ -424,7 +517,188 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp" />
 
+            <LinearLayout
+                android:id="@+id/default_server_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@xml/linear_layout_ripple"
+                android:onClick="onChangeDefaultServer"
+                android:orientation="vertical"
+                android:weightSum="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@xml/linear_layout_ripple"
+                    android:onClick="onChangeDefaultServer"
+                    android:orientation="horizontal"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="80"
+                        android:orientation="vertical"
+                        android:paddingTop="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+                        <TextView
+                            android:id="@+id/textView19"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="Default Location"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            tools:ignore="RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="Set custom server as default which works best for your location"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/p_default_server"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="0dp"
+                        android:layout_weight="20"
+                        android:checked="false"
+                        android:clickable="false"
+                        android:scaleX="0.85"
+                        android:scaleY="0.85"
+                        android:src="@drawable/no_flag_default"
+                        android:theme="@style/SCBSwitch"
+                        android:thumb="@xml/bg_thumb"
+                        android:thumbTint="@color/white"
+                        android:track="@xml/bg_switch_states" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/mat_v3"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/alert_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mat_alpha"
+        android:elevation="35dp"
+        android:alpha="0"
+        android:onClick="onAlertDismissSettings"
+        tools:layout_editor_absoluteY="351dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/alert_dialog_panel"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_margin="10dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@xml/sc_rounded_corner_warning"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:elevation="40dp"
+                android:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@xml/sc_rounded_corner"
+                android:elevation="40dp"
+                android:onClick="onAlertDismissSettings"
+                android:text="Dismiss"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/alert_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:maxLines="2"
+                android:text="Error Occred | Network Connection Exception"
+                android:textColor="@color/text_color_v1"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/alert_title" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="9dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toTopOf="@+id/alert_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.375"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/alert_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="7dp"
+                android:maxLines="2"
+                android:text="Error Occured"
+                android:textColor="@color/text_color_v1"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

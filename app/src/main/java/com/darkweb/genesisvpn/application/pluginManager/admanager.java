@@ -2,7 +2,6 @@ package com.darkweb.genesisvpn.application.pluginManager;
 
 import android.os.Handler;
 import android.view.View;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.application.constants.enums;
@@ -24,10 +23,12 @@ public class admanager
     /*Private Variables*/
     private AdView m_banner_ads = null;
     private Handler m_failure_handler = new Handler();
-    eventObserver.eventListener m_event;
+    private eventObserver.eventListener m_event;
+    private AppCompatActivity m_context;
 
     /*Local Variables*/
     private boolean m_ads_disable = false;
+    private boolean m_advert_initialize = false;
 
     /*Initializations*/
     public admanager(eventObserver.eventListener p_event){
@@ -38,48 +39,58 @@ public class admanager
     {
         m_ads_disable = p_ads_disabled;
         m_banner_ads = p_banner_ads;
+        m_context = p_context;
         m_banner_ads.setVisibility(View.GONE);
-        if(!m_ads_disable){
-            Tovuti.from(p_context).monitor((connectionType, isConnected, isFast) -> {
-                if(isConnected){
-                    List<String> testDeviceIds = Collections.singletonList("E6E822D3FE2DC52EE9947D1E042D20A9");
-                    RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
-                    MobileAds.setRequestConfiguration(configuration);
-                    MobileAds.initialize(p_context, "ca-app-pub-5074525529134731~1412991199");
-                    initBannerAds();
-                }
-            });
+    }
+
+    public void initBannerAds()
+    {
+        if(!m_advert_initialize){
+            m_advert_initialize = true;
+            if(!m_ads_disable){
+                Tovuti.from(m_context).monitor((connectionType, isConnected, isFast) -> {
+                    if(isConnected){
+                        List<String> testDeviceIds = Collections.singletonList("E6E822D3FE2DC52EE9947D1E042D20A9");
+                        RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+                        MobileAds.setRequestConfiguration(configuration);
+                    }
+                });
+                final Runnable r = () -> {
+                    MobileAds.initialize(m_context, "ca-app-pub-5074525529134731~1412991199");
+                    AdRequest request = new AdRequest.Builder()
+                            .build();
+                    m_banner_ads.loadAd(request);
+                    initializeListener();
+                };
+                m_failure_handler.postDelayed(r, 1000);
+            }
+            else {
+                m_event.invokeObserver(Arrays.asList(keys.ADS_DISABLED, true), enums.ETYPE.ON_ADVERT_INITIALIZED);
+            }
         }
     }
 
-    private void initBannerAds()
-    {
-        AdRequest request = new AdRequest.Builder()
-                .build();
-        m_banner_ads.loadAd(request);
-        initializeListener();
-    }
 
     public void initializeListener(){
+        m_event.invokeObserver(Arrays.asList(keys.ADS_DISABLED, true), enums.ETYPE.ON_ADVERT_INITIALIZED);
         m_banner_ads.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                m_banner_ads.setVisibility(View.VISIBLE);
+                super.onAdLoaded();
+                m_banner_ads.setVisibility(View.VISIBLE); // banner visible
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 final Runnable r = () -> {
-                    AdRequest request = new AdRequest.Builder()
-                            .build();
-                    m_banner_ads.loadAd(request);
+                    initBannerAds();
                 };
                 m_failure_handler.postDelayed(r, 5000);
             }
 
             @Override
             public void onAdOpened() {
-                m_banner_ads.setVisibility(View.VISIBLE);
+                m_banner_ads.setVisibility(View.VISIBLE); // banner visible
             }
 
             @Override
@@ -111,14 +122,15 @@ public class admanager
                 m_ads_disable = true;
                 m_banner_ads.setVisibility(View.GONE);
                 m_event.invokeObserver(Arrays.asList(keys.ADS_DISABLED, true), enums.ETYPE.PLUGIN_DISABLE_ADS);
-                Toast.makeText(p_context, strings.AD_ADS_DISABLED, Toast.LENGTH_SHORT).show();
+
+                m_event.invokeObserver(Arrays.asList(strings.AD_ADS_DISABLED_TITLE, strings.AD_ADS_DISABLED), enums.ETYPE.ON_ADVERT_ALERT);
             }
             else
             {
-                Toast.makeText(p_context, strings.AD_ADS_ALREADY_DISABLED, Toast.LENGTH_SHORT).show();
+                m_event.invokeObserver(Arrays.asList(strings.AD_ADS_ALREADY_DISABLED_TITLE, strings.AD_ADS_ALREADY_DISABLED), enums.ETYPE.ON_ADVERT_ALERT);
             }
         }else if(m_ads_disable){
-            Toast.makeText(p_context, strings.AD_ADS_ALREADY_DISABLED, Toast.LENGTH_SHORT).show();
+            m_event.invokeObserver(Arrays.asList(strings.AD_ADS_ALREADY_DISABLED_TITLE, strings.AD_ADS_ALREADY_DISABLED), enums.ETYPE.ON_ADVERT_ALERT);
         }
     }
 }

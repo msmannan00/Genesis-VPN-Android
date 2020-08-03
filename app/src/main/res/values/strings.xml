@@ -22,6 +22,7 @@
     <string name="menu_about">About Genesis</string>
     <string name="menu_promotion">Promotion Code</string>
     <string name="menu_location">IP Address &amp; Location</string>
+    <string name="menu_speed">Ookla Speed Test</string>
     <string name="menu_help">Help</string>
     <string name="menu_rate">Rate US</string>
     <string name="menu_server">Server Location</string>
@@ -43,7 +44,7 @@
 
     <!-- APPLICATION GENERAL -->
 
-    <string name="todo">TODO</string>
+    <string name="dashboard">Genesis VPN</string>
     <string name="homepage">Change Location</string>
     <string name="application">Proxy Filter</string>
     <string name="about">About Us</string>
@@ -51,13 +52,34 @@
     <string name="settings">Settings</string>
     <string name="udp_text">UDP</string>
     <string name="tcp_text">TCP</string>
+    <string name="connection_auto">AUTO</string>
     <string name="tcp_info">TCP Mode for games and browsing</string>
     <string name="udp_info">UDP Mode for video streaming</string>
+    <string name="connection_default_info">DEFAULT Mode for auto configuring</string>
     <string name="connection_header">VPN Sock Mode</string>
     <string name="auto_connect_info">Auto-connect to VPN on app launch</string>
     <string name="auto_connect_header">Connect on app launch</string>
     <string name="auto_start_desc">Auto-connect to VPN on Android startup</string>
     <string name="auto_start_header">Connect on startup</string>
+    <string name="smart_vpn">Smart VPN</string>
+    <string name="upload_text_default">0.00 / ↑ kbps</string>
+    <string name="download_text_default">0.00 / ↓ kbps</string>
+
+    <string name="application_header">Application Proxy Filter</string>
+    <string name="application_info">Filter applications to be used with proxy</string>
+
+    <string name="todo">TODO</string>
+    <string name="tcp_default">TCP</string>
+    <string name="alert_dismiss">Dismiss</string>
+    <string name="alert_stop">stop</string>
+    <string name="alert_default_message">Error Occred | Network Connection Exception</string>
+    <string name="alert_title">Error Occured</string>
+    <string name="enter_promotion_code">Enter promotion code</string>
+    <string name="submit">Submit</string>
+    <string name="temp_header">Temp Header</string>
+    <string name="com_temp_body">com.temp.body</string>
+    <string name="enter_app_name">Enter app name</string>
+    <string name="enter_country_name">Enter country name</string>
 
     <!-- SERVER PAGE -->
 

@@ -43,15 +43,14 @@
 
             <ImageButton
                 android:id="@+id/home"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@xml/sc_ripple_default"
+                android:layout_marginStart="3dp"
                 android:contentDescription="@string/todo"
                 android:onClick="onBackPressed"
-                android:padding="3.5dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="11dp"
                 android:scaleType="fitCenter"
                 android:src="@xml/nav_arrow_back"
                 android:tint="@color/white" />

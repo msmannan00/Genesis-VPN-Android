@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -38,6 +39,17 @@ public class helperMethods
         }else {
             return p_exception.getCause().getLocalizedMessage();
         }
+    }
+
+    public static float pxToDp(Context p_context,float p_value){
+        float dip = p_value;
+        Resources r = p_context.getResources();
+        float px = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dip,
+                r.getDisplayMetrics()
+        );
+        return px;
     }
 
     public static void onOpenURL(AppCompatActivity p_context, String p_link){

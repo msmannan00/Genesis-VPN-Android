@@ -1,6 +1,7 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -17,8 +18,8 @@ public class preferenceManager
     /*Private Declarations*/
 
     eventObserver.eventListener m_event;
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor edit;
+    private SharedPreferences m_prefs;
+    private SharedPreferences.Editor m_edit;
 
     /*Initializations*/
     public preferenceManager(eventObserver.eventListener p_event){
@@ -26,48 +27,59 @@ public class preferenceManager
     }
 
     @SuppressLint("CommitPrefEdits")
-    public void initialize(AppCompatActivity m_context)
+    public void initialize(Context m_context)
     {
-        prefs = PreferenceManager.getDefaultSharedPreferences(m_context);
-        edit = prefs.edit();
+        m_prefs = PreferenceManager.getDefaultSharedPreferences(m_context);
+        m_edit = m_prefs.edit();
     }
 
     /*Saving Preferences*/
 
     public void setString(String p_valueKey, String p_value)
     {
-        edit.putString(p_valueKey, p_value);
-        edit.commit();
+        m_edit.putString(p_valueKey, p_value);
+        m_edit.commit();
     }
 
     public void setBool(String p_valueKey, boolean p_value)
     {
-        edit.putBoolean(p_valueKey, p_value);
-        edit.commit();
+        m_edit.putBoolean(p_valueKey, p_value);
+        m_edit.commit();
+    }
+
+    public void setInt(String p_valueKey, int p_value)
+    {
+        m_edit.putInt(p_valueKey, p_value);
+        m_edit.commit();
+    }
+
+    public void setSet(String p_valueKey, ArrayList<String> p_value){
+        Set<String> set = new HashSet<>(p_value);
+        m_edit.putStringSet(p_valueKey, set);
+        m_edit.commit();
     }
 
     /*Recieving Preferences*/
 
     public String getString(String p_valueKey, String p_valueDefault)
     {
-        return prefs.getString(p_valueKey, p_valueDefault);
+        return m_prefs.getString(p_valueKey, p_valueDefault);
     }
 
     public boolean getBool(String p_valueKey, boolean p_valueDefault)
     {
-        return prefs.getBoolean(p_valueKey, p_valueDefault);
-    }
-
-    public void setSet(String p_valueKey, ArrayList<String> p_value){
-        Set<String> set = new HashSet<>(p_value);
-        edit.putStringSet(p_valueKey, set);
-        edit.commit();
+        return m_prefs.getBoolean(p_valueKey, p_valueDefault);
     }
 
     public ArrayList<String> getSet(String p_valueKey, ArrayList<String> p_value){
         Set<String> m_temo_set = new HashSet<>(new ArrayList<>());
-        Set<String> m_response =  prefs.getStringSet(p_valueKey, m_temo_set);
+        Set<String> m_response =  m_prefs.getStringSet(p_valueKey, m_temo_set);
         return new ArrayList<>(m_response);
+    }
+
+    public int getInt(String p_valueKey, int p_valueDefault)
+    {
+        return m_prefs.getInt(p_valueKey, p_valueDefault);
     }
 
 }

@@ -69,6 +69,10 @@ public class serverController extends AppCompatActivity {
         sharedControllerManager.getInstance().setServerController(this);
         m_model = new serverModel(this, new serverModelCallback());
         m_view_controller = new serverViewController(this, new serverViewCallback());
+        if(m_list_model!=null){
+            m_list_model.getRecentModel().clear();
+            m_list_model.getCountryModel().clear();
+        }
         m_list_model = serverListModel.getInstance();
         m_list_model.setRecentModel(status.RECENT_SERVERS);
     }
