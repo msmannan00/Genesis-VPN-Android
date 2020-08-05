@@ -3,6 +3,9 @@ package com.darkweb.genesisvpn.application.pluginManager;
 import android.content.Context;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
@@ -38,10 +41,10 @@ public class pluginManager
     public Object onAdvertTrigger(List<Object> data, enums.AD_ETYPE p_event){
         if(p_event == enums.AD_ETYPE.INITIALIZE){
             boolean m_ads_status = m_preference_manager.getBool(keys.ADS_DISABLED,false);;
-            m_ad_manager.initialize((AppCompatActivity)data.get(0), m_ads_status, (com.google.android.gms.ads.AdView)data.get(1));
+            m_ad_manager.initialize(((FragmentActivity)data.get(0)).getApplicationContext(), m_ads_status, (com.google.android.gms.ads.AdView)data.get(1));
         }
         else if(p_event == enums.AD_ETYPE.DISABLE_ADS){
-            m_ad_manager.adsDisabler((AppCompatActivity)data.get(0));
+            m_ad_manager.adsDisabler();
         }
         else if(p_event == enums.AD_ETYPE.AD_STATUS){
             return m_ad_manager.isAdDisabled();
@@ -71,7 +74,7 @@ public class pluginManager
     /*ANALYTICS HANDLER*/
     public void onAnalyticsTrigger(List<Object> data, enums.ANALYTIC_ETYPE p_event){
         if(p_event == enums.ANALYTIC_ETYPE.INITIALIZE){
-            m_analytics_manager.initialize((AppCompatActivity)data.get(0));
+            m_analytics_manager.initialize((FragmentActivity)data.get(0));
         }
     }
     public class analyticsCallback implements eventObserver.eventListener{

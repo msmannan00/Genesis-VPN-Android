@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 
 import com.anchorfree.sdk.UnifiedSDK;
 import com.darkweb.genesisvpn.R;
@@ -45,13 +46,13 @@ class settingViewController {
 
     /*LOCAL VARIABLE DECLARATION*/
 
-    private AppCompatActivity m_context;
+    private FragmentActivity m_context;
     private eventObserver.eventListener m_event;
     private boolean isDefaultServerSet = false;
 
     /*INITIALIZATIONS*/
 
-    public settingViewController(AppCompatActivity p_context, eventObserver.eventListener p_event, Switch p_auto_connect, Switch p_auto_start, RadioButton p_udp_connection, RadioButton p_tcp_connection, ImageView p_default_server, Switch p_auto_optimal_location, LinearLayout p_default_server_layout, RadioButton p_def_connection, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description)
+    public settingViewController(FragmentActivity p_context, eventObserver.eventListener p_event, Switch p_auto_connect, Switch p_auto_start, RadioButton p_udp_connection, RadioButton p_tcp_connection, ImageView p_default_server, Switch p_auto_optimal_location, LinearLayout p_default_server_layout, RadioButton p_def_connection, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description)
     {
         this.m_context = p_context;
         this.m_event = p_event;
@@ -75,7 +76,6 @@ class settingViewController {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(m_context.getResources().getColor(R.color.colorPrimary));
-        m_context. setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         onUpdateFlag();
 
         m_auto_connect.setChecked(status.AUTO_CONNECT);
@@ -83,19 +83,13 @@ class settingViewController {
         m_auto_optimal_location.setChecked(status.AUTO_OPTIMAL_LOCATION);
 
         if(status.CONNECTION_TYPE == 1){
-            m_udp_connection.setChecked(false);
-            m_tcp_connection.setChecked(true);
-            m_def_connection.setChecked(false);
+            onUpdateConnectionType(R.id.m_connect_type_TCP);
         }
         else if(status.CONNECTION_TYPE == 2){
-            m_udp_connection.setChecked(false);
-            m_tcp_connection.setChecked(false);
-            m_def_connection.setChecked(true);
+            onUpdateConnectionType(R.id.m_connect_type_AUTO);
         }
         else {
-            m_udp_connection.setChecked(true);
-            m_tcp_connection.setChecked(false);
-            m_def_connection.setChecked(false);
+            onUpdateConnectionType(R.id.m_connect_type_UDP);
         }
 
         if(m_auto_optimal_location.isChecked()){
@@ -109,6 +103,24 @@ class settingViewController {
         m_alert_dialog.setAlpha(0);
         m_alert_dialog.setVisibility(View.GONE);
         m_alert_title.setTypeface(null, Typeface.BOLD);
+    }
+
+    public void onUpdateConnectionType(int p_id){
+        if(p_id == R.id.m_connect_type_TCP){
+            m_udp_connection.setChecked(false);
+            m_tcp_connection.setChecked(true);
+            m_def_connection.setChecked(false);
+        }
+        else if(p_id == R.id.m_connect_type_AUTO){
+            m_udp_connection.setChecked(false);
+            m_tcp_connection.setChecked(false);
+            m_def_connection.setChecked(true);
+        }
+        else {
+            m_udp_connection.setChecked(true);
+            m_tcp_connection.setChecked(false);
+            m_def_connection.setChecked(false);
+        }
     }
 
     public void onDefaultServerToggle(boolean p_is_checked){
@@ -128,34 +140,16 @@ class settingViewController {
     public void onUpdateFlag(){
         if(!m_auto_optimal_location.isChecked()){
             if(m_default_server!=null && !status.DEFAULT_SERVER.equals(strings.EMPTY_STR)){
-                //animateFlag(FlagKit.drawableWithFlag(m_context, status.DEFAULT_SERVER));
                 m_default_server.setImageDrawable(FlagKit.drawableWithFlag(m_context, status.DEFAULT_SERVER));
                 isDefaultServerSet = true;
             }
         }else if(isDefaultServerSet){
-            // animateFlag(m_context.getDrawable(R.drawable.no_flag_default));
             m_default_server.setImageDrawable(m_context.getDrawable(R.drawable.no_flag_default));
             isDefaultServerSet = false;
         }
     }
 
-    public void animateFlag(Drawable p_flag){
-        try{
-            if(m_default_server.getAlpha()>=0.7f){
-                m_default_server.animate().cancel();
-                m_default_server.animate().alpha(0).setDuration(150).withEndAction(() -> {
-                    m_default_server.animate().setDuration(350).alpha(1);
-                    m_default_server.setImageDrawable(p_flag);
-                }).start();
-            }else {
-                m_default_server.animate().cancel();
-                m_default_server.setAlpha(0);
-                m_default_server.animate().setDuration(350).alpha(1).start();
-                m_default_server.setImageDrawable(p_flag);
-            }
-        }catch (Exception ex){
-        }
-    }
+    /*ALERT VIEW*/
 
     public void onAlertDismiss() {
         m_context.runOnUiThread(() -> {
@@ -204,9 +198,6 @@ class settingViewController {
     }
 
     public boolean isAlertViewShwoing(){
-        return m_alert_dialog.getAlpha() > 0;
+        return m_alert_dialog.getVisibility() == View.VISIBLE;
     }
-
-    /*HELPER METHODS*/
-
 }

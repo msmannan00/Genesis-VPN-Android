@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mat"
-    tools:context=".application.promotionManager.promotionController">
+    android:background="@color/primary_blue_back"
+    tools:context=".application.aboutManager.aboutController">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/mat"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_blue_back"
         tools:context=".application.aboutManager.aboutController">
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/m_main_layout"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_gravity="center_vertical"
             android:background="@color/colorPrimary"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,18 +22,17 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/home"
+                android:id="@+id/m_back_navigation"
                 android:layout_gravity="center_vertical"
                 android:background="@xml/sc_ripple_default"
                 android:layout_marginStart="3dp"
                 android:contentDescription="@string/todo"
-                android:onClick="onBackPressed"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:padding="11dp"
                 android:scaleType="fitCenter"
                 android:src="@xml/nav_arrow_back"
-                android:tint="@color/white" />
+                android:tint="@color/white"/>
 
             <TextView
                 style="@android:style/TextAppearance.DeviceDefault.Medium"
@@ -43,17 +41,17 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="-1dp"
-                android:text="@string/promotion"
+                android:text="@string/about_text"
                 android:textColor="@color/white"
                 android:textSize="15.5sp" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/m_text_view_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="110"
-            android:background="@color/mat"
+            android:background="@color/primary_blue_back"
             android:paddingStart="23dp"
             android:paddingEnd="23dp"
             android:justificationMode="inter_word"
@@ -63,19 +61,21 @@
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/m_logo"
+            tools:targetApi="o" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/m_logo"
             android:layout_width="175dp"
             android:layout_height="172dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/textView3"
+            app:layout_constraintEnd_toStartOf="@+id/m_text_view_1"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            app:srcCompat="@mipmap/splashlogo" />
+            app:layout_constraintStart_toEndOf="@+id/m_text_view_1"
+            app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
+            android:src="@mipmap/splashlogo"
+            android:contentDescription="@string/todo" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3">
+            app:layout_constraintTop_toBottomOf="@+id/m_text_view_1">
 
             <View
                 android:layout_width="fill_parent"
@@ -99,13 +99,13 @@
                 android:paddingEnd="10dp" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/m_text_view_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingStart="15dp"
-                android:text="Version 1.0"
+                android:text="@string/about_version_1_0"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
@@ -119,13 +119,13 @@
                 android:paddingEnd="10dp" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/m_text_view_3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingStart="15dp"
-                android:text="Email | gamesolstudios@gmail.com"
+                android:text="@string/about_email_gamesolstudios_gmail_com"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
@@ -139,13 +139,13 @@
                 android:paddingEnd="10dp" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/m_text_view_4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingStart="15dp"
-                android:text="Supported | Android Lollipop and Above"
+                android:text="@string/about_supported_android_lollipop_and_above"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />
@@ -159,13 +159,13 @@
                 android:paddingEnd="10dp" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/m_text_view_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingStart="15dp"
-                android:text="Licence | GPN Open Source"
+                android:text="@string/about_licence_gpn_open_source"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:ignore="RtlSymmetry" />

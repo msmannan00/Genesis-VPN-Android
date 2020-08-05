@@ -49,11 +49,13 @@ public class enums {
     public enum ETYPE {
         ABOUT_ADS_REMOVE_CLICK,
         HOME_ALERT,
+        OPEN_FRAGMENT,
         GENERIC_QUIT,
         PLUGIN_DISABLE_ADS,
         SHOW_ADVERT,
         ON_ADVERT_INITIALIZED,
         ON_ADVERT_ALERT,
+        ON_LOAD_LIST,
     }
 
     public enum AD_ETYPE {

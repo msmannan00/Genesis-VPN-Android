@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.darkweb.genesisvpn.R;
@@ -31,7 +33,7 @@ import java.util.Arrays;
 
 public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.listViewHolder>
 {
-    private AppCompatActivity m_context;
+    private Fragment m_context;
     private ArrayList<serverListRowModel> m_server_model = new ArrayList<>();
     private enums.SERVER m_type;
     private ArrayList<serverListRowModel> m_server_model_async;
@@ -39,10 +41,11 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
     public static boolean m_type_response;
     boolean isLoaded = false;
 
-    serverListAdapter(AppCompatActivity p_context, ArrayList<serverListRowModel> p_server_model,enums.SERVER p_type, ViewPager2 p_pager, boolean p_response_type) {
+    serverListAdapter(Fragment p_context, ArrayList<serverListRowModel> p_server_model, enums.SERVER p_type, ViewPager2 p_pager, boolean p_response_type) {
         this.m_context = p_context;
         m_type = p_type;
         m_pager = p_pager;
+        m_pager.setVisibility(View.INVISIBLE);;
         m_server_model_async = p_server_model;
         m_type_response = p_response_type;
         updateList(new ArrayList<>());
@@ -57,14 +60,14 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                     sleep(400);
                     for(int counter=0;counter<m_server_model_async.size();counter++){
                         int finalCounter = counter;
-                        m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        m_context.getActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_server_model.add(m_server_model_async.get(finalCounter));
                             serverListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
                         },(long) 0));
 
                         if(!isLoaded && counter==20 && m_pager.getVisibility() == View.INVISIBLE ){
                             isLoaded = true;
-                            m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                            m_context.getActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
                                 m_pager.setVisibility(View.VISIBLE);
                                 m_pager.animate().cancel();
                                 m_pager.setAlpha(0);
@@ -79,7 +82,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                     }
                     if(!isLoaded){
                         m_pager.setAlpha(0);
-                        m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        m_context.getActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_pager.setVisibility(View.VISIBLE);
                             m_pager.animate().cancel();
                             m_pager.setAlpha(0);
@@ -152,7 +155,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
             }
 
             if(model.getCountryModel() != null){
-                flags.setImageDrawable(FlagKit.drawableWithFlag(m_context, model.getCountryModel().getCountry()));
+                flags.setImageDrawable(FlagKit.drawableWithFlag(m_context.getActivity(), model.getCountryModel().getCountry()));
             }else {
                 try {
                     Resources res = m_context.getResources();
@@ -165,17 +168,17 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
             layout.setOnClickListener(view -> {
                 if(model.getCountryModel() == null){
                     sharedControllerManager.getInstance().getHomeController().onChooseServer(strings.OPTIMAL_SERVER);
-                    m_context.onBackPressed();
+                    m_context.getActivity().onBackPressed();
                 }else {
                     if(!m_type_response){
                         serverListModel.getInstance().addModel(model);
                         sharedControllerManager.getInstance().getHomeController().onChooseServer(model.getCountryModel().getCountry());
-                        m_context.onBackPressed();
+                        m_context.getActivity().onBackPressed();
                     }else {
                         status.DEFAULT_SERVER = model.getCountryModel().getCountry();
                         pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
                         status.AUTO_OPTIMAL_LOCATION = false;
-                        m_context.onBackPressed();
+                        m_context.getActivity().onBackPressed();
                     }
                 }
             });

@@ -1,6 +1,7 @@
 package com.darkweb.genesisvpn.application.homeManager;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -15,38 +16,45 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
 import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.aboutManager.aboutController;
+import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.messages;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.jwang123.flagkit.FlagKit;
+
+import java.util.Collections;
 import java.util.Locale;
 
 class homeViewController {
 
     /*LOCAL VIEW DECLARATION*/
-
     private Button m_connect_base;
     private Button m_connect_animator;
     private Button m_connection_toggle;
     private Button m_stop_alert_btn;
     private Button m_connect_animator_initial;
+    private Button m_dismiss_alert_btn;
+    private FrameLayout m_fragment_container;
 
     private ImageView m_connect_loading;
     private ImageView m_speed_base;
+    private ImageView m_blocker;
     private ImageButton m_flag;
 
-    private AppCompatActivity m_context;
+    private FragmentActivity m_context;
     private TextView m_connect_label;
     private String m_text = strings.HO_IDLE;
     private ConstraintLayout m_alert_dialog;
@@ -71,7 +79,7 @@ class homeViewController {
 
     /*INITIALIZATIONS*/
 
-    homeViewController(eventObserver.eventListener p_event, Button p_connect_base, Button p_connect_animator, ImageView p_connect_loading, ImageButton p_flag/*, TextView p_location_info*/, TextView p_connect_label, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, AppCompatActivity p_context, TextView p_download_speed, TextView p_upload_speed, Button p_connection_toggle, Button p_stop_alert_btn, DrawerLayout p_drawer, ImageView p_speed_base, Button p_connect_animator_initial)
+    homeViewController(eventObserver.eventListener p_event, Button p_connect_base, Button p_connect_animator, ImageView p_connect_loading, ImageButton p_flag, TextView p_connect_label, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, FragmentActivity p_context, TextView p_download_speed, TextView p_upload_speed, Button p_connection_toggle, Button p_stop_alert_btn, DrawerLayout p_drawer, ImageView p_speed_base, Button p_connect_animator_initial, Button p_dismiss_alert_btn, FrameLayout p_fragment_container, ImageView p_blocker)
     {
         this.m_event = p_event;
         this.m_connect_base = p_connect_base;
@@ -90,6 +98,9 @@ class homeViewController {
         this.m_drawer = p_drawer;
         this.m_speed_base = p_speed_base;
         this.m_connect_animator_initial = p_connect_animator_initial;
+        this.m_dismiss_alert_btn = p_dismiss_alert_btn;
+        this.m_fragment_container = p_fragment_container;
+        this.m_blocker = p_blocker;
 
         m_speed_base.setTranslationZ(35);
         m_connect_animations = new connectAnimation();
@@ -131,7 +142,6 @@ class homeViewController {
         m_connect_animator.setTransitionName(strings.HO_TRANSITION_NAME_START);
         m_connect_animator_initial.setTransitionName(strings.HO_TRANSITION_NAME_START);
         m_connect_animations.rotateAnimation(m_connect_loading, m_speed_base);
-        //m_connect_animations.beatAnimation(m_connect_animator_initial);
 
         if(status.AUTO_CONNECT){
             m_connect_label.setText(strings.HO_CONNECTING);
@@ -306,41 +316,50 @@ class homeViewController {
     }
 
     public void onShowAlert(String p_error_message,String p_error_title, boolean p_is_forced, boolean isStopButtonActive){
-        String m_error = p_error_message;
-        if(p_is_forced || !m_alert_description.getText().equals(m_error) && !m_alert_title.getText().equals(strings.AF_NO_APPLICATION_HEADER)){
-            if(isStopButtonActive){
-                m_stop_alert_btn.setVisibility(View.VISIBLE);
-            }else {
-                m_stop_alert_btn.setVisibility(View.INVISIBLE);
-            }
-            isForcedAlert = p_is_forced;
-            m_context.runOnUiThread(() -> {
-                if(m_alert_dialog.getAlpha()<1){
-                    m_alert_dialog.animate().cancel();
-                    m_alert_dialog.setAlpha(0);
-                }else {
-                    m_alert_description.animate().cancel();
-                    m_alert_title.animate().cancel();
-                    m_alert_description.setAlpha(0.0f);
-                    m_alert_title.setAlpha(0.0f);
-                    m_alert_description.animate().alpha(1);
-                    m_alert_title.animate().alpha(1);
 
+        m_context.runOnUiThread(() -> {
+            String m_error = p_error_message;
+            if(p_is_forced || !m_alert_description.getText().equals(m_error) && !m_alert_title.getText().equals(strings.AF_NO_APPLICATION_HEADER)){
+                Drawable m_background;
+                if(isStopButtonActive){
+                    m_background = helperMethods.XMLTODrawable(m_context, R.xml.sc_rounded_corner_positive);
+                    m_stop_alert_btn.setVisibility(View.VISIBLE);
+                }else {
+                    m_background = helperMethods.XMLTODrawable(m_context, R.xml.sc_rounded_corner);
+                    m_stop_alert_btn.setVisibility(View.INVISIBLE);
+                }
+                if(m_background!=null){
+                    m_dismiss_alert_btn.setBackground(m_background);
+                }
+                isForcedAlert = p_is_forced;
+                m_context.runOnUiThread(() -> {
+                    if(m_alert_dialog.getAlpha()<1){
+                        m_alert_dialog.animate().cancel();
+                        m_alert_dialog.setAlpha(0);
+                    }else {
+                        m_alert_description.animate().cancel();
+                        m_alert_title.animate().cancel();
+                        m_alert_description.setAlpha(0.0f);
+                        m_alert_title.setAlpha(0.0f);
+                        m_alert_description.animate().alpha(1);
+                        m_alert_title.animate().alpha(1);
+
+                        m_alert_description.setText(m_error);
+                        m_alert_title.setText(p_error_title);
+                        return;
+                    }
+
+                    m_alert_dialog.animate().setDuration(200).alpha(1).withEndAction(() -> {
+                        m_alert_dialog.setClickable(true);
+                        ((ConstraintLayout)m_alert_dialog.getChildAt(0)).getChildAt(1).setClickable(true);
+                        ((ConstraintLayout)m_alert_dialog.getChildAt(0)).getChildAt(2).setClickable(true);
+                    });
                     m_alert_description.setText(m_error);
                     m_alert_title.setText(p_error_title);
-                    return;
-                }
-
-                m_alert_dialog.animate().setDuration(200).alpha(1).withEndAction(() -> {
-                    m_alert_dialog.setClickable(true);
-                    ((ConstraintLayout)m_alert_dialog.getChildAt(0)).getChildAt(1).setClickable(true);
-                    ((ConstraintLayout)m_alert_dialog.getChildAt(0)).getChildAt(2).setClickable(true);
+                    m_alert_dialog.setVisibility(View.VISIBLE);
                 });
-                m_alert_description.setText(m_error);
-                m_alert_title.setText(p_error_title);
-                m_alert_dialog.setVisibility(View.VISIBLE);
-            });
-        }
+            }
+        });
     }
 
     public void onAlertDismissProxy() {
@@ -437,11 +456,49 @@ class homeViewController {
                     if(!isFlagRemoved){
                         isFlagRemoved = true;
                         animateFlag(m_context.getResources().getDrawable(R.drawable.no_flag_default));
-                        // m_location_info.setText(strings.HO_UNCONNECTED);
                     }
                 }
             }
         };
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void onOpenFragment(){
+        m_context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        m_blocker.setClickable(true);
+        m_fragment_container.setAlpha(0);
+        m_fragment_container.setVisibility(View.VISIBLE);
+        m_fragment_container.animate().cancel();
+        m_fragment_container.animate()
+                .setDuration(150)
+                .scaleY(1f)
+                .scaleX(1f)
+                .alpha(1)
+                .setStartDelay(0)
+                .start();
+
+        new Handler().postDelayed(() -> m_blocker.setClickable(false), 200);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void onCloseFragment(){
+        m_context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        m_context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        m_blocker.setClickable(true);
+        m_fragment_container.setAlpha(1);
+        m_fragment_container.setVisibility(View.VISIBLE);
+        m_fragment_container.animate().cancel();
+        m_fragment_container.animate()
+                .setDuration(150)
+                .scaleY(0.93f)
+                .scaleX(0.93f)
+                .alpha(0)
+                .setStartDelay(0).withEndAction(() -> {
+                    m_fragment_container.setVisibility(View.INVISIBLE);
+                }).start();
+
+        new Handler().postDelayed(() -> m_blocker.setClickable(false), 200);
+
     }
 
     public void animateFlag(Drawable p_flag){

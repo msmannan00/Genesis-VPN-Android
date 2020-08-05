@@ -13,7 +13,7 @@
     <item>
         <shape android:shape="rectangle">
             <!-- put your background color here-->
-            <solid android:color="@color/mat" />
+            <solid android:color="@color/primary_blue_back" />
         </shape>
     </item>
 

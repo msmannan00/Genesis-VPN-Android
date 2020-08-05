@@ -10,6 +10,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -19,14 +20,14 @@ import java.util.ArrayList;
 
 public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listViewHolder>
 {
-    private AppCompatActivity m_context;
+    private FragmentActivity m_context;
     private ArrayList<String> m_disabled_packages;
     private ArrayList<appListRowModel> m_app_model = new ArrayList<>();
     private ArrayList<appListRowModel> m_app_model_async;
     private ViewPager2 m_pager;
     boolean isLoaded = false;
 
-    appListAdapter(AppCompatActivity p_context, ArrayList<String> p_disabled_packages, ArrayList<appListRowModel> p_app_model, ViewPager2 p_pager) {
+    appListAdapter(FragmentActivity p_context, ArrayList<String> p_disabled_packages, ArrayList<appListRowModel> p_app_model, ViewPager2 p_pager) {
         this.m_context = p_context;
         m_pager = p_pager;
         m_disabled_packages = p_disabled_packages;

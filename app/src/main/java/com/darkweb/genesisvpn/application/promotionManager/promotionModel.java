@@ -3,6 +3,7 @@ package com.darkweb.genesisvpn.application.promotionManager;
 import android.text.format.DateFormat;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
@@ -13,13 +14,13 @@ class promotionModel
 {
     /* PRIVATE VARIABLES */
 
-    private AppCompatActivity m_context;
+    private FragmentActivity m_context;
     private eventObserver.eventListener m_event;
     private int m_promo_code_multiplier = 472810;
 
     /*INITIALIZATION*/
 
-    public promotionModel(AppCompatActivity p_context, eventObserver.eventListener p_event){
+    public promotionModel(FragmentActivity p_context, eventObserver.eventListener p_event){
         this.m_context = p_context;
         m_event = p_event;
     }
@@ -44,7 +45,7 @@ class promotionModel
         int m_promo_code_real = (day + month+1 + year)  * m_promo_code_multiplier;
         return m_promo_code_real == m_user_promo;
     }
-    // 968787690
+
     void quit()
     {
         m_event.invokeObserver(null, enums.ETYPE.GENERIC_QUIT);

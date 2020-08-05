@@ -4,29 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="onClearPromotionEditText"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".application.promotionManager.promotionController">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/m_main_layout"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:onClick="onClearPromotionEditText"
         android:layout_gravity="center_vertical"
         android:background="@color/colorPrimary"
+        android:clickable="false"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/home"
+            android:id="@+id/m_back_navigation"
             android:layout_gravity="center_vertical"
             android:background="@xml/sc_ripple_default"
             android:layout_marginStart="3dp"
             android:contentDescription="@string/todo"
-            android:onClick="onBackPressed"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:padding="11dp"
@@ -43,35 +44,38 @@
             android:layout_marginTop="-1dp"
             android:text="@string/promotion"
             android:textColor="@color/white"
+            android:clickable="false"
             android:textSize="15.5sp" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView3"
+        android:clickable="false"
+        android:id="@+id/m_text_view_1"
         android:layout_width="wrap_content"
-        android:onClick="onClearPromotionEditText"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_weight="110"
-        android:background="@color/mat"
+        android:background="@color/primary_blue_back"
         android:justificationMode="inter_word"
         android:paddingEnd="23dp"
+        android:paddingStart="0dp"
         android:text="@string/promotion"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintStart_toEndOf="@+id/m_logo"
+        app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
+        tools:targetApi="o" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/m_text_view_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_weight="110"
-        android:onClick="onClearPromotionEditText"
-        android:background="@color/mat"
+        android:background="@color/primary_blue_back"
+        android:clickable="false"
         android:paddingStart="15dp"
         android:paddingEnd="23dp"
         android:text="@string/promotion_description"
@@ -80,19 +84,20 @@
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/m_logo" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/m_logo"
         android:layout_width="60dp"
-        android:layout_height="48dp"
+        android:layout_height="55dp"
         android:layout_marginTop="19dp"
         android:paddingStart="0dp"
-        android:onClick="onClearPromotionEditText"
         android:paddingEnd="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:srcCompat="@mipmap/splashlogo" />
+        app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
+        android:clickable="false"
+        android:src="@mipmap/splashlogo"
+        android:contentDescription="@string/todo" />
 
     <EditText
         android:id="@+id/m_promotion_edit_text"
@@ -103,7 +108,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="Enter promotion code"
+        android:hint="@string/promotion_enter_promotion_code"
         android:popupElevation="5dp"
         android:inputType="textPersonName"
         android:background="@xml/sc_generic_input"
@@ -114,26 +119,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/m_text_view_1"
+        android:autofillHints="" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/m_submit"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp"
-        android:onClick="adsDisabler"
         android:background="@xml/sc_rounded_corner_white"
-        android:text="Submit"
+        android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/m_promotion_edit_text" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/promotion_alert_dialog"
+        android:id="@+id/m_alert_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mat_alpha"
-        android:onClick="onAlertDismissPromotion"
         android:translationZ="2000dp"
         android:alpha="0"
         android:visibility="invisible"
@@ -145,7 +149,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/promotion_alert_dialog_panel"
+            android:id="@+id/m_promotion_alert_dialog_panel"
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_margin="10dp"
@@ -157,7 +161,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/m_interaction_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
@@ -168,13 +172,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/m_alert_dismiss"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="15dp"
                 android:background="@xml/sc_rounded_corner"
-                android:onClick="onAlertDismissPromotion"
                 android:text="@string/alert_dismiss"
                 android:textColor="@color/white"
                 android:textSize="12sp"
@@ -182,7 +185,7 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
-                android:id="@+id/promotion_alert_description"
+                android:id="@+id/m_alert_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -196,7 +199,7 @@
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/promotion_alert_title" />
+                app:layout_constraintTop_toBottomOf="@+id/m_alert_title" />
 
             <View
                 android:layout_width="match_parent"
@@ -205,13 +208,13 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="9dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toTopOf="@+id/promotion_alert_description"
+                app:layout_constraintBottom_toTopOf="@+id/m_alert_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.375"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/promotion_alert_title"
+                android:id="@+id/m_alert_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"

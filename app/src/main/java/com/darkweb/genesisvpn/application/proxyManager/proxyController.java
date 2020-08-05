@@ -215,6 +215,7 @@ public class proxyController implements  VpnStateListener{
                 }
             }
         } else if(p_trigger_request == TRIGGER.CHANGE_SERVER){
+            onHomeCommands(HOME_COMMANDS.ON_CONNECTING, null);
             m_ui_status = REQUEST.CONNECTING_VPN;
             onHomeCommands(HOME_COMMANDS.ON_CONNECTING, null);
             m_request = REQUEST.CHANGING_SERVER;

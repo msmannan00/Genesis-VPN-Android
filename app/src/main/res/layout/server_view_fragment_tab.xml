@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
     tools:context=".application.appManager.appController">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:id="@+id/server_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/mat"
+            android:background="@color/primary_blue_back"
             android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

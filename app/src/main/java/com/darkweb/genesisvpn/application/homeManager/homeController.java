@@ -2,20 +2,20 @@ package com.darkweb.genesisvpn.application.homeManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import com.anchorfree.partner.api.data.Country;
 import com.darkweb.genesisvpn.R;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.MenuItem;
+
+import com.darkweb.genesisvpn.application.aboutManager.aboutController;
+import com.darkweb.genesisvpn.application.appManager.appController;
 import com.darkweb.genesisvpn.application.constants.constants;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.enums.TRIGGER;
@@ -26,17 +26,22 @@ import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
+import com.darkweb.genesisvpn.application.promotionManager.promotionController;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
+import com.darkweb.genesisvpn.application.serverManager.serverController;
+import com.darkweb.genesisvpn.application.settingManager.settingController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
+
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.Menu;
 import android.widget.ActionMenuView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -44,13 +49,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class homeController extends AppCompatActivity {
+public class homeController extends FragmentActivity {
 
     /*LOCAL VARIABLE DECLARATION*/
     DrawerLayout m_drawer;
+    FrameLayout m_fragment_container;
 
     TextView m_alert_title;
-    // TextView m_location_info;
     TextView m_connect_label;
     TextView m_alert_description;
     TextView m_download_speed;
@@ -61,11 +66,12 @@ public class homeController extends AppCompatActivity {
     Button m_connect_animator_initial;
     Button m_connection_toggle;
     Button m_stop_alert_btn;
+    Button m_dismiss_alert_btn;
+
     ImageView m_speed_base;
-
-    ImageButton m_flag;
-
     ImageView m_connect_loading;
+    ImageView m_blocker;
+    ImageButton m_flag;
 
     homeViewController m_view_controller;
     homeModel m_model;
@@ -87,6 +93,7 @@ public class homeController extends AppCompatActivity {
         initializeCustomListeners();
         initializePluginManager();
         initializeVPN();
+        initializeFragment();
     }
 
     public void initializeBoot(){
@@ -150,7 +157,7 @@ public class homeController extends AppCompatActivity {
         else {
             status.CONNECTION_TYPE = 0;
         }
-        m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial);
+        m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial, m_dismiss_alert_btn, m_fragment_container, m_blocker);
 
         if(!status.AUTO_CONNECT){
             onLoadAdvert();
@@ -191,8 +198,20 @@ public class homeController extends AppCompatActivity {
         m_drawer = findViewById(R.id.drawer_layout);
         m_speed_base = findViewById(R.id.m_speed_base);
         m_connect_animator_initial = findViewById(R.id.connect_animator_initial);
+        m_dismiss_alert_btn = findViewById(R.id.m_dismiss_alert_btn);
+        m_fragment_container = findViewById(R.id.m_fragment_conteiner);
+        m_blocker = findViewById(R.id.m_blocker);
 
         m_model = new homeModel(this, new homeModelCallback());
+    }
+
+    public void initializeFragment(){
+        helperMethods.openFragment(m_fragment_container, new aboutController(), this);
+        helperMethods.openFragment(m_fragment_container, new appController(), this);
+        helperMethods.openFragment(m_fragment_container, new promotionController(), this);
+        helperMethods.openFragment(m_fragment_container, new settingController(), this);
+        helperMethods.openFragment(m_fragment_container, new serverController(), this);
+        getSupportFragmentManager().popBackStack();
     }
 
     /*EVENT HANDLERS DEFAULTS*/
@@ -218,7 +237,7 @@ public class homeController extends AppCompatActivity {
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         View parent = view.getRootView();
         popupWindow.setAnimationStyle(R.style.popup_window_animation);
-        popupWindow.showAtLocation(parent, Gravity.TOP|Gravity.END,(int)helperMethods.pxToDp(this,5),(int)helperMethods.pxToDp(this,70));
+        popupWindow.showAtLocation(parent, Gravity.TOP|Gravity.END,(int)helperMethods.pxToDp(this,0),(int)helperMethods.pxToDp(this,70));
     }
 
     public void onOpenDrawer(View view){
@@ -284,11 +303,58 @@ public class homeController extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(m_view_controller.isAlertViewShwoing()){
-            m_view_controller.onAlertDismiss();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count < 1 && getSupportFragmentManager().getFragments().size()==0 || m_fragment_container.getVisibility() == View.INVISIBLE) {
+            if(m_drawer.isDrawerOpen(GravityCompat.START)){
+                m_view_controller.onCloseDrawer();
+            }
+            else{
+                if(m_view_controller.isAlertViewShwoing()){
+                    m_view_controller.onAlertDismiss();
+                }
+                else {
+                    this.moveTaskToBack(true);
+                }
+            }
         }
-        else {
-            this.moveTaskToBack(true);
+        else{
+            List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
+
+            if(count >= 1){
+                getSupportFragmentManager().popBackStack();
+                if(getSupportFragmentManager().getBackStackEntryAt(0).getName().endsWith("serverController") || getSupportFragmentManager().getBackStackEntryAt(0).getName().endsWith("appController")){
+                    if(getSupportFragmentManager().getBackStackEntryAt(0).getName().endsWith("appController"))
+                    {
+                        ((appController)m_fragments.get(m_fragments.size()-2)).onBackPressed();
+                    }
+                    ((settingController)m_fragments.get(0)).onResumeFragment();
+                }
+            }
+            else {
+                boolean m_close_triggered_status = false;
+                if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("settingController")){
+                    m_close_triggered_status = ((settingController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                }
+                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("serverController")){
+                    m_close_triggered_status = ((serverController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                }
+                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("promotionController")){
+                    m_close_triggered_status = ((promotionController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                }
+                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("aboutController")){
+                    m_close_triggered_status = ((aboutController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                }
+                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("appController")){
+                    m_close_triggered_status = ((appController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                }
+                if(m_close_triggered_status){
+                    m_model.onResetUIBlock();
+                    m_fragment_container.bringToFront();
+                    m_view_controller.onCloseFragment();
+                }
+            }
+            onResume();
         }
     }
 
@@ -303,7 +369,7 @@ public class homeController extends AppCompatActivity {
     {
         m_flag.setOnClickListener(view -> {
             m_proxy_controller.clearExceptionCounter();
-            m_model.onServer(50, m_proxy_controller.isUserRegistered());
+            m_model.onServer(50, m_proxy_controller.isUserRegistered(), m_fragment_container);
         });
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         m_connect_base.setOnTouchListener((view, motionEvent) -> {
@@ -355,34 +421,34 @@ public class homeController extends AppCompatActivity {
 
         if (id == R.id.nav_app)
         {
-            onAppManager(null);
+            onAppManager(500);
         }
         else if (id == R.id.speed_test)
         {
-            m_model.onSpeedTest(300);
+            m_model.onSpeedTest(500);
         }
         else if (id == R.id.nav_ip_address)
         {
-            m_model.onLocation(300);
+            m_model.onLocation(500);
         }
         else if (id == R.id.nav_promotion)
         {
-            onPromotion(null);
+            onPromotionOpen(500);
         }
         else if (id == R.id.nav_about)
         {
             m_view_controller.onAlertDismiss();
             onPopupDismiss();
-            m_model.onAboutUS();
+            m_model.onAboutUS(500,m_fragment_container);
         }
         else if (id == R.id.server)
         {
             m_proxy_controller.clearExceptionCounter();
-            m_model.onServer(300,m_proxy_controller.isUserRegistered());
+            m_model.onServer(500,m_proxy_controller.isUserRegistered(), m_fragment_container);
         }
         else if (id == R.id.setting)
         {
-            onSettingManager(null);
+            onSettingManagerOpen(500);
         }
         else if (id == R.id.nav_share)
         {
@@ -417,10 +483,10 @@ public class homeController extends AppCompatActivity {
 
     /*EVENT HANDLERS OVERRIDE*/
 
-    public void onPromotion(View view){
+    public void onPromotionOpen(int p_delay){
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
-        m_model.onPromotion(300);
+        m_model.onPromotion(p_delay, m_fragment_container);
     }
 
     public void onStartBeatAnimation(){
@@ -430,7 +496,7 @@ public class homeController extends AppCompatActivity {
     public void onSettingManagerClick(View view){
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
-        m_model.onSettings(0);
+        m_model.onSettings(100, m_fragment_container);
     }
 
     public void onStart(View view)
@@ -443,19 +509,11 @@ public class homeController extends AppCompatActivity {
         m_view_controller.onSpeedClick();
     }
 
-    public void onAppManagerClick(View item){
-        m_view_controller.onAlertDismiss();
-        onPopupDismiss();
-        if(constants.SYSTEM_APPS.size()>0){
-            m_model.onAppManager(0);
-        }
-    }
-
     public void onServer(MenuItem item){
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
         m_proxy_controller.clearExceptionCounter();
-        m_model.onServer(300,m_proxy_controller.isUserRegistered());
+        m_model.onServer(100,m_proxy_controller.isUserRegistered(), m_fragment_container);
     }
 
     public void onChooseServer(String p_server){
@@ -465,21 +523,30 @@ public class homeController extends AppCompatActivity {
     public void onServer(View view) {
         m_view_controller.onAlertDismiss();
         m_proxy_controller.clearExceptionCounter();
-        m_model.onServer(300,m_proxy_controller.isUserRegistered());
+        m_model.onServer(100,m_proxy_controller.isUserRegistered(), m_fragment_container);
         onPopupDismiss();
+    }
+
+    public void onSettingManagerOpen(int delay) {
+        onPopupDismiss();
+        m_model.onSettings(delay, m_fragment_container);
     }
 
     public void onSettingManager(View view) {
-        onPopupDismiss();
-        m_model.onSettings(300);
+        onSettingManagerOpen(0);
     }
 
-    public void onAppManager(View view) {
+
+    public void onAppManager(int delay) {
         onPopupDismiss();
         m_view_controller.onAlertDismiss();
         if(constants.SYSTEM_APPS.size()>0){
-            m_model.onAppManager(500);
+            m_model.onAppManager(delay, m_fragment_container);
         }
+    }
+
+    public void onAppManager(View view) {
+        onAppManager(0);
     }
 
     /*EVENT VIEW CALLBACK HANDLER*/
@@ -503,6 +570,9 @@ public class homeController extends AppCompatActivity {
                 String finalM_message = m_message;
                 new Handler().postDelayed(() -> m_view_controller.onShowAlert(finalM_message,(String) p_data.get(1), true, finalIsStopButtonActive),(long) p_data.get(2));
             }
+            else if(p_event_type == enums.ETYPE.OPEN_FRAGMENT){
+                m_view_controller.onOpenFragment();
+            }
         }
     }
 
@@ -522,10 +592,6 @@ public class homeController extends AppCompatActivity {
 
     public void onShowAlert(String p_error, boolean p_is_forced){
         m_view_controller.onShowAlert(strings.HO_ERROR_OCCURED + p_error, "Request Failure", p_is_forced, true);
-    }
-
-    public void pauseBeatAnimationForAdvert(){
-        //m_view_controller.pauseBeatAnimationForAdvert();
     }
 
     public void onLoadAdvert(){

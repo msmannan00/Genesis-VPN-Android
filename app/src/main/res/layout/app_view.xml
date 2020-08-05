@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
     tools:context=".application.appManager.appController">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/m_progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/m_main_layout"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:weightSum="10"
@@ -43,12 +43,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/home"
+                android:id="@+id/m_back_navigation"
                 android:layout_gravity="center_vertical"
                 android:background="@xml/sc_ripple_default"
                 android:layout_marginStart="3dp"
                 android:contentDescription="@string/todo"
-                android:onClick="onBackPressed"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:padding="11dp"
@@ -69,31 +68,30 @@
                 android:textSize="15.5sp" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/m_alert_clear_popup"
                 android:layout_width="0dp"
                 android:layout_gravity="center_vertical"
                 android:background="@color/blue_circle_clear"
                 android:layout_height="wrap_content"
                 android:src="@xml/ic_baseline_reset"
                 android:layout_marginEnd="10dp"
-                android:onClick="onReset"
                 android:layout_weight="1"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/m_linear_layout_main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
             tools:context=".MainActivity">
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs"
+                android:id="@+id/m_tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:foregroundTint="@color/green"
@@ -104,13 +102,122 @@
                 app:tabMode="fixed" />
 
             <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager"
+                android:id="@+id/m_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/mat">
+                android:background="@color/primary_blue_back">
 
             </androidx.viewpager2.widget.ViewPager2>
         </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/m_alert_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mat_alpha"
+        android:translationZ="2000dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/m_promotion_alert_dialog_panel"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_margin="10dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="@xml/sc_rounded_corner_warning"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/m_interaction_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/m_alert_clear_data"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="15dp"
+                android:background="@xml/sc_rounded_corner_positive"
+                android:text="@string/alert_dismiss"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <Button
+                android:id="@+id/m_alert_dismiss"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@xml/sc_rounded_corner_negative"
+                android:text="@string/alert_clear_Data"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/m_alert_clear_data" />
+
+            <TextView
+                android:id="@+id/m_alert_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="19dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:maxLines="2"
+                android:text="@string/alert_default_message"
+                android:textColor="@color/text_color_v1"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/m_alert_title" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="9dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toTopOf="@+id/m_alert_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.375"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/m_alert_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="7dp"
+                android:maxLines="2"
+                android:textStyle="bold"
+                android:text="@string/alert_title"
+                android:textColor="@color/text_color_v1"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

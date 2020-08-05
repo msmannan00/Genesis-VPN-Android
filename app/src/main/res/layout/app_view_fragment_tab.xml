@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
     tools:context=".application.appManager.appController">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="1dp"
-        android:background="@color/mat"
+        android:background="@color/primary_blue_back"
         android:layout_marginEnd="1dp"
         android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,7 +38,7 @@
             android:id="@+id/app_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/mat"
+            android:background="@color/primary_blue_back"
             android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

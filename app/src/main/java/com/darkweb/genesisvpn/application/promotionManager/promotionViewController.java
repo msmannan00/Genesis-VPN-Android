@@ -4,11 +4,14 @@ import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentActivity;
 
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.strings;
@@ -18,16 +21,19 @@ import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 class promotionViewController {
 
     /*LOCAL VARIABLE DECLARATION*/
-    private AppCompatActivity m_context;
+    private FragmentActivity m_context;
     private eventObserver.eventListener m_event;
     private EditText m_promotion_edit_text;
     private ConstraintLayout m_alert_dialog;
     private TextView m_alert_title;
     private TextView m_alert_description;
+    private ImageButton m_back_navigation;
+    private Button m_submit;
+    private Button m_alert_dismiss;
 
     /*INITIALIZATIONS*/
 
-    public promotionViewController(AppCompatActivity p_context, eventObserver.eventListener p_event, EditText p_promotion_edit_text, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description)
+    public promotionViewController(FragmentActivity p_context, eventObserver.eventListener p_event, EditText p_promotion_edit_text, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, ImageButton p_back_navigation, Button p_submit, Button p_alert_dismiss)
     {
         this.m_context = p_context;
         this.m_event = p_event;
@@ -35,6 +41,9 @@ class promotionViewController {
         this.m_alert_dialog = p_alert_dialog;
         this.m_alert_title = p_alert_title;
         this.m_alert_description = p_alert_description;
+        this.m_back_navigation = p_back_navigation;
+        this.m_submit = p_submit;
+        this.m_alert_dismiss = p_alert_dismiss;
 
         onInitializeView();
     }
@@ -44,7 +53,6 @@ class promotionViewController {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(m_context.getResources().getColor(R.color.colorPrimary));
-        m_context. setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     public void onClearPromotionEditText(){

@@ -1,5 +1,6 @@
 package com.darkweb.genesisvpn.application.helperManager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -13,10 +14,18 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.anchorfree.vpnsdk.exceptions.VpnException;
+import com.darkweb.genesisvpn.R;
+import com.darkweb.genesisvpn.application.aboutManager.aboutController;
 import com.darkweb.genesisvpn.application.appManager.appListRowModel;
 import com.darkweb.genesisvpn.application.constants.strings;
 
@@ -52,12 +61,12 @@ public class helperMethods
         return px;
     }
 
-    public static void onOpenURL(AppCompatActivity p_context, String p_link){
+    public static void onOpenURL(FragmentActivity p_context, String p_link){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(p_link));
         p_context.startActivity(browserIntent);
     }
 
-    public static void shareApp(AppCompatActivity p_context) {
+    public static void shareApp(FragmentActivity p_context) {
         ShareCompat.IntentBuilder.from(p_context)
                 .setType(strings.SH_TYPE)
                 .setChooserTitle(strings.SH_TITLE)
@@ -66,7 +75,7 @@ public class helperMethods
                 .startChooser();
     }
 
-    public static void hideKeyboard(AppCompatActivity context) {
+    public static void hideKeyboard(FragmentActivity context) {
         View view = context.findViewById(android.R.id.content);
         if (view != null)
         {
@@ -76,7 +85,7 @@ public class helperMethods
         }
     }
 
-    public static void sendEmail(AppCompatActivity p_context)
+    public static void sendEmail(FragmentActivity p_context)
     {
         Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 strings.EM_MAIL_TO,strings.EM_EMAIL, null));
@@ -88,19 +97,77 @@ public class helperMethods
         }
     }
 
-    public static void quit(AppCompatActivity activity) {
+    public static Drawable XMLTODrawable(Context p_context, int ID){
+        Resources res = p_context.getResources();
+        try {
+            return Drawable.createFromXml(res, res.getXml(ID));
+        } catch (Exception ex) {
+        }
+        return null;
+    }
+
+    public static void quit(FragmentActivity activity) {
         activity.finish();
     }
 
-    public static void openActivity( Class<?> p_cls, AppCompatActivity p_context){
-        Intent myIntent = new Intent(p_context, p_cls);
-        p_context.startActivity(myIntent);
+    @SuppressLint("ResourceType")
+    public static void openFragment(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context){
+        FrameLayout fragContainer = p_fragment_container;
+        FrameLayout ll = new FrameLayout(p_context);
+        ll.setId(100);
+        String m_class_name = strings.EMPTY_STR;
+        if(p_context.getSupportFragmentManager().getFragments().size()>0){
+            m_class_name = p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName();
+        }
+        if(m_class_name.equals(p_cls.getClass().getName())){
+            return;
+        }
+        List<Fragment> m_fragments = p_context.getSupportFragmentManager().getFragments();
+        for(int counter = 0;counter<m_fragments.size();counter++){
+            p_context.getSupportFragmentManager().beginTransaction().remove(m_fragments.get(counter)).commit();
+            p_context.getSupportFragmentManager().executePendingTransactions();
+        }
+
+
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().beginTransaction().replace(ll.getId(),(p_cls)).commit();
+        fragContainer.addView(ll);
+        p_context.getSupportFragmentManager().executePendingTransactions();
     }
 
-    public static void openActivityWithBundle( Class<?> p_cls, AppCompatActivity p_context, String p_key, Boolean p_value){
-        Intent myIntent = new Intent(p_context, p_cls);
-        myIntent.putExtra(p_key, p_value);
-        p_context.startActivity(myIntent);
+    @SuppressLint("ResourceType")
+    public static void openFragmentWithBundle(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context, String p_key, Boolean p_value){
+        if(!p_value){
+            openFragment(p_fragment_container, p_cls, p_context);
+            return;
+        }
+        FrameLayout fragContainer = p_fragment_container;
+        FrameLayout ll = new FrameLayout(p_context);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(p_key, p_value);
+        p_cls.setArguments(bundle);
+        ll.setId(100);
+        String m_class_name = strings.EMPTY_STR;
+        if(p_context.getSupportFragmentManager().getFragments().size()>0){
+            m_class_name = p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName();
+        }
+        if(m_class_name.equals(p_cls.getClass().getName()) && !m_class_name.equals("serverController")){
+            return;
+        }
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().popBackStack();
+        p_context.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_left, R.anim.slide_out_right).addToBackStack(p_cls.getClass().getName()).add(ll.getId(),(p_cls),"m_returnable_fragment").commit();
+        fragContainer.addView(ll);
+        p_context.getSupportFragmentManager().executePendingTransactions();
     }
 
     public static int screenWidth()

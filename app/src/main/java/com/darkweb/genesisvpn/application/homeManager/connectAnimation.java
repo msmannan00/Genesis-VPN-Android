@@ -37,6 +37,7 @@ class connectAnimation
     {
         m_default_size = ((Button) p_target).getWidth();
         this.m_target = p_target;
+        ((Button)this.m_target).setLayerType(View.LAYER_TYPE_HARDWARE, null);
         circularGrow = ObjectAnimator.ofPropertyValuesHolder(
                 p_target,
                 PropertyValuesHolder.ofFloat(strings.HA_SCALE_X, 1.3f),
@@ -51,11 +52,6 @@ class connectAnimation
         setListerner(circularGrow,messages.CIRCULAR_GROW_FINISH,messages.CIRCULAR_GROW_STARTED);
     }
 
-    public void stopCircularGlowAnimator(){
-        circularGrow.removeAllListeners();
-        circularGrow.end();
-    }
-
     ImageView m_support;
     @SuppressLint("ObjectAnimatorBinding")
     void rotateAnimation(Object p_target, ImageView p_support)
@@ -67,6 +63,7 @@ class connectAnimation
         rotate.setInterpolator(new LinearInterpolator());
         rotate.setRepeatCount(Animation.INFINITE);
         m_target = p_target;
+        (this.m_support).setLayerType(View.LAYER_TYPE_HARDWARE, null);
         ((ImageView) p_target).startAnimation(rotate);
     }
 

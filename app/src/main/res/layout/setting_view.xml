@@ -5,23 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
     tools:context=".application.settingManager.settingController">
 
     <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
     tools:context=".application.settingManager.settingController">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/mat"
+        android:background="@color/primary_blue_back"
         tools:context=".application.aboutManager.aboutController">
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/m_main_layout"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="center_vertical"
@@ -32,10 +32,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/home"
+                android:id="@+id/m_back_navigation"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/todo"
-                android:onClick="onBackPressed"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@xml/sc_ripple_default"
@@ -64,18 +63,18 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+            app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
             <LinearLayout
+                android:id="@+id/m_connect_startup_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@xml/linear_layout_ripple"
-                android:onClick="onAutoStart"
                 android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -85,28 +84,28 @@
                     android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/m_text_view_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/auto_start_header"
+                        android:text="@string/settings_auto_start_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/m_text_view_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/auto_start_desc"
+                        android:text="@string/settings_auto_start_desc"
                         android:textColor="@color/mat_text"
                         android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
@@ -140,13 +139,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/m_connect_launch_container"
                 android:background="@xml/linear_layout_ripple"
-                android:onClick="onAutoConnect"
                 android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -156,28 +155,28 @@
                     android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/m_text_view_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/auto_connect_header"
+                        android:text="@string/settings_auto_connect_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/textView24"
+                        android:id="@+id/m_text_view_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/auto_connect_info"
+                        android:text="@string/settings_auto_connect_info"
                         android:textColor="@color/mat_text"
                         android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
@@ -216,7 +215,7 @@
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -226,44 +225,44 @@
                     android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
+                    tools:ignore="UselessParent">
 
                     <TextView
-                        android:id="@+id/textView15"
+                        android:id="@+id/m_text_view_5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/connection_header"
+                        android:text="@string/settings_connection_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
 
                     <LinearLayout
-                        android:id="@+id/connection1"
+                        android:id="@+id/m_connect_type_UDP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@xml/linear_layout_ripple"
                         android:clickable="false"
-                        android:onClick="onChangeConnectionType"
                         android:orientation="horizontal"
                         android:paddingTop="7dp"
                         android:paddingBottom="7dp"
                         android:weightSum="10"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                         <TextView
-                            android:id="@+id/textView17"
+                            android:id="@+id/m_text_view_6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:layout_weight="9"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="@string/udp_info"
+                            android:text="@string/settings_udp_info"
                             android:textColor="@color/mat_text"
                             android:textSize="12sp"
                             tools:ignore="RtlSymmetry,SmallSp" />
@@ -274,27 +273,28 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|end"
                             android:layout_weight="1"
+                            android:layout_marginRight="5dp"
                             android:buttonTint="@color/white"
                             android:clickable="false"
                             android:layoutDirection="rtl"
-                            android:text="@string/udp_text"
-                            android:textColor="@color/white" />
+                            android:text="@string/settings_udp_text"
+                            android:textColor="@color/white"
+                            tools:ignore="RtlHardcoded" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/connection2"
+                        android:id="@+id/m_connect_type_TCP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@xml/linear_layout_ripple"
                         android:clickable="false"
-                        android:onClick="onChangeConnectionType"
                         android:orientation="horizontal"
                         android:paddingTop="7dp"
                         android:paddingBottom="7dp"
                         android:weightSum="10"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -303,7 +303,7 @@
                             android:layout_weight="9"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="@string/tcp_info"
+                            android:text="@string/settings_tcp_info"
                             android:textColor="@color/mat_text"
                             android:textSize="12sp"
                             tools:ignore="RtlSymmetry,SmallSp" />
@@ -313,54 +313,56 @@
                             android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|end"
+                            android:layout_marginRight="5dp"
                             android:layout_weight="1"
                             android:buttonTint="@color/white"
                             android:layoutDirection="rtl"
                             android:clickable="false"
-                            android:text="@string/tcp_text"
-                            android:textColor="@color/white" />
+                            android:text="@string/settings_tcp_text"
+                            android:textColor="@color/white"
+                            tools:ignore="RtlHardcoded" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/connection3"
+                        android:id="@+id/m_connect_type_AUTO"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@xml/linear_layout_ripple"
                         android:clickable="false"
-                        android:onClick="onChangeConnectionType"
                         android:orientation="horizontal"
                         android:paddingTop="7dp"
                         android:paddingBottom="7dp"
                         android:weightSum="10"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
-                            android:layout_weight="8"
+                            android:layout_weight="9"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="@string/connection_default_info"
+                            android:text="@string/settings_connection_default_info"
                             android:textColor="@color/mat_text"
                             android:textSize="12sp"
                             tools:ignore="RtlSymmetry,SmallSp" />
 
                         <RadioButton
                             android:id="@+id/m_def_connection"
-                            android:layout_width="0dp"
+                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="top|end"
-                            android:layout_marginStart="0dp"
-                            android:layout_weight="2"
-                            android:clickable="false"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
                             android:buttonTint="@color/white"
-                            android:checked="true"
                             android:layoutDirection="rtl"
-                            android:text="@string/connection_auto"
-                            android:textColor="@color/white" />
+                            android:clickable="false"
+                            android:checked="true"
+                            android:text="@string/settings_connection_auto"
+                            android:textColor="@color/white"
+                            tools:ignore="RtlHardcoded" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -375,15 +377,15 @@
                 android:paddingEnd="10dp" />
 
             <LinearLayout
+                android:id="@+id/m_proxy_filter_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@xml/linear_layout_ripple"
-                android:onClick="onProxyFilter"
                 android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -393,34 +395,34 @@
                     android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                     <TextView
-                        android:id="@+id/textView30"
+                        android:id="@+id/m_text_view_7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/application_header"
+                        android:text="@string/settings_application_header"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/textView29"
+                        android:id="@+id/m_text_view_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/application_info"
+                        android:text="@string/settings_application_info"
                         android:textColor="@color/mat_text"
                         android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
                 </LinearLayout>
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/m_image_view_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -446,15 +448,15 @@
                 android:paddingEnd="10dp" />
 
             <LinearLayout
+                android:id="@+id/m_auto_optimal_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@xml/linear_layout_ripple"
-                android:onClick="onAutoDefaultServer"
                 android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -464,28 +466,28 @@
                     android:paddingTop="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                     <TextView
-                        android:id="@+id/textView14"
+                        android:id="@+id/m_text_view_9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="@string/smart_vpn"
+                        android:text="@string/settings_smart_vpn"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         tools:ignore="RtlSymmetry" />
 
                     <TextView
-                        android:id="@+id/textView25"
+                        android:id="@+id/m_text_view_10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
                         android:clickable="false"
                         android:paddingStart="15dp"
-                        android:text="Automatically set optimal location"
+                        android:text="@string/settings_automatically_set_optimal_location"
                         android:textColor="@color/mat_text"
                         android:textSize="12sp"
                         tools:ignore="RtlSymmetry,SmallSp" />
@@ -518,11 +520,10 @@
                 android:paddingEnd="10dp" />
 
             <LinearLayout
-                android:id="@+id/default_server_layout"
+                android:id="@+id/m_change_server_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@xml/linear_layout_ripple"
-                android:onClick="onChangeDefaultServer"
                 android:orientation="vertical"
                 android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -533,7 +534,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@xml/linear_layout_ripple"
-                    android:onClick="onChangeDefaultServer"
                     android:orientation="horizontal"
                     android:weightSum="100"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -548,28 +548,28 @@
                         android:paddingTop="15dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                         <TextView
-                            android:id="@+id/textView19"
+                            android:id="@+id/m_text_view_11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="Default Location"
+                            android:text="@string/settings_default_location"
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             tools:ignore="RtlSymmetry" />
 
                         <TextView
-                            android:id="@+id/textView22"
+                            android:id="@+id/m_text_view_12"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="15dp"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="Set custom server as default which works best for your location"
+                            android:text="@string/settings_custom_server_info"
                             android:textColor="@color/mat_text"
                             android:textSize="12sp"
                             tools:ignore="RtlSymmetry,SmallSp" />
@@ -590,7 +590,8 @@
                         android:theme="@style/SCBSwitch"
                         android:thumb="@xml/bg_thumb"
                         android:thumbTint="@color/white"
-                        android:track="@xml/bg_switch_states" />
+                        android:track="@xml/bg_switch_states"
+                        android:contentDescription="@string/todo" />
 
                 </LinearLayout>
 
@@ -612,17 +613,22 @@
 </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/alert_dialog"
+        android:id="@+id/m_alert_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mat_alpha"
-        android:elevation="35dp"
+        android:translationZ="2000dp"
         android:alpha="0"
-        android:onClick="onAlertDismissSettings"
-        tools:layout_editor_absoluteY="351dp">
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/alert_dialog_panel"
+            android:id="@+id/m_promotion_alert_dialog_panel"
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_margin="10dp"
@@ -634,11 +640,10 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/m_interaction_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:elevation="40dp"
                 android:enabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -646,34 +651,34 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/m_alert_dismiss"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="15dp"
                 android:background="@xml/sc_rounded_corner"
-                android:elevation="40dp"
-                android:onClick="onAlertDismissSettings"
-                android:text="Dismiss"
+                android:text="@string/alert_dismiss"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
-                android:id="@+id/alert_description"
+                android:id="@+id/m_alert_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="19dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:maxLines="2"
-                android:text="Error Occred | Network Connection Exception"
+                android:text="@string/alert_default_message"
                 android:textColor="@color/text_color_v1"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/alert_title" />
+                app:layout_constraintTop_toBottomOf="@+id/m_alert_title" />
 
             <View
                 android:layout_width="match_parent"
@@ -682,23 +687,25 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="9dp"
                 android:background="@android:color/darker_gray"
-                app:layout_constraintBottom_toTopOf="@+id/alert_description"
+                app:layout_constraintBottom_toTopOf="@+id/m_alert_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.375"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/alert_title"
+                android:id="@+id/m_alert_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="7dp"
                 android:maxLines="2"
-                android:text="Error Occured"
+                android:textStyle="bold"
+                android:text="@string/alert_title"
                 android:textColor="@color/text_color_v1"
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

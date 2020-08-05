@@ -37,9 +37,9 @@ public class strings
     public static String HO_CONNECTION_TITLE_TCP = "TCP Connection Info";
     public static String HO_CONNECTION_TITLE_UDP = "UDP Connection Info";
     public static String HO_CONNECTION_TITLE_AUTO = "Automatic Connection Info";
-    public static String HO_CONNECTION_TCP =  "Use TCP connection in case if you are only interested in browsing or click TCP button to toggle";
-    public static String HO_CONNECTION_UDP =  "Use UDP connection in case if you are only interested in video streaming or click UDP button to toggle";
-    public static String HO_CONNECTION_AUTO = "Use AUTO connection if you are interested on both browsing and streaming or click AUTO button to toggle";
+    public static String HO_CONNECTION_TCP =  "Use this connection in case if you are only interested in browsing or click TCP button to toggle";
+    public static String HO_CONNECTION_UDP =  "Use this connection in case if you are only interested in video streaming or click UDP button to toggle";
+    public static String HO_CONNECTION_AUTO = "Use this connection if you are interested on both browsing and streaming or click AUTO button to toggle";
     public static String OPTIMAL_SERVER = "optimal_server";
 
     /*APPLICATION FILTER*/
@@ -48,6 +48,8 @@ public class strings
     public static String AF_NO_APPLICATION_MESSAGE = "No installed application found on Device. Install something and comeback later";
     public static String AF_CONNECTED = "connected";
     public static String AF_UNCONNECTED = "unconnected";
+    public static String AF_CLEAR_TITLE = "Resetting Filter Settings";
+    public static String AF_CLEAR_DESC = "You are about to reset filter settings for installed applications. Are you sure ?";
 
     /*SERVER LOADING MESSAGE*/
 

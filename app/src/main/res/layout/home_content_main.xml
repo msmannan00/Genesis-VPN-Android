@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
-    android:background="@color/mat"
+    android:background="@color/primary_blue_back"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".application.homeManager.homeController"
     tools:showIn="@layout/home_app_bar">
@@ -21,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/home"
+            android:id="@+id/m_back_navigation"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_gravity="center_vertical"
@@ -178,21 +179,6 @@
         app:layout_constraintTop_toTopOf="@+id/connect_base" />
 
     <ImageView
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0"
-        android:contentDescription="@string/todo"
-        android:translationZ="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/connect_base"
-        app:layout_constraintEnd_toEndOf="@+id/connect_base"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="@+id/connect_base"
-        app:layout_constraintTop_toTopOf="@+id/connect_base"
-        app:layout_constraintVertical_bias="0.453"
-        app:srcCompat="@drawable/loading" />
-
-    <ImageView
         android:id="@+id/m_speed_base"
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -262,7 +248,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:translationZ="1500dp"
+        android:translationZ="850dp"
         app:layout_constraintStart_toStartOf="@+id/m_speed_base"
         app:layout_constraintTop_toTopOf="@+id/m_speed_base" />
 
@@ -280,18 +266,9 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:translationZ="1500dp"
+        android:translationZ="850dp"
         app:layout_constraintStart_toStartOf="@+id/p_upload"
         app:layout_constraintTop_toTopOf="@+id/m_speed_base" />
-
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar">
-
-    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/home_alert_dialog"
@@ -299,7 +276,8 @@
         android:layout_height="match_parent"
         android:background="@color/mat_alpha"
         android:onClick="onAlertDismiss"
-        android:translationZ="2000dp"
+        android:translationZ="900dp"
+        android:alpha="0"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -321,7 +299,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/m_interaction_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
@@ -332,7 +310,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/m_dismiss_alert_btn"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="12dp"
@@ -351,13 +329,13 @@
                 android:layout_height="35dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="10dp"
-                android:background="@xml/sc_rounded_corner"
+                android:background="@xml/sc_rounded_corner_negative"
                 android:onClick="onAlertStop"
                 android:text="@string/alert_stop"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button2" />
+                app:layout_constraintEnd_toStartOf="@+id/m_dismiss_alert_btn" />
 
             <TextView
                 android:id="@+id/home_alert_description"
@@ -403,4 +381,52 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/m_fragment_conteiner"
+        android:layout_width="match_parent"
+        android:scaleX="0.93"
+        android:scaleY="0.93"
+        android:layout_height="match_parent"
+        android:onClick="onAlertDismiss"
+        android:visibility="invisible"
+        android:alpha="0"
+        android:translationZ="900dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+    </FrameLayout >
+
+    <ImageView
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:contentDescription="@string/todo"
+        android:translationZ="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/connect_base"
+        app:layout_constraintEnd_toEndOf="@+id/connect_base"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/connect_base"
+        app:layout_constraintTop_toTopOf="@+id/connect_base"
+        app:layout_constraintVertical_bias="0.453"
+        android:src="@drawable/loading" />
+
+    <ImageView
+        android:id="@+id/m_blocker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="525dp"
+        android:focusable="true"
+        android:alpha="0"
+        android:background="@color/blue_circle_clear"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/todo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

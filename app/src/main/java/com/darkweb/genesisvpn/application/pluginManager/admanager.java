@@ -1,8 +1,11 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
+import android.content.Context;
 import android.os.Handler;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
@@ -24,7 +27,7 @@ public class admanager
     private AdView m_banner_ads = null;
     private Handler m_failure_handler = new Handler();
     private eventObserver.eventListener m_event;
-    private AppCompatActivity m_context;
+    private Context m_context;
 
     /*Local Variables*/
     private boolean m_ads_disable = false;
@@ -35,7 +38,7 @@ public class admanager
         m_event = p_event;
     }
 
-    public void initialize(AppCompatActivity p_context,boolean p_ads_disabled, com.google.android.gms.ads.AdView p_banner_ads)
+    public void initialize(Context p_context, boolean p_ads_disabled, com.google.android.gms.ads.AdView p_banner_ads)
     {
         m_ads_disable = p_ads_disabled;
         m_banner_ads = p_banner_ads;
@@ -77,20 +80,18 @@ public class admanager
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                m_banner_ads.setVisibility(View.VISIBLE); // banner visible
+                m_banner_ads.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                final Runnable r = () -> {
-                    initBannerAds();
-                };
+                final Runnable r = () -> initBannerAds();
                 m_failure_handler.postDelayed(r, 5000);
             }
 
             @Override
             public void onAdOpened() {
-                m_banner_ads.setVisibility(View.VISIBLE); // banner visible
+                m_banner_ads.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -113,7 +114,7 @@ public class admanager
     }
 
     /*Helper Methods*/
-    public void adsDisabler(AppCompatActivity p_context)
+    public void adsDisabler()
     {
         if(!m_ads_disable)
         {
