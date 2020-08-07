@@ -51,7 +51,9 @@ public class serverListModel
             }
             Collections.sort(m_country_model);
         }
-        m_event.invokeObserver(null, enums.ETYPE.ON_LOAD_LIST);
+        if(m_event!=null){
+            m_event.invokeObserver(null, enums.ETYPE.ON_LOAD_LIST);
+        }
 
     }
     public ArrayList<serverListRowModel> getCountryModel()

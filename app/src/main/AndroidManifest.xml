@@ -8,52 +8,59 @@
 
     <application
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:stopWithTask="true"
-        android:debuggable="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:stopWithTask="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode">
-        <service android:name=".application.helperManager.OnClearFromRecentService" android:stopWithTask="false" />
+
+        <service
+            android:name=".application.helperManager.OnClearFromRecentService"
+            android:stopWithTask="false" />
+
         <activity
             android:name=".application.homeManager.homeController"
-            android:icon="@mipmap/ic_launcher"
             android:clearTaskOnLaunch="true"
-            android:launchMode="singleTop"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="com.sdk.notification.action"/>
+                <action android:name="com.sdk.notification.action" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="be76c64dae2519d4ab8daaed88298da14c7c294f" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5074525529134731~1412991199"/>
+            android:value="ca-app-pub-5074525529134731~1412991199" />
 
-
-        <receiver android:enabled="true" android:name="com.darkweb.genesisvpn.application.helperManager.BootUpReceiver" android:exported="true"
+        <receiver
+            android:name=".application.helperManager.BootUpReceiver"
+            android:enabled="true"
+            android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

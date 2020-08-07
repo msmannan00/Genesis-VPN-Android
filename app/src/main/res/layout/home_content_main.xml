@@ -146,6 +146,7 @@
         android:id="@+id/connect_base"
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:layout_marginTop="20dp"
         android:background="@xml/connector_drawable"
         android:onClick="onStart"
         android:padding="12dp"
@@ -157,7 +158,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/banner_ads"
+        app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar"
         app:layout_constraintVertical_bias="0.37" />
 
     <TextView
@@ -383,7 +384,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
-        android:id="@+id/m_fragment_conteiner"
+        android:id="@+id/m_fragment_container"
         android:layout_width="match_parent"
         android:scaleX="0.93"
         android:scaleY="0.93"
@@ -419,7 +420,7 @@
         android:id="@+id/m_blocker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:translationZ="525dp"
+        android:translationZ="1525dp"
         android:focusable="true"
         android:alpha="0"
         android:background="@color/blue_circle_clear"

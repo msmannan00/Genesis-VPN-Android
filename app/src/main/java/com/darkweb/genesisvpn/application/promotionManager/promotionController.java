@@ -15,16 +15,12 @@ import androidx.fragment.app.Fragment;
 
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.enums;
-import com.darkweb.genesisvpn.application.constants.keys;
-import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
-import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +80,7 @@ public class promotionController extends Fragment {
         m_alert_description = root.findViewById(R.id.m_alert_description);
         m_back_navigation = root.findViewById(R.id.m_back_navigation);
         m_submit = root.findViewById(R.id.m_submit);
-        m_alert_dismiss = root.findViewById(R.id.m_alert_dismiss);
+        m_alert_dismiss = root.findViewById(R.id.m_alert_clear_data);
     }
 
     public void initializeClickListeners(){
@@ -95,7 +91,7 @@ public class promotionController extends Fragment {
             else if(v.getId()==R.id.m_submit){
                 m_model.adsDisabler();
             }
-            else if(v.getId()==R.id.m_alert_dismiss || v.getId()==R.id.m_alert_dialog){
+            else if(v.getId()==R.id.m_alert_clear_data || v.getId()==R.id.m_alert_dialog){
                 onAlertDismiss();
             }
         };

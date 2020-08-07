@@ -21,15 +21,12 @@ public class BootUpReceiver extends BroadcastReceiver {
         SharedPreferences m_prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean m_is_auto_start_enabled = m_prefs.getBoolean(keys.AUTO_START, false);
 
-        if (m_is_auto_start_enabled && intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            Log.i("FUCJJJJ","F11");
-            proxyController.getInstance().initHydraOnBootLoad(context);
-            Log.i("FUCJJJJ","F22");
+        if(m_is_auto_start_enabled){
+            Intent i = new Intent(context, homeController.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
 
-            //Intent i = new Intent(context, homeController.class);
-            //i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //i.putExtra(keys.IS_AUTO_BOOT,true);
-            //context.startActivity(i);
+            proxyController.getInstance().initHydraOnBootLoad();
         }
     }
 }

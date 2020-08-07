@@ -71,9 +71,9 @@
     <string name="settings_connection_auto">AUTO</string>
     <string name="settings_application_header">Application Proxy Filter</string>
     <string name="settings_application_info">Filter applications to be used with proxy</string>
-    <string name="settings_smart_vpn">Smart VPN</string>
+    <string name="settings_smart_vpn">Smart VPN | Boot</string>
     <string name="settings_automatically_set_optimal_location">Automatically set optimal location</string>
-    <string name="settings_default_location">Default Location</string>
+    <string name="settings_default_location">Default Location | Boot</string>
     <string name="settings_custom_server_info">Set custom server as default which works best for your location</string>
 
     <!-- SERVER PAGE -->

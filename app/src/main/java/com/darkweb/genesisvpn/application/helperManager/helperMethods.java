@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 import static com.darkweb.genesisvpn.application.constants.strings.SE_UNKNOWN_EXCEPTION;
 import static com.darkweb.genesisvpn.application.constants.strings.SE_VPN_PERMISSION;
+import static com.darkweb.genesisvpn.application.serverManager.serverListAdapter.m_type_response;
 
 public class helperMethods
 {
@@ -111,7 +112,7 @@ public class helperMethods
     }
 
     @SuppressLint("ResourceType")
-    public static void openFragment(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context){
+    public static boolean openFragment(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context, boolean p_is_forced){
         FrameLayout fragContainer = p_fragment_container;
         FrameLayout ll = new FrameLayout(p_context);
         ll.setId(100);
@@ -119,8 +120,8 @@ public class helperMethods
         if(p_context.getSupportFragmentManager().getFragments().size()>0){
             m_class_name = p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName();
         }
-        if(m_class_name.equals(p_cls.getClass().getName())){
-            return;
+        if(m_class_name.endsWith(p_cls.getClass().getName()) && !p_is_forced){
+            return false;
         }
         List<Fragment> m_fragments = p_context.getSupportFragmentManager().getFragments();
         for(int counter = 0;counter<m_fragments.size();counter++){
@@ -136,15 +137,20 @@ public class helperMethods
         p_context.getSupportFragmentManager().popBackStack();
         p_context.getSupportFragmentManager().popBackStack();
         p_context.getSupportFragmentManager().beginTransaction().replace(ll.getId(),(p_cls)).commit();
+        ll.setTag(p_cls.getClass().getName());
         fragContainer.addView(ll);
         p_context.getSupportFragmentManager().executePendingTransactions();
+        return true;
     }
 
     @SuppressLint("ResourceType")
-    public static void openFragmentWithBundle(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context, String p_key, Boolean p_value){
+    public static boolean openFragmentWithBundle(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context, String p_key, Boolean p_value){
         if(!p_value){
-            openFragment(p_fragment_container, p_cls, p_context);
-            return;
+            if(m_type_response != p_value && p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName().endsWith("serverController")){
+                return openFragment(p_fragment_container, p_cls, p_context,true);
+            }else{
+                return openFragment(p_fragment_container, p_cls, p_context,false);
+            }
         }
         FrameLayout fragContainer = p_fragment_container;
         FrameLayout ll = new FrameLayout(p_context);
@@ -156,8 +162,8 @@ public class helperMethods
         if(p_context.getSupportFragmentManager().getFragments().size()>0){
             m_class_name = p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName();
         }
-        if(m_class_name.equals(p_cls.getClass().getName()) && !m_class_name.equals("serverController")){
-            return;
+        if(m_class_name.endsWith(p_cls.getClass().getName())){
+            return false;
         }
         p_context.getSupportFragmentManager().popBackStack();
         p_context.getSupportFragmentManager().popBackStack();
@@ -168,6 +174,7 @@ public class helperMethods
         p_context.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_left, R.anim.slide_out_right).addToBackStack(p_cls.getClass().getName()).add(ll.getId(),(p_cls),"m_returnable_fragment").commit();
         fragContainer.addView(ll);
         p_context.getSupportFragmentManager().executePendingTransactions();
+        return true;
     }
 
     public static int screenWidth()

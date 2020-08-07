@@ -651,7 +651,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/m_alert_dismiss"
+                android:id="@+id/m_alert_clear_data"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="12dp"

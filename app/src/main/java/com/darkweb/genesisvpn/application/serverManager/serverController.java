@@ -60,6 +60,9 @@ public class serverController extends Fragment {
             isRequestTypeResponse = this.getArguments().getBoolean(keys.REQUEST_TYPE, false);
             serverFragment.m_type_response = isRequestTypeResponse;
         }
+        else {
+            serverFragment.m_type_response = false;
+        }
     }
 
     public void initializeDrawable()
@@ -68,7 +71,7 @@ public class serverController extends Fragment {
         m_tabs[1]=getActivity().getDrawable(R.drawable.ic_baseline_rescent);
     }
 
-    private void initViewPager() {
+    public void initViewPager() {
         serverViewPageAdapter adapter = new serverViewPageAdapter(getActivity(), m_list_model);
         serverFragment.m_pager = m_pager;
         m_pager.setAdapter(adapter);

@@ -116,7 +116,7 @@ public class settingController extends Fragment {
         m_connect_type_AUTO = root.findViewById(R.id.m_connect_type_AUTO);
         m_auto_optimal_container = root.findViewById(R.id.m_auto_optimal_container);
         m_proxy_filter_container = root.findViewById(R.id.m_proxy_filter_container);
-        m_alert_dismiss = root.findViewById(R.id.m_alert_dismiss);
+        m_alert_dismiss = root.findViewById(R.id.m_alert_clear_data);
     }
 
     public void initializeClickListeners(){
@@ -157,7 +157,7 @@ public class settingController extends Fragment {
                     m_view_controller.onShowAlert(SE_SERVER_MESSAGE_DESC, strings.SE_REQUEST_INITIALIZING, false);
                 }
             }
-            else if(v.getId()==R.id.m_alert_dismiss || v.getId()==R.id.m_alert_dialog){
+            else if(v.getId()==R.id.m_alert_clear_data || v.getId()==R.id.m_alert_dialog){
                 m_view_controller.onAlertDismiss();
             }
         };
@@ -198,6 +198,7 @@ public class settingController extends Fragment {
             if(status.AUTO_OPTIMAL_LOCATION != m_auto_optimal_location.isChecked()){
                 status.AUTO_OPTIMAL_LOCATION = m_auto_optimal_location.isChecked();
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_OPTIMAL_LOCATION, status.AUTO_OPTIMAL_LOCATION), enums.PREFERENCES_ETYPE.SET_BOOL);
+                proxyController.getInstance().onResetServer();
             }
             if(status.AUTO_START != m_auto_start.isChecked()){
                 status.AUTO_START = m_auto_start.isChecked();

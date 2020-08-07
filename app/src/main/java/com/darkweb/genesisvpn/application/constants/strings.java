@@ -24,7 +24,6 @@ public class strings
     public static String HO_CONNECTING = "Connecting";
     public static String HO_CONNECTED = "Connected";
     public static String HO_DISCONNECTING = "Terminating";
-    public static String HO_UNCONNECTED = "Unconnected | Choose Location";
     public static String HO_CONNECTED_TO = "Connected To | ";
     public static String HO_PRIVACY_URL = "https://infogamesolstudios.blogspot.com/p/privacy-policy-function-var-html5.html";
     public static String HO_RATE_US_URL = "market://details?id=com.darkweb.genesisvpn";
@@ -45,7 +44,6 @@ public class strings
     /*APPLICATION FILTER*/
 
     public static String AF_NO_APPLICATION_HEADER = "Application Not Found";
-    public static String AF_NO_APPLICATION_MESSAGE = "No installed application found on Device. Install something and comeback later";
     public static String AF_CONNECTED = "connected";
     public static String AF_UNCONNECTED = "unconnected";
     public static String AF_CLEAR_TITLE = "Resetting Filter Settings";

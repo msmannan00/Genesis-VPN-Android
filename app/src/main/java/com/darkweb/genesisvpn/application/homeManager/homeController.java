@@ -2,7 +2,6 @@ package com.darkweb.genesisvpn.application.homeManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.MenuItem;
-
 import com.darkweb.genesisvpn.application.aboutManager.aboutController;
 import com.darkweb.genesisvpn.application.appManager.appController;
 import com.darkweb.genesisvpn.application.constants.constants;
@@ -22,6 +20,7 @@ import com.darkweb.genesisvpn.application.constants.enums.TRIGGER;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
+import com.darkweb.genesisvpn.application.helperManager.BootUpReceiver;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
@@ -31,7 +30,6 @@ import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.serverManager.serverController;
 import com.darkweb.genesisvpn.application.settingManager.settingController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
-
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -85,15 +83,24 @@ public class homeController extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_view);
-
         initializeBoot();
         initializeCrashHandler();
         initializeModel();
+        initializeProxy();
         initializeViews();
         initializeCustomListeners();
         initializePluginManager();
         initializeVPN();
         initializeFragment();
+        postInitializations();
+    }
+
+    private void postInitializations() {
+        proxyController.getInstance().onAutoConnectInitialization();
+    }
+
+    private void initializeProxy() {
+        m_proxy_controller = proxyController.getInstance();
     }
 
     public void initializeBoot(){
@@ -107,7 +114,7 @@ public class homeController extends FragmentActivity {
         m_proxy_controller.onStartVPN();
         boolean isAutoBoot = getIntent().getBooleanExtra(keys.IS_AUTO_BOOT, false);
         if(isAutoBoot && status.AUTO_START){
-            m_proxy_controller.autoBoot();
+           m_proxy_controller.autoBoot();
         }
     }
 
@@ -178,7 +185,6 @@ public class homeController extends FragmentActivity {
             }
         }.start();
         sharedControllerManager.getInstance().setHomeController(this);
-        m_proxy_controller = proxyController.getInstance();
     }
 
     public void initializeViews(){
@@ -199,20 +205,20 @@ public class homeController extends FragmentActivity {
         m_speed_base = findViewById(R.id.m_speed_base);
         m_connect_animator_initial = findViewById(R.id.connect_animator_initial);
         m_dismiss_alert_btn = findViewById(R.id.m_dismiss_alert_btn);
-        m_fragment_container = findViewById(R.id.m_fragment_conteiner);
+        m_fragment_container = findViewById(R.id.m_fragment_container);
         m_blocker = findViewById(R.id.m_blocker);
 
         m_model = new homeModel(this, new homeModelCallback());
     }
 
     public void initializeFragment(){
-        helperMethods.openFragment(m_fragment_container, new aboutController(), this);
-        helperMethods.openFragment(m_fragment_container, new appController(), this);
-        helperMethods.openFragment(m_fragment_container, new promotionController(), this);
-        helperMethods.openFragment(m_fragment_container, new settingController(), this);
-        helperMethods.openFragment(m_fragment_container, new serverController(), this);
-        getSupportFragmentManager().popBackStack();
-    }
+        //helperMethods.openFragment(m_fragment_container, new aboutController(), this);
+        //helperMethods.openFragment(m_fragment_container, new appController(), this);
+        //helperMethods.openFragment(m_fragment_container, new promotionController(), this);
+        //helperMethods.openFragment(m_fragment_container, new serverController(), this);
+        //helperMethods.openFragment(m_fragment_container, new settingController(), this);
+        //getSupportFragmentManager().popBackStack();
+   }
 
     /*EVENT HANDLERS DEFAULTS*/
 
@@ -263,6 +269,7 @@ public class homeController extends FragmentActivity {
         if(popupWindow!=null){
             popupWindow.dismiss();
         }
+        m_view_controller.onCloseDrawer();
     }
 
     public void onConnectionToggle(View view) {
@@ -318,7 +325,7 @@ public class homeController extends FragmentActivity {
                 }
             }
         }
-        else{
+        else if(!m_blocker.isClickable()){
             List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
 
             if(count >= 1){
@@ -333,26 +340,26 @@ public class homeController extends FragmentActivity {
             }
             else {
                 boolean m_close_triggered_status = false;
-                if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("settingController")){
-                    m_close_triggered_status = ((settingController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                if(m_fragments.get(0).getClass().getName().endsWith("settingController")){
+                    m_close_triggered_status = ((settingController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("serverController")){
-                    m_close_triggered_status = ((serverController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                else if(m_fragments.get(0).getClass().getName().endsWith("serverController")){
+                    m_close_triggered_status = ((serverController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("promotionController")){
-                    m_close_triggered_status = ((promotionController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                else if(m_fragments.get(0).getClass().getName().endsWith("promotionController")){
+                    m_close_triggered_status = ((promotionController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("aboutController")){
-                    m_close_triggered_status = ((aboutController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                else if(m_fragments.get(0).getClass().getName().endsWith("aboutController")){
+                    m_close_triggered_status = ((aboutController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(m_fragments.size()-1).getClass().getName().endsWith("appController")){
-                    m_close_triggered_status = ((appController)m_fragments.get(m_fragments.size()-1)).onBackPressed();
+                else if(m_fragments.get(0).getClass().getName().endsWith("appController")){
+                    m_close_triggered_status = ((appController)m_fragments.get(0)).onBackPressed();
                 }
                 if(m_close_triggered_status){
-                    m_model.onResetUIBlock();
                     m_fragment_container.bringToFront();
                     m_view_controller.onCloseFragment();
                 }
+                m_model.onResetUIBlock();
             }
             onResume();
         }
@@ -392,9 +399,13 @@ public class homeController extends FragmentActivity {
         super.onResume();
         if(!isFinishing()){
            status.HAS_APPLICATION_STOPPED = false;
-           m_view_controller.onConnectionUpdate();
+           if(m_view_controller!=null){
+               m_view_controller.onConnectionUpdate();
+           }
         }
-        m_model.onResetUIBlock();
+        if(m_model!=null){
+            m_model.onResetUIBlock();
+        }
     }
 
     @Override
@@ -571,7 +582,12 @@ public class homeController extends FragmentActivity {
                 new Handler().postDelayed(() -> m_view_controller.onShowAlert(finalM_message,(String) p_data.get(1), true, finalIsStopButtonActive),(long) p_data.get(2));
             }
             else if(p_event_type == enums.ETYPE.OPEN_FRAGMENT){
-                m_view_controller.onOpenFragment();
+                boolean m_Response = (boolean)p_data.get(0);
+                if(m_Response)
+                    m_view_controller.onOpenFragment(500);
+                else
+                    m_view_controller.onOpenFragment(0);
+
             }
         }
     }
@@ -634,6 +650,11 @@ public class homeController extends FragmentActivity {
     public void onSetFlag(String location)
     {
         m_view_controller.onSetFlag(location);
+    }
+
+    public void onSetFlagInstant(String location)
+    {
+        m_view_controller.onClearFlagInstant();
     }
 
     public void onUpdateDownloadSpeed(float val){

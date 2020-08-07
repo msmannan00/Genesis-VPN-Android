@@ -3,7 +3,10 @@ package com.darkweb.genesisvpn.application.homeManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.view.View;
 import android.widget.FrameLayout;
+
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import com.darkweb.genesisvpn.application.aboutManager.aboutController;
 import com.darkweb.genesisvpn.application.appManager.appController;
@@ -64,19 +67,19 @@ class homeModel
         {
             m_isUIBlocked = true;
             new Handler().postDelayed(() -> {
-                helperMethods.openFragment(p_fragment_conteiner, new aboutController(), m_context);
-                m_event.invokeObserver(Collections.singletonList(m_delay), enums.ETYPE.OPEN_FRAGMENT);
+                boolean m_response =  helperMethods.openFragment(p_fragment_conteiner, new aboutController(), m_context, false);
+                m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
     }
 
-    void onSettings(int m_delay, FrameLayout p_fragment_conteiner){
+    void onSettings(int m_delay, FrameLayout p_fragment_container){
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
             new Handler().postDelayed(() -> {
-                helperMethods.openFragment(p_fragment_conteiner, new settingController(), m_context);
-                m_event.invokeObserver(Collections.singletonList(m_delay), enums.ETYPE.OPEN_FRAGMENT);
+                boolean m_response =  helperMethods.openFragment(p_fragment_container, new settingController(), m_context, false);
+                m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
     }
@@ -86,8 +89,8 @@ class homeModel
         {
             m_isUIBlocked = true;
             new Handler().postDelayed(() -> {
-                helperMethods.openFragment(p_fragment_conteiner, new promotionController(), m_context);
-                m_event.invokeObserver(Collections.singletonList(m_delay), enums.ETYPE.OPEN_FRAGMENT);
+                boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new promotionController(), m_context, false);
+                m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
     }
@@ -97,8 +100,8 @@ class homeModel
         {
             m_isUIBlocked = true;
             new Handler().postDelayed(() -> {
-                helperMethods.openFragment(p_fragment_conteiner, new appController(), m_context);
-                m_event.invokeObserver(Collections.singletonList(m_delay), enums.ETYPE.OPEN_FRAGMENT);
+                boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new appController(), m_context, false);
+                m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
     }
@@ -125,8 +128,8 @@ class homeModel
             if(p_registeration_status == REGISTERATION.LOADING_SERVER_SUCCESS){
                 m_isUIBlocked = true;
                 new Handler().postDelayed(() -> {
-                    helperMethods.openFragmentWithBundle(p_fragment_conteiner, new serverController(), m_context, keys.REQUEST_TYPE, false);
-                    m_event.invokeObserver(Collections.singletonList(p_delay), enums.ETYPE.OPEN_FRAGMENT);
+                    boolean m_response = helperMethods.openFragmentWithBundle(p_fragment_conteiner, new serverController(), m_context, keys.REQUEST_TYPE, false);
+                    m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
                 }, p_delay);
             }
             else if(p_registeration_status == REGISTERATION.LOADING_SERVER_FAILURE){

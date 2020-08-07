@@ -275,11 +275,15 @@ class homeViewController {
     }
 
     public void onOpenDrawer(){
+        m_drawer.setEnabled(true);
+        m_drawer.setClickable(true);
         m_drawer.openDrawer(Gravity.LEFT); //Edit Gravity.START need API 14
     }
 
     public void onCloseDrawer(){
-        m_drawer.closeDrawer(Gravity.LEFT); //Edit Gravity.START need API 14
+        if(m_drawer!=null){
+            m_drawer.closeDrawer(Gravity.LEFT); //Edit Gravity.START need API 14
+        }
     }
 
     public void onConnectionToggle(int p_connection){
@@ -313,6 +317,11 @@ class homeViewController {
         }else {
             startPostTask(messages.REMOVE_FLAG);
         }
+    }
+
+    public void onClearFlagInstant()
+    {
+        startPostTask(messages.REMOVE_FLAG_INSTANT);
     }
 
     public void onShowAlert(String p_error_message,String p_error_title, boolean p_is_forced, boolean isStopButtonActive){
@@ -458,12 +467,25 @@ class homeViewController {
                         animateFlag(m_context.getResources().getDrawable(R.drawable.no_flag_default));
                     }
                 }
+                else if(msg.what == messages.REMOVE_FLAG_INSTANT)
+                {
+                    if(m_flag.getAlpha()==0f)
+                    {
+                        m_flag.animate().alpha(1);
+                    }
+
+                    if(!isFlagRemoved){
+                        isFlagRemoved = true;
+                        m_flag.setAlpha(1);
+                        m_flag.setBackground(m_context.getResources().getDrawable(R.drawable.no_flag_default));
+                    }
+                }
             }
         };
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public void onOpenFragment(){
+    public void onOpenFragment(int p_delay){
         m_context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         m_blocker.setClickable(true);
         m_fragment_container.setAlpha(0);
@@ -474,7 +496,7 @@ class homeViewController {
                 .scaleY(1f)
                 .scaleX(1f)
                 .alpha(1)
-                .setStartDelay(0)
+                .setStartDelay(p_delay)
                 .start();
 
         new Handler().postDelayed(() -> m_blocker.setClickable(false), 200);

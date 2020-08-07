@@ -10,9 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.darkweb.genesisvpn.R;
@@ -20,16 +18,16 @@ import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
+import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import com.jwang123.flagkit.FlagKit;
-
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.listViewHolder>
 {
@@ -38,7 +36,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
     private enums.SERVER m_type;
     private ArrayList<serverListRowModel> m_server_model_async;
     private ViewPager2 m_pager;
-    public static boolean m_type_response;
+    public static boolean m_type_response = false;
     boolean isLoaded = false;
 
     serverListAdapter(Fragment p_context, ArrayList<serverListRowModel> p_server_model, enums.SERVER p_type, ViewPager2 p_pager, boolean p_response_type) {
@@ -172,15 +170,21 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                 }else {
                     if(!m_type_response){
                         serverListModel.getInstance().addModel(model);
+                        proxyController.getInstance().onSetServer(model.getCountryModel().getCountry());
                         sharedControllerManager.getInstance().getHomeController().onChooseServer(model.getCountryModel().getCountry());
                         m_context.getActivity().onBackPressed();
                     }else {
                         status.DEFAULT_SERVER = model.getCountryModel().getCountry();
+                        proxyController.getInstance().onSetServer(status.DEFAULT_SERVER);
                         pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
                         status.AUTO_OPTIMAL_LOCATION = false;
+                        proxyController.getInstance().onResetServer();
                         m_context.getActivity().onBackPressed();
                     }
                 }
+                new Handler().postDelayed(() -> {
+                    sharedControllerManager.getInstance().getServerController().initViewPager();
+                }, 1000);
             });
         }
     }

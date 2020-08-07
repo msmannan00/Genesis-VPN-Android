@@ -69,12 +69,12 @@
 
             <ImageButton
                 android:id="@+id/m_alert_clear_popup"
-                android:layout_width="0dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="11dp"
                 android:layout_gravity="center_vertical"
-                android:background="@color/blue_circle_clear"
-                android:layout_height="wrap_content"
+                android:background="@xml/sc_ripple_default"
                 android:src="@xml/ic_baseline_reset"
-                android:layout_marginEnd="10dp"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -117,6 +117,7 @@
         android:layout_height="match_parent"
         android:background="@color/mat_alpha"
         android:translationZ="2000dp"
+        android:alpha="0"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -149,7 +150,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/m_alert_clear_data"
+                android:id="@+id/m_alert_dismiss"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="12dp"
@@ -162,7 +163,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <Button
-                android:id="@+id/m_alert_dismiss"
+                android:id="@+id/m_alert_clear_data"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
                 android:layout_marginEnd="15dp"
@@ -172,7 +173,7 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/m_alert_clear_data" />
+                app:layout_constraintEnd_toStartOf="@+id/m_alert_dismiss" />
 
             <TextView
                 android:id="@+id/m_alert_description"

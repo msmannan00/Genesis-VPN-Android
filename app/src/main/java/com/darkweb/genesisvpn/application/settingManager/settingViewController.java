@@ -24,6 +24,7 @@ import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.jwang123.flagkit.FlagKit;
 
 import java.util.Locale;

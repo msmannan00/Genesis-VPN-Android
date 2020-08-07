@@ -91,9 +91,9 @@ public class appController extends Fragment {
         m_alert_dialog = p_view.findViewById(R.id.m_alert_dialog);
         m_alert_title = p_view.findViewById(R.id.m_alert_title);
         m_alert_description = p_view.findViewById(R.id.m_alert_description);
-        m_alert_dismiss = p_view.findViewById(R.id.m_alert_dismiss);
+        m_alert_dismiss = p_view.findViewById(R.id.m_alert_clear_data);
         m_back_navigation = p_view.findViewById(R.id.m_back_navigation);
-        m_alert_clear_data = p_view.findViewById(R.id.m_alert_clear_data);
+        m_alert_clear_data = p_view.findViewById(R.id.m_alert_dismiss);
         m_alert_clear_popup = p_view.findViewById(R.id.m_alert_clear_popup);
     }
 
@@ -102,14 +102,15 @@ public class appController extends Fragment {
             if(v.getId()==R.id.m_back_navigation){
                 m_model.quit();
             }
-            else if(v.getId()==R.id.m_alert_dismiss){
-                m_view_controller.onAlertDismiss();
+            else if(v.getId()==R.id.m_alert_clear_data){
+                onClearData();
+                proxyController.getInstance().onSettingChanged();
             }
             else if(v.getId()==R.id.m_alert_clear_popup){
                 m_view_controller.onShowAlert(strings.AF_CLEAR_DESC, strings.AF_CLEAR_TITLE ,true);
             }
-            else if(v.getId()==R.id.m_alert_clear_data){
-                onClearData();
+            else if(v.getId()==R.id.m_alert_dismiss || v.getId()==R.id.m_alert_dialog){
+               m_view_controller.onAlertDismiss();
             }
         };
     }
@@ -119,6 +120,7 @@ public class appController extends Fragment {
         m_back_navigation.setOnClickListener(m_on_click_listener);
         m_alert_clear_data.setOnClickListener(m_on_click_listener);
         m_alert_clear_popup.setOnClickListener(m_on_click_listener);
+        m_alert_dialog.setOnClickListener(m_on_click_listener);
     }
 
     /*EVENT HANDLER*/
