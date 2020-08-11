@@ -129,14 +129,7 @@ public class helperMethods
             p_context.getSupportFragmentManager().executePendingTransactions();
         }
 
-
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().beginTransaction().replace(ll.getId(),(p_cls)).commit();
+        p_context.getSupportFragmentManager().beginTransaction().add(ll.getId(),(p_cls)).commit();
         ll.setTag(p_cls.getClass().getName());
         fragContainer.addView(ll);
         p_context.getSupportFragmentManager().executePendingTransactions();
@@ -146,7 +139,7 @@ public class helperMethods
     @SuppressLint("ResourceType")
     public static boolean openFragmentWithBundle(FrameLayout p_fragment_container, Fragment p_cls, FragmentActivity p_context, String p_key, Boolean p_value){
         if(!p_value){
-            if(m_type_response != p_value && p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName().endsWith("serverController")){
+            if(m_type_response != p_value && (p_context.getSupportFragmentManager().getFragments().get(0).getClass().getName().endsWith("serverController"))){
                 return openFragment(p_fragment_container, p_cls, p_context,true);
             }else{
                 return openFragment(p_fragment_container, p_cls, p_context,false);
@@ -165,12 +158,7 @@ public class helperMethods
         if(m_class_name.endsWith(p_cls.getClass().getName())){
             return false;
         }
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
-        p_context.getSupportFragmentManager().popBackStack();
+
         p_context.getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_left, R.anim.slide_out_right).addToBackStack(p_cls.getClass().getName()).add(ll.getId(),(p_cls),"m_returnable_fragment").commit();
         fragContainer.addView(ll);
         p_context.getSupportFragmentManager().executePendingTransactions();

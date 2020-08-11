@@ -147,6 +147,7 @@ class homeViewController {
             m_connect_label.setText(strings.HO_CONNECTING);
             m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.075f);
             m_text = strings.HO_CONNECTING;
+            m_connect_loading.animate().cancel();
             m_connect_loading.animate().setDuration(500).withStartAction(() -> {
                 m_connect_loading.animate().setStartDelay(0);
                 ViewCompat.setTranslationZ(m_speed_base, 35);
@@ -168,7 +169,7 @@ class homeViewController {
         lp1.height = helperMethods.screenWidth()*14/100;
         m_flag.setLayoutParams(lp1);
         // m_location_info.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.035f);
-        m_flag.setBackground(ContextCompat.getDrawable(m_context, R.drawable.no_flag_default));
+        m_flag.setImageDrawable(ContextCompat.getDrawable(m_context, R.drawable.no_flag_default));
         setStatusBarColor();
         m_alert_dialog.setAlpha(0);
         m_alert_dialog.setVisibility(View.GONE);
@@ -180,6 +181,8 @@ class homeViewController {
         }else {
             m_connection_toggle.setText("AUTO");
         }
+
+        new Handler().postDelayed(() -> m_connect_base.setClickable(true), 500);
 
     }
 
@@ -441,6 +444,7 @@ class homeViewController {
             {
                 if(msg.what == messages.UPDATE_FLAG)
                 {
+
                     if(!m_flag_status.equals(strings.EMPTY_STR))
                     {
                         if(m_flag.getAlpha()==0f)
@@ -457,11 +461,11 @@ class homeViewController {
                 }
                 else if(msg.what == messages.REMOVE_FLAG)
                 {
+
                     if(m_flag.getAlpha()==0f)
                     {
                         m_flag.animate().alpha(1);
                     }
-
                     if(!isFlagRemoved){
                         isFlagRemoved = true;
                         animateFlag(m_context.getResources().getDrawable(R.drawable.no_flag_default));
@@ -469,15 +473,21 @@ class homeViewController {
                 }
                 else if(msg.what == messages.REMOVE_FLAG_INSTANT)
                 {
+
                     if(m_flag.getAlpha()==0f)
                     {
+                        m_flag.animate().cancel();
                         m_flag.animate().alpha(1);
                     }
-
                     if(!isFlagRemoved){
+
                         isFlagRemoved = true;
-                        m_flag.setAlpha(1);
-                        m_flag.setBackground(m_context.getResources().getDrawable(R.drawable.no_flag_default));
+                        m_flag.animate().cancel();
+                        m_connect_label.animate().cancel();
+                        m_connect_label.setAlpha(1);
+                        m_flag.animate().cancel();
+                        m_flag.animate().setDuration(0).alpha(1);
+                        m_flag.setImageDrawable(m_context.getResources().getDrawable(R.drawable.no_flag_default));
                     }
                 }
             }
@@ -529,13 +539,13 @@ class homeViewController {
                 m_flag.animate().cancel();
                 m_flag.animate().alpha(0).setDuration(150).withEndAction(() -> {
                     m_flag.animate().setDuration(350).alpha(1);
-                    m_flag.setBackground(p_flag);
+                    m_flag.setImageDrawable(p_flag);
                 }).start();
             }else {
                 m_flag.animate().cancel();
                 m_flag.setAlpha(0);
                 m_flag.animate().setDuration(350).alpha(1).start();
-                m_flag.setBackground(p_flag);
+                m_flag.setImageDrawable(p_flag);
             }
         }catch (Exception ex){
         }

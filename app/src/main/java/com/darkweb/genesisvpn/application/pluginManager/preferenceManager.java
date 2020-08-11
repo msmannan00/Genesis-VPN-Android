@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,8 +56,7 @@ public class preferenceManager
     }
 
     public void setSet(String p_valueKey, ArrayList<String> p_value){
-        Set<String> set = new HashSet<>(p_value);
-        m_edit.putStringSet(p_valueKey, set);
+        m_edit.putString(p_valueKey, TextUtils.join(",", p_value));
         m_edit.commit();
     }
 
@@ -72,9 +73,7 @@ public class preferenceManager
     }
 
     public ArrayList<String> getSet(String p_valueKey, ArrayList<String> p_value){
-        Set<String> m_temo_set = new HashSet<>(new ArrayList<>());
-        Set<String> m_response =  m_prefs.getStringSet(p_valueKey, m_temo_set);
-        return new ArrayList<>(m_response);
+        return new ArrayList( Arrays.asList( m_prefs.getString(p_valueKey, "").split(",") ) );
     }
 
     public int getInt(String p_valueKey, int p_valueDefault)

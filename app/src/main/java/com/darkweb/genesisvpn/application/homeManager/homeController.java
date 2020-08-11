@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import com.darkweb.genesisvpn.R;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.darkweb.genesisvpn.application.constants.enums.TRIGGER;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.helperManager.BootUpReceiver;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
@@ -154,16 +154,6 @@ public class homeController extends FragmentActivity {
         status.DISABLED_APPS = (ArrayList<String>)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, null), enums.PREFERENCES_ETYPE.GET_SET);
         status.DEFAULT_SERVER = (String) pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, ""), enums.PREFERENCES_ETYPE.GET_STRING);
 
-        int m_connection_type = (int)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 2), enums.PREFERENCES_ETYPE.GET_INT);
-        if(m_connection_type == 1){
-            status.CONNECTION_TYPE = 1;
-        }
-        else if(m_connection_type == 2){
-            status.CONNECTION_TYPE = 2;
-        }
-        else {
-            status.CONNECTION_TYPE = 0;
-        }
         m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial, m_dismiss_alert_btn, m_fragment_container, m_blocker);
 
         if(!status.AUTO_CONNECT){
@@ -212,12 +202,16 @@ public class homeController extends FragmentActivity {
     }
 
     public void initializeFragment(){
-        //helperMethods.openFragment(m_fragment_container, new aboutController(), this);
-        //helperMethods.openFragment(m_fragment_container, new appController(), this);
-        //helperMethods.openFragment(m_fragment_container, new promotionController(), this);
-        //helperMethods.openFragment(m_fragment_container, new serverController(), this);
-        //helperMethods.openFragment(m_fragment_container, new settingController(), this);
-        //getSupportFragmentManager().popBackStack();
+        helperMethods.openFragment(m_fragment_container, new aboutController(), this, false);
+        helperMethods.openFragment(m_fragment_container, new appController(), this,false);
+        helperMethods.openFragment(m_fragment_container, new promotionController(), this, false);
+        helperMethods.openFragment(m_fragment_container, new settingController(), this, false);
+   }
+
+   public void initializeServerModel(){
+        if(m_fragment_container.getVisibility() != View.VISIBLE){
+            helperMethods.openFragment(m_fragment_container, new serverController(), this,  false);
+        }
    }
 
     /*EVENT HANDLERS DEFAULTS*/
@@ -278,17 +272,21 @@ public class homeController extends FragmentActivity {
             m_view_controller.onConnectionToggle(2);
             status.CONNECTION_TYPE = 2;
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, status.CONNECTION_TYPE), enums.PREFERENCES_ETYPE.SET_INT);
-            m_proxy_controller.onSettingChanged();
+            m_proxy_controller.onSettingChanged(false);
         }else if(m_text.equals("UDP")){
             m_view_controller.onConnectionToggle(1);
             status.CONNECTION_TYPE = 1;
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, status.CONNECTION_TYPE), enums.PREFERENCES_ETYPE.SET_INT);
-            m_proxy_controller.onSettingChanged();
+            m_proxy_controller.onSettingChanged(false);
         }else {
             m_view_controller.onConnectionToggle(0);
             status.CONNECTION_TYPE = 0;
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, status.CONNECTION_TYPE), enums.PREFERENCES_ETYPE.SET_INT);
-            m_proxy_controller.onSettingChanged();
+            m_proxy_controller.onSettingChanged(false);
+        }
+        List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
+        if(m_fragments.get(0).getClass().getName().endsWith(settingController.class.getName())){
+            sharedControllerManager.getInstance().getSettingController().initialize();
         }
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
@@ -327,41 +325,57 @@ public class homeController extends FragmentActivity {
         }
         else if(!m_blocker.isClickable()){
             List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
+            boolean m_close_triggered_status = false;
 
             if(count >= 1){
-                getSupportFragmentManager().popBackStack();
                 if(getSupportFragmentManager().getBackStackEntryAt(0).getName().endsWith("serverController") || getSupportFragmentManager().getBackStackEntryAt(0).getName().endsWith("appController")){
                     if(getSupportFragmentManager().getBackStackEntryAt(0).getName().endsWith("appController"))
                     {
-                        ((appController)m_fragments.get(m_fragments.size()-2)).onBackPressed();
+                        ((appController)m_fragments.get(1)).onBackPressed();
                     }
                     ((settingController)m_fragments.get(0)).onResumeFragment();
+                    for(int count_frag=1;count_frag<m_fragments.size();count_frag++){
+                        getSupportFragmentManager().popBackStack();
+                        getSupportFragmentManager().beginTransaction().remove(m_fragments.get(count_frag)).commit();
+                    }
+                    return;
                 }
-            }
-            else {
-                boolean m_close_triggered_status = false;
+            }else {
                 if(m_fragments.get(0).getClass().getName().endsWith("settingController")){
                     m_close_triggered_status = ((settingController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(0).getClass().getName().endsWith("serverController")){
-                    m_close_triggered_status = ((serverController)m_fragments.get(0)).onBackPressed();
-                }
-                else if(m_fragments.get(0).getClass().getName().endsWith("promotionController")){
+                else if((m_fragments.get(0).getClass().getName().endsWith("promotionController"))){
                     m_close_triggered_status = ((promotionController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(0).getClass().getName().endsWith("aboutController")){
+                else if((m_fragments.get(0).getClass().getName().endsWith("aboutController"))){
                     m_close_triggered_status = ((aboutController)m_fragments.get(0)).onBackPressed();
                 }
-                else if(m_fragments.get(0).getClass().getName().endsWith("appController")){
+                else if((m_fragments.get(0).getClass().getName().endsWith("appController"))){
                     m_close_triggered_status = ((appController)m_fragments.get(0)).onBackPressed();
+                }
+                else if((m_fragments.get(0).getClass().getName().endsWith("serverController"))){
+                    m_close_triggered_status = ((serverController)m_fragments.get(0)).onBackPressed();
                 }
                 if(m_close_triggered_status){
                     m_fragment_container.bringToFront();
                     m_view_controller.onCloseFragment();
                 }
-                m_model.onResetUIBlock();
+                for(int count_frag=1;count_frag<m_fragments.size();count_frag++){
+                    getSupportFragmentManager().beginTransaction().remove(m_fragments.get(count_frag)).commit();
+                    getSupportFragmentManager().popBackStackImmediate();
+                }
             }
+            m_model.onResetUIBlock();
             onResume();
+        }
+    }
+
+    public boolean isFragmentVisible(String p_fragment_name){
+        List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
+        if(m_fragments.get(0).getClass().getName().endsWith(p_fragment_name) && m_fragment_container.getVisibility()==View.VISIBLE){
+            return true;
+        }else {
+            return false;
         }
     }
 
@@ -376,7 +390,7 @@ public class homeController extends FragmentActivity {
     {
         m_flag.setOnClickListener(view -> {
             m_proxy_controller.clearExceptionCounter();
-            m_model.onServer(50, m_proxy_controller.isUserRegistered(), m_fragment_container);
+            m_model.onServer(500, m_proxy_controller.isUserRegistered(), m_fragment_container);
         });
         startService(new Intent(getBaseContext(), OnClearFromRecentService.class));
         m_connect_base.setOnTouchListener((view, motionEvent) -> {
@@ -432,7 +446,7 @@ public class homeController extends FragmentActivity {
 
         if (id == R.id.nav_app)
         {
-            onAppManager(500);
+            onAppManager(700);
         }
         else if (id == R.id.speed_test)
         {
@@ -455,7 +469,7 @@ public class homeController extends FragmentActivity {
         else if (id == R.id.server)
         {
             m_proxy_controller.clearExceptionCounter();
-            m_model.onServer(500,m_proxy_controller.isUserRegistered(), m_fragment_container);
+            m_model.onServer(700,m_proxy_controller.isUserRegistered(), m_fragment_container);
         }
         else if (id == R.id.setting)
         {
@@ -507,11 +521,14 @@ public class homeController extends FragmentActivity {
     public void onSettingManagerClick(View view){
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
-        m_model.onSettings(100, m_fragment_container);
+        m_model.onSettings(500, m_fragment_container);
     }
 
     public void onStart(View view)
     {
+        m_connect_base.setClickable(false);
+        new Handler().postDelayed(() -> m_connect_base.setClickable(true), 250);
+
         m_proxy_controller.onTriggered(TRIGGER.TOOGLE);
     }
 
@@ -524,7 +541,7 @@ public class homeController extends FragmentActivity {
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
         m_proxy_controller.clearExceptionCounter();
-        m_model.onServer(100,m_proxy_controller.isUserRegistered(), m_fragment_container);
+        m_model.onServer(500,m_proxy_controller.isUserRegistered(), m_fragment_container);
     }
 
     public void onChooseServer(String p_server){
@@ -534,7 +551,7 @@ public class homeController extends FragmentActivity {
     public void onServer(View view) {
         m_view_controller.onAlertDismiss();
         m_proxy_controller.clearExceptionCounter();
-        m_model.onServer(100,m_proxy_controller.isUserRegistered(), m_fragment_container);
+        m_model.onServer(500,m_proxy_controller.isUserRegistered(), m_fragment_container);
         onPopupDismiss();
     }
 

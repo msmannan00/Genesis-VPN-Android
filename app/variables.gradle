@@ -1,18 +1,18 @@
 /*arm Versions*/
-project.ext.arm_vname = '25'
-project.ext.arm_vcode = 25
+project.ext.arm_vname = '35'
+project.ext.arm_vcode = 35
 
 /*aarch Versions*/
-project.ext.aarch_vname = '26'
-project.ext.aarch_vcode = 26
+project.ext.aarch_vname = '36'
+project.ext.aarch_vcode = 36
 
 /*x86 Versions*/
-project.ext.x86_vname = '27'
-project.ext.x86_vcode = 27
+project.ext.x86_vname = '37'
+project.ext.x86_vcode = 37
 
 /*x64 Versions*/
-project.ext.x64_vname = '28'
-project.ext.x64_vcode = 28
+project.ext.x64_vname = '38'
+project.ext.x64_vcode = 38
 
 /*Dimension*/
 project.ext.dimen = 'abi'
@@ -51,7 +51,7 @@ project.ext.V_STORED_CARRIER_ID_KEY = "\"com.northghost.afvclient.CARRIER_ID_KEY
 /*Proguard*/
 project.ext.getDefaultProguardFile = 'proguard-android-optimize.txt'
 project.ext.proguard_rules_pro = 'proguard-rules.pro'
-project.ext.minifyEnabled = true
+project.ext.minifyEnabled = false
 
 /*Implementations*/
 project.ext.fileTree = fileTree(dir: 'libs', include: ['*.jar'])

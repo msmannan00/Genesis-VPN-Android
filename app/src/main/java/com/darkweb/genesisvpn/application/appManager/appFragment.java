@@ -54,7 +54,6 @@ public class appFragment extends Fragment {
 
         if(count != -1){
             RecyclerView m_list_view = view.findViewById(R.id.app_listview);
-            m_list_view.invalidate();
             m_list_view.setLayoutManager(new LinearLayoutManager(sharedControllerManager.getInstance().getHomeController()));
             appListAdapter adapter;
 

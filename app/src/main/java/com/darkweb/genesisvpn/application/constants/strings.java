@@ -63,7 +63,7 @@ public class strings
 
     /*ADS MESSAGES*/
 
-    public static String AD_ADS_DISABLED_TITLE = "Congradulations";
+    public static String AD_ADS_DISABLED_TITLE = "Congratulation";
     public static String AD_ADS_DISABLED = "Ads Disabled Successfully. Now you can enjoy our premium version of apps withour advertisement";
     public static String AD_ADS_FAILED = "Promotion Request Failure. If promotion code is valid please contact us so we can look into it";
     public static String AD_ADS_FAILED_TITLE = "Invalid Promotion Code";

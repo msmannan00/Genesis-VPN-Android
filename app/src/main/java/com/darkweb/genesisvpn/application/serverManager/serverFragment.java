@@ -75,7 +75,7 @@ public class serverFragment extends Fragment {
                 adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getRecentModel(), enums.SERVER.RECENT, m_pager, m_type_response);
                 m_list_view.setAdapter(adapter);
 
-                if(status.RECENT_SERVERS.size()<=0){
+                if(m_list_model.getRecentModel().size()<=0){
                     m_list_view.setAlpha(0);
                 }else {
                     m_list_view.setAlpha(1);

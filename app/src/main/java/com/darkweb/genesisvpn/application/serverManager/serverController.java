@@ -32,6 +32,7 @@ public class serverController extends Fragment {
 
     private boolean isRequestTypeResponse = false;
     private boolean isRunning = false;
+    private boolean isChangedWhileRunning = false;
     private View.OnClickListener m_on_click_listener;
     private serverViewController m_view_controller;
     private serverModel m_model;
@@ -45,6 +46,7 @@ public class serverController extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.server_view, null);
+        isRunning = true;
         initBundle();
         initializeDrawable();
         initializeModel();
@@ -53,6 +55,10 @@ public class serverController extends Fragment {
         initializeClickListeners();
         initializeListeners();
         return root;
+    }
+
+    public void onInitialize(){
+
     }
 
     public void initBundle(){
@@ -72,24 +78,33 @@ public class serverController extends Fragment {
     }
 
     public void initViewPager() {
-        serverViewPageAdapter adapter = new serverViewPageAdapter(getActivity(), m_list_model);
-        serverFragment.m_pager = m_pager;
-        m_pager.setAdapter(adapter);
+        if(getActivity()!=null){
+            serverViewPageAdapter adapter = new serverViewPageAdapter(getActivity(), m_list_model);
+            serverFragment.m_pager = m_pager;
+            m_pager.setAdapter(adapter);
 
-        new TabLayoutMediator(m_tab_layout, m_pager, (tab, position) -> tab.setIcon(m_tabs[position])).attach();
+            new TabLayoutMediator(m_tab_layout, m_pager, (tab, position) -> tab.setIcon(m_tabs[position])).attach();
+        }
+    }
+
+    public void onDataChanged(){
+        if (sharedControllerManager.getInstance().getHomeController().isFragmentVisible(serverController.this.getClass().getName())) {
+            isChangedWhileRunning = true;
+        }else {
+            initializeModel();
+            initViewPager();
+        }
     }
 
     public void initializeModel(){
         sharedControllerManager.getInstance().setServerController(this);
         m_model = new serverModel(getActivity(), new serverModelCallback());
         m_view_controller = new serverViewController(getActivity(), new serverViewCallback());
-        if(m_list_model!=null){
-            m_list_model.getRecentModel().clear();
-            m_list_model.getCountryModel().clear();
-        }
+
+
         m_list_model = serverListModel.getInstance();
         m_list_model.onInitialize(new serverListModelCallback());
-        m_list_model.setRecentModel(status.RECENT_SERVERS);
+        //m_list_model.setRecentModel(status.RECENT_SERVERS);
     }
 
     public void initializeViews(View p_view){
@@ -114,17 +129,14 @@ public class serverController extends Fragment {
 
     public boolean onBackPressed()
     {
+        isRunning = false;
         if(isRequestTypeResponse){
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
         }
-        if(!m_list_model.getRecentModel().equals(status.RECENT_SERVERS)){
-            status.RECENT_SERVERS.clear();
-            status.RECENT_SERVERS.addAll(m_list_model.getRecentModel());
-            ArrayList<String> m_recent_name = new ArrayList<>();
-            for(int counter=0;counter<status.RECENT_SERVERS.size();counter++){
-                m_recent_name.add(status.RECENT_SERVERS.get(counter).getHeader());
-            }
-            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.RECENT_COUNTRIES, m_recent_name), enums.PREFERENCES_ETYPE.SET_SET);
+        if(isChangedWhileRunning){
+            isChangedWhileRunning = false;
+            initializeModel();
+            initViewPager();
         }
         return true;
     }

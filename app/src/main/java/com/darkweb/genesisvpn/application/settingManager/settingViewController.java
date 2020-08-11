@@ -13,18 +13,12 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
-
-import com.anchorfree.sdk.UnifiedSDK;
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.constants.messages;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
-import com.darkweb.genesisvpn.application.helperManager.helperMethods;
-import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.jwang123.flagkit.FlagKit;
 
 import java.util.Locale;

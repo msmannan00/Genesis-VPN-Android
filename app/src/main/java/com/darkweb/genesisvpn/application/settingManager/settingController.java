@@ -80,10 +80,14 @@ public class settingController extends Fragment {
         super.onCreate(savedInstanceState);
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.setting_view, null);
         initializeModel(root);
+        initialize();
+        return root;
+    }
+
+    public void initialize(){
         initializeViews();
         initializeClickListeners();
         initializeListeners();
-        return root;
     }
 
     public void onResumeFragment(){
@@ -117,6 +121,7 @@ public class settingController extends Fragment {
         m_auto_optimal_container = root.findViewById(R.id.m_auto_optimal_container);
         m_proxy_filter_container = root.findViewById(R.id.m_proxy_filter_container);
         m_alert_dismiss = root.findViewById(R.id.m_alert_clear_data);
+        sharedControllerManager.getInstance().setSettingController(this);
     }
 
     public void initializeClickListeners(){
@@ -207,17 +212,17 @@ public class settingController extends Fragment {
             if(status.CONNECTION_TYPE != 1 && m_tcp_connection.isChecked()){
                 status.CONNECTION_TYPE = 1;
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 1), enums.PREFERENCES_ETYPE.SET_INT);
-                sharedControllerManager.getInstance().getProxyController().onSettingChanged();
+                sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
             }
             else if(status.CONNECTION_TYPE != 0 && m_udp_connection.isChecked()){
                 status.CONNECTION_TYPE = 0;
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 0), enums.PREFERENCES_ETYPE.SET_INT);
-                sharedControllerManager.getInstance().getProxyController().onSettingChanged();
+                sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
             }
             else if(status.CONNECTION_TYPE != 2 && m_def_connection.isChecked()){
                 status.CONNECTION_TYPE = 2;
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 2), enums.PREFERENCES_ETYPE.SET_INT);
-                sharedControllerManager.getInstance().getProxyController().onSettingChanged();
+                sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
             }
             return true;
         }

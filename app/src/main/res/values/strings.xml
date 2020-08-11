@@ -98,6 +98,8 @@
     <string name="com_temp_body">com.temp.body</string>
     <string name="enter_app_name">Enter app name</string>
     <string name="enter_country_name">Enter country name</string>
+    <string name="no_recently_used_servers_found">No Recently Used Servers Found</string>
+    <string name="connect_to_any_server_and_comeback_to_us">Connect to any server and comeback to us</string>
 
     <!-- SERVER PAGE -->
 

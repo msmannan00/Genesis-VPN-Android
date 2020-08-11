@@ -50,7 +50,7 @@
 
     <TextView
         android:clickable="false"
-        android:id="@+id/m_text_view_1"
+        android:id="@+id/m_text_view_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

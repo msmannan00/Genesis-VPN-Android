@@ -16,11 +16,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.strings;
+import com.darkweb.genesisvpn.application.homeManager.homeController;
+import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
+
 import java.util.ArrayList;
 
 public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listViewHolder>
 {
     private FragmentActivity m_context;
+    private homeController UI_Thread_Context;
     private ArrayList<String> m_disabled_packages;
     private ArrayList<appListRowModel> m_app_model = new ArrayList<>();
     private ArrayList<appListRowModel> m_app_model_async;
@@ -33,6 +37,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
         m_disabled_packages = p_disabled_packages;
         m_app_model_async = p_app_model;
         m_pager.setVisibility(View.INVISIBLE);
+        UI_Thread_Context = sharedControllerManager.getInstance().getHomeController();
         updateAsync();
     }
 
@@ -43,14 +48,14 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                     sleep(400);
                     for(int counter=0;counter<m_app_model_async.size();counter++){
                         int finalCounter = counter;
-                        m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_app_model.add(m_app_model_async.get(finalCounter));
                             appListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
                         },(long) 0));
 
                         if(!isLoaded && counter==20 && m_pager.getVisibility() == View.INVISIBLE){
                             isLoaded = true;
-                            m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                            UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                                 m_pager.setVisibility(View.VISIBLE);
                                 m_pager.animate().cancel();
                                 m_pager.setAlpha(0);
@@ -63,7 +68,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                     }
                     if(!isLoaded){
                         m_pager.setAlpha(0);
-                        m_context.runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_pager.setVisibility(View.VISIBLE);
                             m_pager.animate().cancel();
                             m_pager.setAlpha(0);
@@ -117,6 +122,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
             layout = itemView.findViewById(R.id.app);
             m_switch =  itemView.findViewById(R.id.is_enabled);
 
+            m_switch.clearAnimation();
             heaaderText.setText(model.getHeader());
             descriptionText.setText(model.getDescription());
             icon.setImageDrawable(model.getIcon());

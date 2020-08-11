@@ -8,6 +8,7 @@ ext {
 
 android {
     /*Build Settings*/
+
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
     defaultConfig {

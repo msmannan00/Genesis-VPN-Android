@@ -99,6 +99,7 @@
             android:track="@xml/bg_switch_states"
             android:clickable="false" />
 
+
     </LinearLayout>
 
     <View

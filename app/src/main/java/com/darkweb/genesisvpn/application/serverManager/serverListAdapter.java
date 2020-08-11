@@ -1,5 +1,6 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -19,6 +21,7 @@ import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.homeManager.homeController;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
@@ -32,6 +35,7 @@ import java.util.Collections;
 public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.listViewHolder>
 {
     private Fragment m_context;
+    private homeController UI_Thread_Context;
     private ArrayList<serverListRowModel> m_server_model = new ArrayList<>();
     private enums.SERVER m_type;
     private ArrayList<serverListRowModel> m_server_model_async;
@@ -41,11 +45,13 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
 
     serverListAdapter(Fragment p_context, ArrayList<serverListRowModel> p_server_model, enums.SERVER p_type, ViewPager2 p_pager, boolean p_response_type) {
         this.m_context = p_context;
+        isLoaded = false;
         m_type = p_type;
         m_pager = p_pager;
         m_pager.setVisibility(View.INVISIBLE);;
         m_server_model_async = p_server_model;
         m_type_response = p_response_type;
+        UI_Thread_Context = sharedControllerManager.getInstance().getHomeController();
         updateList(new ArrayList<>());
         updateAsync();
     }
@@ -58,14 +64,14 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                     sleep(400);
                     for(int counter=0;counter<m_server_model_async.size();counter++){
                         int finalCounter = counter;
-                        m_context.getActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_server_model.add(m_server_model_async.get(finalCounter));
                             serverListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
                         },(long) 0));
 
                         if(!isLoaded && counter==20 && m_pager.getVisibility() == View.INVISIBLE ){
                             isLoaded = true;
-                            m_context.getActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
+                            UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                                 m_pager.setVisibility(View.VISIBLE);
                                 m_pager.animate().cancel();
                                 m_pager.setAlpha(0);
@@ -95,7 +101,8 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
     }
 
     public void updateList(ArrayList<serverListRowModel> p_server_model){
-        m_server_model = p_server_model;
+        m_server_model.clear();
+        m_server_model.addAll(p_server_model);
     }
 
     @Override
@@ -164,27 +171,26 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
             }
 
             layout.setOnClickListener(view -> {
+
                 if(model.getCountryModel() == null){
                     sharedControllerManager.getInstance().getHomeController().onChooseServer(strings.OPTIMAL_SERVER);
-                    m_context.getActivity().onBackPressed();
                 }else {
                     if(!m_type_response){
-                        serverListModel.getInstance().addModel(model);
                         proxyController.getInstance().onSetServer(model.getCountryModel().getCountry());
                         sharedControllerManager.getInstance().getHomeController().onChooseServer(model.getCountryModel().getCountry());
-                        m_context.getActivity().onBackPressed();
+                        proxyController.getInstance().onSettingChanged(false);
                     }else {
+                        String m_current_server = proxyController.getInstance().getServerName();
                         status.DEFAULT_SERVER = model.getCountryModel().getCountry();
                         proxyController.getInstance().onSetServer(status.DEFAULT_SERVER);
                         pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
                         status.AUTO_OPTIMAL_LOCATION = false;
-                        proxyController.getInstance().onResetServer();
-                        m_context.getActivity().onBackPressed();
+                        if(!m_current_server.equals(status.DEFAULT_SERVER)){
+                            proxyController.getInstance().onSettingChanged(false);
+                        }
                     }
                 }
-                new Handler().postDelayed(() -> {
-                    sharedControllerManager.getInstance().getServerController().initViewPager();
-                }, 1000);
+                m_context.getActivity().onBackPressed();
             });
         }
     }

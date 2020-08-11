@@ -152,6 +152,7 @@
         android:padding="12dp"
         android:singleLine="true"
         android:text=""
+        android:clickable="false"
         android:textColor="@color/white"
         android:translationZ="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -194,15 +195,22 @@
         app:layout_constraintStart_toStartOf="@+id/loading"
         app:layout_constraintTop_toTopOf="@+id/loading" />
 
+
     <ImageButton
         android:id="@+id/icon"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/no_flag_default"
+        android:layout_width="160dp"
+        android:layout_height="130dp"
+        android:layout_margin="15dp"
+        android:background="@xml/sc_ripple_image"
         android:contentDescription="@string/todo"
         android:translationZ="10dp"
+        android:onClick="onOpenDrawer"
+        android:padding="2dp"
+        android:scaleX="1.12"
+        android:scaleY="1.12"
+        android:scaleType="fitCenter"
+        android:src="@drawable/no_flag_default"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

@@ -104,7 +104,7 @@ public class appController extends Fragment {
             }
             else if(v.getId()==R.id.m_alert_clear_data){
                 onClearData();
-                proxyController.getInstance().onSettingChanged();
+                proxyController.getInstance().onSettingChanged(true);
             }
             else if(v.getId()==R.id.m_alert_clear_popup){
                 m_view_controller.onShowAlert(strings.AF_CLEAR_DESC, strings.AF_CLEAR_TITLE ,true);
@@ -135,9 +135,8 @@ public class appController extends Fragment {
             if(!status.DISABLED_APPS.equals(m_list_model.getModel())){
                 status.DISABLED_APPS.clear();
                 status.DISABLED_APPS.addAll(m_list_model.getModel());
-                proxyController.getInstance().onSettingChanged();
-
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, status.DISABLED_APPS), enums.PREFERENCES_ETYPE.SET_SET);
+                proxyController.getInstance().onSettingChanged(true);
             }
             return true;
         }

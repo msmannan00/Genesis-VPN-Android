@@ -66,8 +66,8 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
+            boolean m_response =helperMethods.openFragment(p_fragment_conteiner, new aboutController(), m_context, false);
             new Handler().postDelayed(() -> {
-                boolean m_response =  helperMethods.openFragment(p_fragment_conteiner, new aboutController(), m_context, false);
                 m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
@@ -77,8 +77,8 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
+            boolean m_response =  helperMethods.openFragment(p_fragment_container, new settingController(), m_context, false);
             new Handler().postDelayed(() -> {
-                boolean m_response =  helperMethods.openFragment(p_fragment_container, new settingController(), m_context, false);
                 m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
@@ -88,8 +88,8 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
+            boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new promotionController(), m_context, false);
             new Handler().postDelayed(() -> {
-                boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new promotionController(), m_context, false);
                 m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
@@ -99,8 +99,8 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
+            boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new appController(), m_context, false);
             new Handler().postDelayed(() -> {
-                boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new appController(), m_context, false);
                 m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
             }, m_delay);
         }
@@ -127,8 +127,8 @@ class homeModel
         {
             if(p_registeration_status == REGISTERATION.LOADING_SERVER_SUCCESS){
                 m_isUIBlocked = true;
+                boolean m_response = helperMethods.openFragmentWithBundle(p_fragment_conteiner, new serverController(), m_context, keys.REQUEST_TYPE, false);
                 new Handler().postDelayed(() -> {
-                    boolean m_response = helperMethods.openFragmentWithBundle(p_fragment_conteiner, new serverController(), m_context, keys.REQUEST_TYPE, false);
                     m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
                 }, p_delay);
             }

@@ -4,6 +4,7 @@ import com.darkweb.genesisvpn.application.homeManager.homeController;
 import com.darkweb.genesisvpn.application.promotionManager.promotionController;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.serverManager.serverController;
+import com.darkweb.genesisvpn.application.settingManager.settingController;
 
 public class sharedControllerManager
 {
@@ -14,6 +15,7 @@ public class sharedControllerManager
     serverController m_server_controller;
     proxyController m_proxy_controller;
     promotionController m_promotion_controller;
+    settingController m_setting_controller;
 
     /*INITIALIZATIONS*/
 
@@ -49,6 +51,13 @@ public class sharedControllerManager
     }
     public promotionController getPromotionController(){
         return this.m_promotion_controller;
+    }
+
+    public void setSettingController(settingController p_setting_controller){
+        this.m_setting_controller = p_setting_controller;
+    }
+    public settingController getSettingController(){
+        return this.m_setting_controller;
     }
 
 }
