@@ -206,8 +206,8 @@
         android:translationZ="10dp"
         android:onClick="onOpenDrawer"
         android:padding="2dp"
-        android:scaleX="1.12"
-        android:scaleY="1.12"
+        android:scaleX="1.125"
+        android:scaleY="1.125"
         android:scaleType="fitCenter"
         android:src="@drawable/no_flag_default"
 

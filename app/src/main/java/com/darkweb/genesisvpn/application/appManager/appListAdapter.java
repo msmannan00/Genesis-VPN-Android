@@ -142,6 +142,8 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
             }
 
             layout.setOnClickListener(view -> {
+                view.clearAnimation();
+                view.invalidate();
                 Switch m_checkbox_current = (Switch) ((LinearLayout)view).getChildAt(2);
                 boolean isChecked = !m_checkbox_current.isChecked();
                 m_checkbox_current.performClick();
