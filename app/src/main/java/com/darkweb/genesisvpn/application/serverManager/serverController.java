@@ -111,6 +111,7 @@ public class serverController extends Fragment {
         m_tab_layout = p_view.findViewById(R.id.m_tab_layout);
         m_pager = p_view.findViewById(R.id.m_pager);
         m_back_navigation = p_view.findViewById(R.id.m_back_navigation);
+        m_pager.setOffscreenPageLimit(2);
     }
 
     public void initializeClickListeners(){

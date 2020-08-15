@@ -9,536 +9,72 @@
     tools:context=".application.settingManager.settingController">
 
     <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primary_blue_back"
-    tools:context=".application.settingManager.settingController">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/primary_blue_back"
-        tools:context=".application.aboutManager.aboutController">
+        tools:context=".application.settingManager.settingController">
 
-        <LinearLayout
-            android:id="@+id/m_main_layout"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_gravity="center_vertical"
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageButton
-                android:id="@+id/m_back_navigation"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="@string/todo"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@xml/sc_ripple_default"
-                android:layout_marginStart="3dp"
-                android:padding="11dp"
-                android:scaleType="fitCenter"
-                android:src="@xml/nav_arrow_back"
-                android:tint="@color/white" />
-
-            <TextView
-                style="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="-1dp"
-                android:text="@string/settings"
-                android:textColor="@color/white"
-                android:textSize="15.5sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="320dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+            android:background="@color/primary_blue_back"
+            tools:context=".application.aboutManager.aboutController">
 
             <LinearLayout
-                android:id="@+id/m_connect_startup_container"
+                android:id="@+id/m_main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@xml/linear_layout_ripple"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/colorPrimary"
                 android:orientation="horizontal"
-                android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="80"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                    <TextView
-                        android:id="@+id/m_text_view_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_auto_start_header"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:id="@+id/m_text_view_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_auto_start_desc"
-                        android:textColor="@color/mat_text"
-                        android:textSize="12sp"
-                        tools:ignore="RtlSymmetry,SmallSp" />
-                </LinearLayout>
-
-                <Switch
-                    android:id="@+id/p_auto_start"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                <ImageButton
+                    android:id="@+id/m_back_navigation"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="20"
-                    android:checked="false"
-                    android:clickable="false"
-                    android:scaleX="0.85"
-                    android:scaleY="0.85"
-                    android:theme="@style/SCBSwitch"
-                    android:thumb="@xml/bg_thumb"
-                    android:thumbTint="@color/white"
-                    android:track="@xml/bg_switch_states" />
-            </LinearLayout>
+                    android:contentDescription="@string/todo"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@xml/sc_ripple_default"
+                    android:layout_marginStart="3dp"
+                    android:padding="11dp"
+                    android:scaleType="fitCenter"
+                    android:src="@xml/nav_arrow_back"
+                    android:tint="@color/white" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="0dp"
-                android:background="@color/mat_v3"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
+                <TextView
+                    style="@android:style/TextAppearance.DeviceDefault.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="-1dp"
+                    android:text="@string/settings"
+                    android:textColor="@color/white"
+                    android:textSize="15.5sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/m_connect_launch_container"
-                android:background="@xml/linear_layout_ripple"
-                android:orientation="horizontal"
-                android:weightSum="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="80"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                    <TextView
-                        android:id="@+id/m_text_view_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_auto_connect_header"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:id="@+id/m_text_view_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_auto_connect_info"
-                        android:textColor="@color/mat_text"
-                        android:textSize="12sp"
-                        tools:ignore="RtlSymmetry,SmallSp" />
-                </LinearLayout>
-
-                <Switch
-                    android:id="@+id/p_auto_connect"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="20"
-                    android:checked="false"
-                    android:clickable="false"
-                    android:scaleX="0.85"
-                    android:scaleY="0.85"
-                    android:theme="@style/SCBSwitch"
-                    android:thumb="@xml/bg_thumb"
-                    android:thumbTint="@color/white"
-                    android:track="@xml/bg_switch_states" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="0dp"
-                android:background="@color/mat_v3"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:orientation="horizontal"
-                android:weightSum="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
-                    tools:ignore="UselessParent">
-
-                    <TextView
-                        android:id="@+id/m_text_view_5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_connection_header"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        tools:ignore="RtlSymmetry" />
-
-                    <LinearLayout
-                        android:id="@+id/m_connect_type_UDP"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@xml/linear_layout_ripple"
-                        android:clickable="false"
-                        android:orientation="horizontal"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:weightSum="10"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                        <TextView
-                            android:id="@+id/m_text_view_6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="9"
-                            android:clickable="false"
-                            android:paddingStart="15dp"
-                            android:text="@string/settings_udp_info"
-                            android:textColor="@color/mat_text"
-                            android:textSize="12sp"
-                            tools:ignore="RtlSymmetry,SmallSp" />
-
-                        <RadioButton
-                            android:id="@+id/m_udp_connection"
-                            android:layout_width="58dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="top|end"
-                            android:layout_weight="1"
-                            android:layout_marginRight="5dp"
-                            android:buttonTint="@color/white"
-                            android:clickable="false"
-                            android:layoutDirection="rtl"
-                            android:text="@string/settings_udp_text"
-                            android:textColor="@color/white"
-                            tools:ignore="RtlHardcoded" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/m_connect_type_TCP"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@xml/linear_layout_ripple"
-                        android:clickable="false"
-                        android:orientation="horizontal"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:weightSum="10"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="9"
-                            android:clickable="false"
-                            android:paddingStart="15dp"
-                            android:text="@string/settings_tcp_info"
-                            android:textColor="@color/mat_text"
-                            android:textSize="12sp"
-                            tools:ignore="RtlSymmetry,SmallSp" />
-
-                        <RadioButton
-                            android:id="@+id/m_tcp_connection"
-                            android:layout_width="60dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="top|end"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/white"
-                            android:layoutDirection="rtl"
-                            android:clickable="false"
-                            android:text="@string/settings_tcp_text"
-                            android:textColor="@color/white"
-                            tools:ignore="RtlHardcoded" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/m_connect_type_AUTO"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@xml/linear_layout_ripple"
-                        android:clickable="false"
-                        android:orientation="horizontal"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:weightSum="10"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_weight="9"
-                            android:clickable="false"
-                            android:paddingStart="15dp"
-                            android:text="@string/settings_connection_default_info"
-                            android:textColor="@color/mat_text"
-                            android:textSize="12sp"
-                            tools:ignore="RtlSymmetry,SmallSp" />
-
-                        <RadioButton
-                            android:id="@+id/m_def_connection"
-                            android:layout_width="60dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="top|end"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="1"
-                            android:buttonTint="@color/white"
-                            android:layoutDirection="rtl"
-                            android:clickable="false"
-                            android:checked="true"
-                            android:text="@string/settings_connection_auto"
-                            android:textColor="@color/white"
-                            tools:ignore="RtlHardcoded" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="0dp"
-                android:background="@color/mat_v3"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
-
-            <LinearLayout
-                android:id="@+id/m_proxy_filter_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@xml/linear_layout_ripple"
-                android:orientation="horizontal"
-                android:weightSum="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="90"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                    <TextView
-                        android:id="@+id/m_text_view_7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_application_header"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:id="@+id/m_text_view_8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_application_info"
-                        android:textColor="@color/mat_text"
-                        android:textSize="12sp"
-                        tools:ignore="RtlSymmetry,SmallSp" />
-                </LinearLayout>
-                <ImageView
-                    android:id="@+id/m_image_view_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="10"
-                    android:clickable="false"
-                    android:src="@xml/ic_baseline_arrow_forward"
-                    android:scaleX="0.85"
-                    android:scaleY="0.85"
-                    android:theme="@style/SCBSwitch"
-                    android:thumb="@xml/bg_thumb"
-                    android:thumbTint="@color/white"
-                    android:track="@xml/bg_switch_states"
-                    android:contentDescription="@string/todo" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="0dp"
-                android:background="@color/mat_v3"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
-
-            <LinearLayout
-                android:id="@+id/m_auto_optimal_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@xml/linear_layout_ripple"
-                android:orientation="horizontal"
-                android:weightSum="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="80"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
-
-                    <TextView
-                        android:id="@+id/m_text_view_9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_smart_vpn"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        tools:ignore="RtlSymmetry" />
-
-                    <TextView
-                        android:id="@+id/m_text_view_10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:clickable="false"
-                        android:paddingStart="15dp"
-                        android:text="@string/settings_automatically_set_optimal_location"
-                        android:textColor="@color/mat_text"
-                        android:textSize="12sp"
-                        tools:ignore="RtlSymmetry,SmallSp" />
-                </LinearLayout>
-
-                <Switch
-                    android:id="@+id/p_auto_optimal_location"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="20"
-                    android:checked="true"
-                    android:clickable="false"
-                    android:scaleX="0.85"
-                    android:scaleY="0.85"
-                    android:theme="@style/SCBSwitch"
-                    android:thumb="@xml/bg_thumb"
-                    android:thumbTint="@color/white"
-                    android:track="@xml/bg_switch_states" />
-            </LinearLayout>
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="0dp"
-                android:background="@color/mat_v3"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp" />
-
-            <LinearLayout
-                android:id="@+id/m_change_server_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@xml/linear_layout_ripple"
+                android:minHeight="320dp"
                 android:orientation="vertical"
-                android:weightSum="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                 <LinearLayout
+                    android:id="@+id/m_device_launch_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@xml/linear_layout_ripple"
                     android:orientation="horizontal"
                     android:weightSum="100"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -551,52 +87,432 @@
                         app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
 
                         <TextView
-                            android:id="@+id/m_text_view_11"
+                            android:id="@+id/m_text_view_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="@string/settings_default_location"
+                            android:text="@string/settings_auto_start_header"
                             android:textColor="@color/white"
                             android:textStyle="bold"
                             tools:ignore="RtlSymmetry" />
 
                         <TextView
-                            android:id="@+id/m_text_view_12"
+                            android:id="@+id/m_text_view_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="15dp"
                             android:clickable="false"
                             android:paddingStart="15dp"
-                            android:text="@string/settings_custom_server_info"
+                            android:text="@string/settings_auto_start_desc"
                             android:textColor="@color/mat_text"
                             android:textSize="12sp"
                             tools:ignore="RtlSymmetry,SmallSp" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/p_default_server"
+                    <Switch
+                        android:id="@+id/p_auto_start"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="0dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="20"
                         android:checked="false"
                         android:clickable="false"
                         android:scaleX="0.85"
                         android:scaleY="0.85"
-                        android:src="@drawable/no_flag_default"
+                        android:theme="@style/SCBSwitch"
+                        android:thumb="@xml/bg_thumb"
+                        android:thumbTint="@color/white"
+                        android:track="@xml/bg_switch_states" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/mat_v3"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/m_auto_connect_container"
+                    android:background="@xml/linear_layout_ripple"
+                    android:orientation="horizontal"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="80"
+                        android:orientation="vertical"
+                        android:paddingTop="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                        <TextView
+                            android:id="@+id/m_text_view_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_auto_connect_header"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            tools:ignore="RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/m_text_view_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_auto_connect_info"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/p_auto_connect"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="20"
+                        android:checked="false"
+                        android:clickable="false"
+                        android:scaleX="0.85"
+                        android:scaleY="0.85"
+                        android:theme="@style/SCBSwitch"
+                        android:thumb="@xml/bg_thumb"
+                        android:thumbTint="@color/white"
+                        android:track="@xml/bg_switch_states" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/mat_v3"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:orientation="vertical"
+                        android:paddingTop="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout"
+                        tools:ignore="UselessParent">
+
+                        <TextView
+                            android:id="@+id/m_text_view_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_connection_header"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            tools:ignore="RtlSymmetry" />
+
+                        <LinearLayout
+                            android:id="@+id/m_connect_type_UDP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@xml/linear_layout_ripple"
+                            android:clickable="false"
+                            android:orientation="horizontal"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:weightSum="10"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                            <TextView
+                                android:id="@+id/m_text_view_6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="9"
+                                android:clickable="false"
+                                android:paddingStart="15dp"
+                                android:text="@string/settings_udp_info"
+                                android:textColor="@color/mat_text"
+                                android:textSize="12sp"
+                                tools:ignore="RtlSymmetry,SmallSp" />
+
+                            <RadioButton
+                                android:id="@+id/m_udp_connection"
+                                android:layout_width="56dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top|end"
+                                android:layout_weight="1"
+                                android:layout_marginRight="8dp"
+                                android:buttonTint="@color/white"
+                                android:clickable="false"
+                                android:layoutDirection="rtl"
+                                android:text="@string/settings_udp_text"
+                                android:textColor="@color/white"
+                                tools:ignore="RtlHardcoded" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/m_connect_type_TCP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@xml/linear_layout_ripple"
+                            android:clickable="false"
+                            android:orientation="horizontal"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:weightSum="10"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="9"
+                                android:clickable="false"
+                                android:paddingStart="15dp"
+                                android:text="@string/settings_tcp_info"
+                                android:textColor="@color/mat_text"
+                                android:textSize="12sp"
+                                tools:ignore="RtlSymmetry,SmallSp" />
+
+                            <RadioButton
+                                android:id="@+id/m_tcp_connection"
+                                android:layout_width="60dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top|end"
+                                android:layout_marginRight="8dp"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/white"
+                                android:layoutDirection="rtl"
+                                android:clickable="false"
+                                android:text="@string/settings_tcp_text"
+                                android:textColor="@color/white"
+                                tools:ignore="RtlHardcoded" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/m_connect_type_AUTO"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@xml/linear_layout_ripple"
+                            android:clickable="false"
+                            android:orientation="horizontal"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:weightSum="10"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_weight="9"
+                                android:clickable="false"
+                                android:paddingStart="15dp"
+                                android:text="@string/settings_connection_default_info"
+                                android:textColor="@color/mat_text"
+                                android:textSize="12sp"
+                                tools:ignore="RtlSymmetry,SmallSp" />
+
+                            <RadioButton
+                                android:id="@+id/m_def_connection"
+                                android:layout_width="60dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top|end"
+                                android:layout_marginRight="8dp"
+                                android:layout_weight="1"
+                                android:buttonTint="@color/white"
+                                android:layoutDirection="rtl"
+                                android:clickable="false"
+                                android:checked="true"
+                                android:text="@string/settings_connection_auto"
+                                android:textColor="@color/white"
+                                tools:ignore="RtlHardcoded" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/mat_v3"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/m_proxy_filter_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@xml/linear_layout_ripple"
+                    android:orientation="horizontal"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="90"
+                        android:orientation="vertical"
+                        android:paddingTop="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                        <TextView
+                            android:id="@+id/m_text_view_7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_application_header"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            tools:ignore="RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/m_text_view_8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_application_info"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/m_image_view_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="10"
+                        android:scaleType="fitEnd"
+                        android:layout_marginEnd="8dp"
+                        android:clickable="false"
+                        android:src="@xml/ic_baseline_arrow_forward"
+                        android:scaleX="0.85"
+                        android:scaleY="0.85"
                         android:theme="@style/SCBSwitch"
                         android:thumb="@xml/bg_thumb"
                         android:thumbTint="@color/white"
                         android:track="@xml/bg_switch_states"
                         android:contentDescription="@string/todo" />
-
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/mat_v3"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/m_auto_optimal_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@xml/linear_layout_ripple"
+                    android:orientation="horizontal"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="80"
+                        android:orientation="vertical"
+                        android:paddingTop="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                        <TextView
+                            android:id="@+id/m_text_view_9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_smart_vpn"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            tools:ignore="RtlSymmetry" />
+
+                        <TextView
+                            android:id="@+id/m_text_view_10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:clickable="false"
+                            android:paddingStart="15dp"
+                            android:text="@string/settings_automatically_set_optimal_location"
+                            android:textColor="@color/mat_text"
+                            android:textSize="12sp"
+                            tools:ignore="RtlSymmetry,SmallSp" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/p_auto_optimal_location"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="20"
+                        android:checked="true"
+                        android:clickable="false"
+                        android:scaleX="0.85"
+                        android:scaleY="0.85"
+                        android:theme="@style/SCBSwitch"
+                        android:thumb="@xml/bg_thumb"
+                        android:thumbTint="@color/white"
+                        android:track="@xml/bg_switch_states" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="0dp"
@@ -604,13 +520,99 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp" />
 
+                <LinearLayout
+                    android:id="@+id/m_change_server_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@xml/linear_layout_ripple"
+                    android:orientation="vertical"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@xml/linear_layout_ripple"
+                        android:orientation="horizontal"
+                        android:weightSum="100"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="parent">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="80"
+                            android:orientation="vertical"
+                            android:paddingTop="15dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/m_main_layout">
+
+                            <TextView
+                                android:id="@+id/m_text_view_11"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:clickable="false"
+                                android:paddingStart="15dp"
+                                android:text="@string/settings_default_location"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                tools:ignore="RtlSymmetry" />
+
+                            <TextView
+                                android:id="@+id/m_text_view_12"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="15dp"
+                                android:clickable="false"
+                                android:paddingStart="15dp"
+                                android:text="@string/settings_custom_server_info"
+                                android:textColor="@color/mat_text"
+                                android:textSize="12sp"
+                                tools:ignore="RtlSymmetry,SmallSp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/p_default_server"
+                            android:layout_width="70dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="0dp"
+                            android:layout_weight="18"
+                            android:checked="false"
+                            android:clickable="false"
+                            android:scaleX="1"
+                            android:scaleY="1"
+                            android:scaleType="fitEnd"
+                            android:src="@drawable/no_flag_default"
+                            android:theme="@style/SCBSwitch"
+                            android:thumb="@xml/bg_thumb"
+                            android:thumbTint="@color/white"
+                            android:track="@xml/bg_switch_states"
+                            android:contentDescription="@string/todo" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="0dp"
+                        android:background="@color/mat_v3"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>
+    </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/m_alert_dialog"

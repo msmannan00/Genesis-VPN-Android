@@ -58,7 +58,7 @@
     <!-- SETTINGS PAGE -->
 
     <string name="settings">Settings</string>
-    <string name="settings_auto_start_header">Connect on startup</string>
+    <string name="settings_auto_start_header">Connect on device startup</string>
     <string name="settings_auto_start_desc">Auto-connect to VPN on Android startup</string>
     <string name="settings_auto_connect_header">Connect on app launch</string>
     <string name="settings_auto_connect_info">Auto-connect to VPN on app launch</string>

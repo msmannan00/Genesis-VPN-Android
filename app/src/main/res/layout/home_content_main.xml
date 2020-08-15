@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     android:background="@color/primary_blue_back"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".application.homeManager.homeController"
     tools:showIn="@layout/home_app_bar">
@@ -148,11 +148,11 @@
         android:layout_height="250dp"
         android:layout_marginTop="20dp"
         android:background="@xml/connector_drawable"
+        android:clickable="false"
         android:onClick="onStart"
         android:padding="12dp"
         android:singleLine="true"
         android:text=""
-        android:clickable="false"
         android:textColor="@color/white"
         android:translationZ="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -203,13 +203,13 @@
         android:layout_margin="15dp"
         android:background="@xml/sc_ripple_image"
         android:contentDescription="@string/todo"
-        android:translationZ="10dp"
         android:onClick="onOpenDrawer"
         android:padding="2dp"
+        android:scaleType="fitCenter"
         android:scaleX="1.125"
         android:scaleY="1.125"
-        android:scaleType="fitCenter"
         android:src="@drawable/no_flag_default"
+        android:translationZ="10dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -283,10 +283,10 @@
         android:id="@+id/home_alert_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:alpha="0"
         android:background="@color/mat_alpha"
         android:onClick="onAlertDismiss"
         android:translationZ="900dp"
-        android:alpha="0"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -394,20 +394,19 @@
     <FrameLayout
         android:id="@+id/m_fragment_container"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:onClick="onAlertDismiss"
         android:scaleX="0.93"
         android:scaleY="0.93"
-        android:layout_height="match_parent"
-        android:onClick="onAlertDismiss"
+        android:translationZ="950dp"
         android:visibility="invisible"
-        android:alpha="0"
-        android:translationZ="900dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-    </FrameLayout >
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/loading"
@@ -415,27 +414,44 @@
         android:layout_height="wrap_content"
         android:alpha="0"
         android:contentDescription="@string/todo"
+        android:src="@drawable/loading"
         android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/connect_base"
         app:layout_constraintEnd_toEndOf="@+id/connect_base"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="@+id/connect_base"
         app:layout_constraintTop_toTopOf="@+id/connect_base"
-        app:layout_constraintVertical_bias="0.453"
-        android:src="@drawable/loading" />
+        app:layout_constraintVertical_bias="0.453" />
 
     <ImageView
         android:id="@+id/m_blocker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:translationZ="1525dp"
-        android:focusable="true"
         android:alpha="0"
         android:background="@color/blue_circle_clear"
+        android:contentDescription="@string/todo"
+        android:focusable="true"
+        android:translationZ="1525dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/m_ui_smoothner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="45dp"
+        android:alpha="0"
+        android:background="@color/primary_blue_back"
+        android:clickable="true"
+        android:contentDescription="@string/todo"
+        android:focusable="true"
+        android:translationZ="890dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

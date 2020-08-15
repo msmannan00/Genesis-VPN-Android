@@ -26,8 +26,6 @@ import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.aboutManager.aboutController;
-import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.messages;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
@@ -35,7 +33,6 @@ import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.jwang123.flagkit.FlagKit;
 
-import java.util.Collections;
 import java.util.Locale;
 
 class homeViewController {
@@ -49,6 +46,7 @@ class homeViewController {
     private Button m_dismiss_alert_btn;
     private FrameLayout m_fragment_container;
 
+    private ImageView m_ui_smoothner;
     private ImageView m_connect_loading;
     private ImageView m_speed_base;
     private ImageView m_blocker;
@@ -56,7 +54,7 @@ class homeViewController {
 
     private FragmentActivity m_context;
     private TextView m_connect_label;
-    private String m_text = strings.HO_IDLE;
+    private String m_connect_text_local = strings.HO_IDLE;
     private ConstraintLayout m_alert_dialog;
     private DrawerLayout m_drawer;
 
@@ -76,10 +74,11 @@ class homeViewController {
     private boolean isFlagRemoved = true;
     private eventObserver.eventListener m_event;
     private boolean isForcedAlert = false;
+    private String m_current_flag = strings.EMPTY_STR;
 
     /*INITIALIZATIONS*/
 
-    homeViewController(eventObserver.eventListener p_event, Button p_connect_base, Button p_connect_animator, ImageView p_connect_loading, ImageButton p_flag, TextView p_connect_label, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, FragmentActivity p_context, TextView p_download_speed, TextView p_upload_speed, Button p_connection_toggle, Button p_stop_alert_btn, DrawerLayout p_drawer, ImageView p_speed_base, Button p_connect_animator_initial, Button p_dismiss_alert_btn, FrameLayout p_fragment_container, ImageView p_blocker)
+    homeViewController(eventObserver.eventListener p_event, Button p_connect_base, Button p_connect_animator, ImageView p_connect_loading, ImageButton p_flag, TextView p_connect_label, ConstraintLayout p_alert_dialog, TextView p_alert_title, TextView p_alert_description, FragmentActivity p_context, TextView p_download_speed, TextView p_upload_speed, Button p_connection_toggle, Button p_stop_alert_btn, DrawerLayout p_drawer, ImageView p_speed_base, Button p_connect_animator_initial, Button p_dismiss_alert_btn, FrameLayout p_fragment_container, ImageView p_blocker, ImageView p_ui_smoothner)
     {
         this.m_event = p_event;
         this.m_connect_base = p_connect_base;
@@ -101,6 +100,7 @@ class homeViewController {
         this.m_dismiss_alert_btn = p_dismiss_alert_btn;
         this.m_fragment_container = p_fragment_container;
         this.m_blocker = p_blocker;
+        this.m_ui_smoothner = p_ui_smoothner;
 
         m_speed_base.setTranslationZ(35);
         m_connect_animations = new connectAnimation();
@@ -146,7 +146,7 @@ class homeViewController {
         if(status.AUTO_CONNECT){
             m_connect_label.setText(strings.HO_CONNECTING);
             m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.075f);
-            m_text = strings.HO_CONNECTING;
+            m_connect_text_local = strings.HO_CONNECTING;
             m_connect_loading.animate().cancel();
             m_connect_loading.animate().setDuration(500).withStartAction(() -> {
                 m_connect_loading.animate().setStartDelay(0);
@@ -157,11 +157,10 @@ class homeViewController {
         else {
             m_connect_label.setText(strings.HO_IDLE);
             m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth()*0.2f);
-            m_text = strings.HO_IDLE;
+            m_connect_text_local = strings.HO_IDLE;
             m_connect_loading.animate().cancel();
             m_connect_loading.animate().setDuration(0).alpha(0);
         }
-
         m_flag.setAlpha(1f);
 
         ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) m_flag.getLayoutParams();
@@ -198,8 +197,8 @@ class homeViewController {
     void onDisconnecting()
     {
         m_speed_base.setTranslationZ(35);
-        if(!m_text.equals(strings.HO_DISCONNECTING) && !status.HAS_APPLICATION_STOPPED) {
-            m_text = strings.HO_DISCONNECTING;
+        if(!m_connect_text_local.equals(strings.HO_DISCONNECTING) && !status.HAS_APPLICATION_STOPPED) {
+            m_connect_text_local = strings.HO_DISCONNECTING;
             m_text_size = 0.075f;
             m_context.runOnUiThread(() -> {
                 m_connect_loading.animate().cancel();
@@ -227,8 +226,8 @@ class homeViewController {
     void onConnected()
     {
         m_speed_base.setTranslationZ(35);
-        if(!m_text.equals(strings.HO_CONNECTED) && !status.HAS_APPLICATION_STOPPED) {
-            m_text = strings.HO_CONNECTED;
+        if(!m_connect_text_local.equals(strings.HO_CONNECTED) && !status.HAS_APPLICATION_STOPPED) {
+            m_connect_text_local = strings.HO_CONNECTED;
             m_text_size = 0.080f;
             m_context.runOnUiThread(() -> {
                 m_connect_loading.animate().cancel();
@@ -241,10 +240,9 @@ class homeViewController {
     void onIdle()
     {
         m_speed_base.setTranslationZ(35);
-        Log.i("FUCKUS22","FUCKUS");
 
-        if(!m_text.equals(strings.HO_IDLE) && !status.HAS_APPLICATION_STOPPED) {
-            m_text = strings.HO_IDLE;
+        if(!m_connect_text_local.equals(strings.HO_IDLE) && !status.HAS_APPLICATION_STOPPED) {
+            m_connect_text_local = strings.HO_IDLE;
             m_text_size = 0.2f;
             m_context.runOnUiThread(() -> {
                 m_connect_loading.animate().cancel();
@@ -257,16 +255,15 @@ class homeViewController {
     public void onAutoConnect()
     {
         m_speed_base.setTranslationZ(35);
-        m_connect_base.performClick();
+        //m_connect_base.performClick();
         m_speed_base.setTranslationZ(125);
     }
 
     void onConnecting()
     {
         m_speed_base.setTranslationZ(35);
-        Log.i("FUCKUS33","FUCKUS");
-        if(!m_text.equals(strings.HO_CONNECTING) && !status.HAS_APPLICATION_STOPPED){
-            m_text = strings.HO_CONNECTING;
+        if(!m_connect_text_local.equals(strings.HO_CONNECTING) && !status.HAS_APPLICATION_STOPPED){
+            m_connect_text_local = strings.HO_CONNECTING;
             m_text_size = 0.075f;
             m_context.runOnUiThread(() -> {
                 m_connect_loading.animate().cancel();
@@ -445,42 +442,51 @@ class homeViewController {
                 if(msg.what == messages.UPDATE_FLAG)
                 {
 
+                    Log.i("sppp","sppp:1:" + m_flag_status);
+                    isFlagRemoved = false;
                     if(!m_flag_status.equals(strings.EMPTY_STR))
                     {
                         if(m_flag.getAlpha()==0f)
                         {
                             m_flag.animate().alpha(1);
                         }
-
-                        Locale obj = new Locale(strings.EMPTY_STR, m_flag_status);
-                        String location = strings.HO_CONNECTED_TO + obj.getDisplayCountry();
-
-                        isFlagRemoved = false;
-                        animateFlag(FlagKit.drawableWithFlag(m_context, m_flag_status));
+                        if(!m_current_flag.equals(m_flag_status)){
+                            m_current_flag = m_flag_status;
+                            animateFlag(FlagKit.drawableWithFlag(m_context, m_flag_status));
+                        }
                     }
                 }
                 else if(msg.what == messages.REMOVE_FLAG)
                 {
 
+                    Log.i("sppp","sppp:2:" + m_flag_status);
                     if(m_flag.getAlpha()==0f)
                     {
                         m_flag.animate().alpha(1);
                     }
                     if(!isFlagRemoved){
                         isFlagRemoved = true;
-                        animateFlag(m_context.getResources().getDrawable(R.drawable.no_flag_default));
+
+                        String m_prev_flag = R.drawable.no_flag_default+"";
+                        if(!m_current_flag.equals(m_prev_flag)){
+                            m_current_flag = m_prev_flag;
+                            animateFlag(m_context.getResources().getDrawable(R.drawable.no_flag_default));
+                        }
                     }
                 }
                 else if(msg.what == messages.REMOVE_FLAG_INSTANT)
                 {
 
+                    Log.i("sppp","sppp:3:" + m_flag_status);
                     if(m_flag.getAlpha()==0f)
                     {
-                        m_flag.animate().cancel();
-                        m_flag.animate().alpha(1);
+                        m_flag.animate().setDuration(0).cancel();
+                        m_flag.animate().setDuration(0).alpha(1);
                     }
-                    if(!isFlagRemoved){
 
+                    String m_prev_flag = R.drawable.no_flag_default+"";
+                    if(!m_current_flag.equals(m_prev_flag)){
+                        m_current_flag = m_prev_flag;
                         isFlagRemoved = true;
                         m_flag.animate().cancel();
                         m_connect_label.animate().cancel();
@@ -488,10 +494,38 @@ class homeViewController {
                         m_flag.animate().cancel();
                         m_flag.animate().setDuration(0).alpha(1);
                         m_flag.setImageDrawable(m_context.getResources().getDrawable(R.drawable.no_flag_default));
+
+                        if(m_connect_text_local.equals(strings.HO_DISCONNECTING)) {
+                            m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.075f);
+                        }
+                        else if(m_connect_text_local.equals(strings.HO_CONNECTED)) {
+                            m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.080f);
+                        }
+                        else if(m_connect_text_local.equals(strings.HO_IDLE)) {
+                            m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.2f);
+                        }
+                        else if(m_connect_text_local.equals(strings.HO_CONNECTING)){
+                            m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * 0.075f);
+                        }
+                        m_connect_label.setText(m_connect_text_local);
                     }
                 }
             }
         };
+    }
+
+    public void onStartFragmentAnimation(){
+        m_ui_smoothner.animate().cancel();
+        m_ui_smoothner.setAlpha(0);
+        m_ui_smoothner.setVisibility(View.VISIBLE);
+        m_ui_smoothner.animate().alpha(1);
+    }
+
+    public void onResetFragmentAnimation(){
+        m_ui_smoothner.animate().cancel();
+        m_ui_smoothner.animate().alpha(0).setDuration(200).withEndAction(() -> {
+            m_ui_smoothner.setVisibility(View.INVISIBLE);
+        }).start();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -514,6 +548,7 @@ class homeViewController {
 
     @SuppressLint("ClickableViewAccessibility")
     public void onCloseFragment(){
+        onResetFragmentAnimation();
         m_context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         m_context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         m_blocker.setClickable(true);
@@ -536,16 +571,19 @@ class homeViewController {
     public void animateFlag(Drawable p_flag){
         try{
             if(m_flag.getAlpha()>=0.7f){
+                Log.i("FUZZ","FUZZ1");
                 m_flag.animate().cancel();
                 m_flag.animate().alpha(0).setDuration(150).withEndAction(() -> {
                     m_flag.animate().setDuration(350).alpha(1);
                     m_flag.setImageDrawable(p_flag);
                 }).start();
             }else {
+                Log.i("FUZZ","FUZZ2");
                 m_flag.animate().cancel();
-                m_flag.setAlpha(0);
-                m_flag.animate().setDuration(350).alpha(1).start();
-                m_flag.setImageDrawable(p_flag);
+                m_flag.animate().alpha(0).setDuration(0).withEndAction(() -> {
+                    m_flag.animate().setDuration(350).alpha(1).start();
+                    m_flag.setImageDrawable(p_flag);
+                }).start();
             }
         }catch (Exception ex){
         }
@@ -577,14 +615,14 @@ class homeViewController {
                 if(m_connect_label.getAlpha()>=0.7f){
                     m_connect_label.animate().cancel();
                     m_connect_label.animate().alpha(0).setDuration(200).withEndAction(() -> {
-                        m_connect_label.setText(m_text);
+                        m_connect_label.setText(m_connect_text_local);
                         m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * m_text_size);
                         m_connect_label.animate().setDuration(200).alpha(1);
                     }).start();
                 }else {
                     m_connect_label.animate().cancel();
                     m_connect_label.setAlpha(0);
-                    m_connect_label.setText(m_text);
+                    m_connect_label.setText(m_connect_text_local);
                     m_connect_label.setTextSize(TypedValue.COMPLEX_UNIT_PX, helperMethods.screenWidth() * m_text_size);
                     m_connect_label.animate().setDuration(200).alpha(1).start();
                 }

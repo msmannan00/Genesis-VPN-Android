@@ -95,6 +95,7 @@ public class appController extends Fragment {
         m_back_navigation = p_view.findViewById(R.id.m_back_navigation);
         m_alert_clear_data = p_view.findViewById(R.id.m_alert_dismiss);
         m_alert_clear_popup = p_view.findViewById(R.id.m_alert_clear_popup);
+        m_pager.setOffscreenPageLimit(2);
     }
 
     public void initializeClickListeners(){
@@ -139,6 +140,15 @@ public class appController extends Fragment {
                 proxyController.getInstance().onSettingChanged(true);
             }
             return true;
+        }
+    }
+
+    public void onSaveData(){
+        if(!status.DISABLED_APPS.equals(m_list_model.getModel())){
+            status.DISABLED_APPS.clear();
+            status.DISABLED_APPS.addAll(m_list_model.getModel());
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, status.DISABLED_APPS), enums.PREFERENCES_ETYPE.SET_SET);
+            proxyController.getInstance().onSettingChanged(true);
         }
     }
 

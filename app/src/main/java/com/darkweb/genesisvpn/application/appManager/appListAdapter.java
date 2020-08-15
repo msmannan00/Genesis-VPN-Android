@@ -29,6 +29,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
     private ArrayList<appListRowModel> m_app_model = new ArrayList<>();
     private ArrayList<appListRowModel> m_app_model_async;
     private ViewPager2 m_pager;
+
     boolean isLoaded = false;
 
     appListAdapter(FragmentActivity p_context, ArrayList<String> p_disabled_packages, ArrayList<appListRowModel> p_app_model, ViewPager2 p_pager) {
@@ -36,7 +37,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
         m_pager = p_pager;
         m_disabled_packages = p_disabled_packages;
         m_app_model_async = p_app_model;
-        m_pager.setVisibility(View.INVISIBLE);
+        //m_pager.setVisibility(View.INVISIBLE);
         UI_Thread_Context = sharedControllerManager.getInstance().getHomeController();
         updateAsync();
     }
@@ -45,7 +46,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
         new Thread(){
             public void run(){
                 try {
-                    sleep(400);
+                    sleep(1000);
                     for(int counter=0;counter<m_app_model_async.size();counter++){
                         int finalCounter = counter;
                         UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
@@ -58,10 +59,9 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                             UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                                 m_pager.setVisibility(View.VISIBLE);
                                 m_pager.animate().cancel();
-                                m_pager.setAlpha(0);
+                                //m_pager.setAlpha(0);
                                 m_pager.animate().setDuration(250).alpha(1);
-                            },(long) 400));
-                            Log.i("DUCK1", "DIC");
+                            },(long) 0));
 
                         }
                         sleep(0);
@@ -71,10 +71,9 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                         UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_pager.setVisibility(View.VISIBLE);
                             m_pager.animate().cancel();
-                            m_pager.setAlpha(0);
+                            //m_pager.setAlpha(0);
                             m_pager.animate().setDuration(250).alpha(1);
-                        },(long) 400));
-                        Log.i("DUCK2", "DIC");
+                        },(long) 0));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -141,13 +140,13 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                 connected.setTextColor(m_context.getResources().getColor(R.color.colorAccent));
             }
 
+            final boolean[] isChecked = {m_switch.isChecked()};
+
+
             layout.setOnClickListener(view -> {
-                view.clearAnimation();
-                view.invalidate();
-                Switch m_checkbox_current = (Switch) ((LinearLayout)view).getChildAt(2);
-                boolean isChecked = !m_checkbox_current.isChecked();
-                m_checkbox_current.performClick();
-                if(!isChecked){
+                isChecked[0] = !isChecked[0];
+                m_switch.setChecked(isChecked[0]);
+                if(!isChecked[0]){
                     if(!m_disabled_packages.contains(model.getDescription())){
                         m_disabled_packages.add(model.getDescription());
                     }
@@ -155,7 +154,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                     m_disabled_packages.remove(model.getDescription());
                 }
 
-                if(!isChecked){
+                if(!isChecked[0]){
                     animateConnectText(connected, strings.AF_UNCONNECTED, m_context.getResources().getColor(R.color.colorAccent));
                 } else{
                     animateConnectText(connected, strings.AF_CONNECTED, m_context.getResources().getColor(R.color.green));

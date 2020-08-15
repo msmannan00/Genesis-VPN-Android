@@ -7,10 +7,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import com.darkweb.genesisvpn.R;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.MenuItem;
 import com.darkweb.genesisvpn.application.aboutManager.aboutController;
@@ -66,6 +67,7 @@ public class homeController extends FragmentActivity {
     Button m_stop_alert_btn;
     Button m_dismiss_alert_btn;
 
+    ImageView m_ui_smoothner;
     ImageView m_speed_base;
     ImageView m_connect_loading;
     ImageView m_blocker;
@@ -96,7 +98,10 @@ public class homeController extends FragmentActivity {
     }
 
     private void postInitializations() {
-        proxyController.getInstance().onAutoConnectInitialization();
+        boolean isAutoBoot = getIntent().getBooleanExtra(keys.IS_AUTO_BOOT, false);
+        if(status.AUTO_CONNECT || isAutoBoot){
+            proxyController.getInstance().onAutoConnectInitialization();
+        }
     }
 
     private void initializeProxy() {
@@ -104,10 +109,7 @@ public class homeController extends FragmentActivity {
     }
 
     public void initializeBoot(){
-        boolean isAutoBoot = getIntent().getBooleanExtra(keys.IS_AUTO_BOOT, false);
-        if(isAutoBoot){
-            moveTaskToBack(true);
-        }
+
     }
 
     public void initializeVPN(){
@@ -154,7 +156,7 @@ public class homeController extends FragmentActivity {
         status.DISABLED_APPS = (ArrayList<String>)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, null), enums.PREFERENCES_ETYPE.GET_SET);
         status.DEFAULT_SERVER = (String) pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, ""), enums.PREFERENCES_ETYPE.GET_STRING);
 
-        m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial, m_dismiss_alert_btn, m_fragment_container, m_blocker);
+        m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial, m_dismiss_alert_btn, m_fragment_container, m_blocker, m_ui_smoothner);
 
         if(!status.AUTO_CONNECT){
             onLoadAdvert();
@@ -197,6 +199,7 @@ public class homeController extends FragmentActivity {
         m_dismiss_alert_btn = findViewById(R.id.m_dismiss_alert_btn);
         m_fragment_container = findViewById(R.id.m_fragment_container);
         m_blocker = findViewById(R.id.m_blocker);
+        m_ui_smoothner = findViewById(R.id.m_ui_smoothner);
 
         m_model = new homeModel(this, new homeModelCallback());
     }
@@ -209,9 +212,6 @@ public class homeController extends FragmentActivity {
    }
 
    public void initializeServerModel(){
-        if(m_fragment_container.getVisibility() != View.VISIBLE){
-            helperMethods.openFragment(m_fragment_container, new serverController(), this,  false);
-        }
    }
 
     /*EVENT HANDLERS DEFAULTS*/
@@ -344,6 +344,9 @@ public class homeController extends FragmentActivity {
                 if(m_fragments.get(0).getClass().getName().endsWith("settingController")){
                     m_close_triggered_status = ((settingController)m_fragments.get(0)).onBackPressed();
                 }
+                else if((m_fragments.get(0).getClass().getName().endsWith("appController"))){
+                    m_close_triggered_status = ((appController)m_fragments.get(0)).onBackPressed();
+                }
                 else if((m_fragments.get(0).getClass().getName().endsWith("promotionController"))){
                     m_close_triggered_status = ((promotionController)m_fragments.get(0)).onBackPressed();
                 }
@@ -370,13 +373,19 @@ public class homeController extends FragmentActivity {
         }
     }
 
+    public boolean onSaveForcedData(List<Fragment> m_fragments){
+        if(m_fragments.get(0).getClass().getName().endsWith("settingController")){
+            ((settingController)m_fragments.get(0)).onSaveData();
+        }
+        else if((m_fragments.get(0).getClass().getName().endsWith("appController"))){
+            ((appController)m_fragments.get(0)).onSaveData();
+        }
+        return false;
+    }
+
     public boolean isFragmentVisible(String p_fragment_name){
         List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
-        if(m_fragments.get(0).getClass().getName().endsWith(p_fragment_name) && m_fragment_container.getVisibility()==View.VISIBLE){
-            return true;
-        }else {
-            return false;
-        }
+        return m_fragments.get(0).getClass().getName().endsWith(p_fragment_name) && m_fragment_container.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -425,6 +434,10 @@ public class homeController extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(m_view_controller!=null && m_fragment_container.getVisibility()==View.VISIBLE){
+            List<Fragment> m_fragments = getSupportFragmentManager().getFragments();
+            onSaveForcedData(m_fragments);
+        }
     }
 
     @Override
@@ -441,69 +454,96 @@ public class homeController extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean m_drawer_status = true;
     public void onNavigationItem(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_app)
-        {
-            onAppManager(700);
-        }
-        else if (id == R.id.speed_test)
-        {
-            m_model.onSpeedTest(500);
-        }
-        else if (id == R.id.nav_ip_address)
-        {
-            m_model.onLocation(500);
-        }
-        else if (id == R.id.nav_promotion)
-        {
-            onPromotionOpen(500);
-        }
-        else if (id == R.id.nav_about)
-        {
-            m_view_controller.onAlertDismiss();
-            onPopupDismiss();
-            m_model.onAboutUS(500,m_fragment_container);
-        }
-        else if (id == R.id.server)
-        {
-            m_proxy_controller.clearExceptionCounter();
-            m_model.onServer(700,m_proxy_controller.isUserRegistered(), m_fragment_container);
-        }
-        else if (id == R.id.setting)
-        {
-            onSettingManagerOpen(500);
-        }
-        else if (id == R.id.nav_share)
-        {
-            m_view_controller.onAlertDismiss();
-            onPopupDismiss();
-            m_model.onShare();
-        }
-        else if (id == R.id.nav_help)
-        {
-            m_view_controller.onAlertDismiss();
-            onPopupDismiss();
-            m_model.onContactUS();
-        }
-        else if (id == R.id.nav_rate)
-        {
-            m_view_controller.onAlertDismiss();
-            onPopupDismiss();
-            m_model.onRateUs();
-        }
-        else if (id == R.id.ic_menu_privacy)
-        {
-            m_view_controller.onAlertDismiss();
-            onPopupDismiss();
-            m_model.onPrivacyPolicy();
-        }
-        else if (id == R.id.nav_quit)
-        {
-            m_proxy_controller.onCloseSmooth();
-        }
         onCloseDrawer(null);
+        final int[] id = {item.getItemId()};
+
+        m_drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                m_drawer_status = true;
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                if(!m_drawer_status)
+                {
+                    return;
+                }
+                m_drawer_status = false;
+
+                if (id[0] == R.id.nav_app)
+                {
+                    onAppManager(700);
+                }
+                else if (id[0] == R.id.speed_test)
+                {
+                    m_model.onSpeedTest(500);
+                }
+                else if (id[0] == R.id.nav_ip_address)
+                {
+                    m_model.onLocation(500);
+                }
+                else if (id[0] == R.id.nav_promotion)
+                {
+                    onPromotionOpen(500);
+                }
+                else if (id[0] == R.id.nav_about)
+                {
+                    m_view_controller.onAlertDismiss();
+                    onPopupDismiss();
+                    m_model.onAboutUS(500,m_fragment_container);
+                }
+                else if (id[0] == R.id.server)
+                {
+                    m_proxy_controller.clearExceptionCounter();
+                    m_model.onServer(700,m_proxy_controller.isUserRegistered(), m_fragment_container);
+                }
+                else if (id[0] == R.id.setting)
+                {
+                    onSettingManagerOpen(500);
+                }
+                else if (id[0] == R.id.nav_share)
+                {
+                    m_view_controller.onAlertDismiss();
+                    onPopupDismiss();
+                    m_model.onShare();
+                }
+                else if (id[0] == R.id.nav_help)
+                {
+                    m_view_controller.onAlertDismiss();
+                    onPopupDismiss();
+                    m_model.onContactUS();
+                }
+                else if (id[0] == R.id.nav_rate)
+                {
+                    m_view_controller.onAlertDismiss();
+                    onPopupDismiss();
+                    m_model.onRateUs();
+                }
+                else if (id[0] == R.id.ic_menu_privacy)
+                {
+                    m_view_controller.onAlertDismiss();
+                    onPopupDismiss();
+                    m_model.onPrivacyPolicy();
+                }
+                else if (id[0] == R.id.nav_quit)
+                {
+                    m_proxy_controller.onCloseSmooth();
+                }
+                id[0] = -1;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
     }
 
     /*EVENT HANDLERS OVERRIDE*/
@@ -526,9 +566,6 @@ public class homeController extends FragmentActivity {
 
     public void onStart(View view)
     {
-        m_connect_base.setClickable(false);
-        new Handler().postDelayed(() -> m_connect_base.setClickable(true), 250);
-
         m_proxy_controller.onTriggered(TRIGGER.TOOGLE);
     }
 
@@ -574,7 +611,7 @@ public class homeController extends FragmentActivity {
     }
 
     public void onAppManager(View view) {
-        onAppManager(0);
+        onAppManager(500);
     }
 
     /*EVENT VIEW CALLBACK HANDLER*/
@@ -604,7 +641,9 @@ public class homeController extends FragmentActivity {
                     m_view_controller.onOpenFragment(500);
                 else
                     m_view_controller.onOpenFragment(0);
-
+            }
+            else if(p_event_type == enums.ETYPE.START_FRAGMENT_ANIMATION){
+                m_view_controller.onStartFragmentAnimation();
             }
         }
     }
@@ -641,6 +680,7 @@ public class homeController extends FragmentActivity {
     public void onConnected()
     {
         m_view_controller.onConnected();
+        proxyController.getInstance().onUpdateFlagStatus();
         onLoadAdvert();
     }
 

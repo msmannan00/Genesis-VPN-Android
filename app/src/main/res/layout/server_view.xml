@@ -89,6 +89,7 @@
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/m_pager"
+                android:alpha="0"
                 android:visibility="invisible"
                 android:background="@color/primary_blue_back"
                 android:layout_width="match_parent"

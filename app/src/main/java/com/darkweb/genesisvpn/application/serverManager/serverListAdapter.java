@@ -61,7 +61,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
         new Thread(){
             public void run(){
                 try {
-                    sleep(400);
+                    sleep(1000);
                     for(int counter=0;counter<m_server_model_async.size();counter++){
                         int finalCounter = counter;
                         UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
@@ -76,7 +76,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                                 m_pager.animate().cancel();
                                 m_pager.setAlpha(0);
                                 m_pager.animate().setDuration(250).alpha(1);
-                            },(long) 400));
+                            },(long) 0));
                         }
                         sleep(0);
                     }
@@ -86,12 +86,12 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                     }
                     if(!isLoaded){
                         m_pager.setAlpha(0);
-                        m_context.getActivity().runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_pager.setVisibility(View.VISIBLE);
                             m_pager.animate().cancel();
                             m_pager.setAlpha(0);
                             m_pager.animate().setDuration(250).alpha(1);
-                        },(long) 400));
+                        },(long) 0));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -178,7 +178,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                     if(!m_type_response){
                         proxyController.getInstance().onSetServer(model.getCountryModel().getCountry());
                         sharedControllerManager.getInstance().getHomeController().onChooseServer(model.getCountryModel().getCountry());
-                        proxyController.getInstance().onSettingChanged(false);
+                        proxyController.getInstance().onSettingChanged(true);
                     }else {
                         String m_current_server = proxyController.getInstance().getServerName();
                         status.DEFAULT_SERVER = model.getCountryModel().getCountry();
@@ -186,7 +186,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                         pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
                         status.AUTO_OPTIMAL_LOCATION = false;
                         if(!m_current_server.equals(status.DEFAULT_SERVER)){
-                            proxyController.getInstance().onSettingChanged(false);
+                            proxyController.getInstance().onSettingChanged(true);
                         }
                     }
                 }

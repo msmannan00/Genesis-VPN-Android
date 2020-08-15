@@ -73,6 +73,10 @@ public class settingController extends Fragment {
     private settingModel m_model;
     private boolean isInteractionBlocked = false;
 
+    private boolean m_auto_connect_value = status.AUTO_CONNECT;
+    private boolean m_auto_start_value = status.AUTO_START;
+    private boolean m_auto_optimal_location_value = status.AUTO_OPTIMAL_LOCATION;
+
     /* INITIALIZATION */
 
     @Override
@@ -113,8 +117,8 @@ public class settingController extends Fragment {
         m_alert_title = root.findViewById(R.id.m_alert_title);
         m_alert_description = root.findViewById(R.id.m_alert_description);
         m_back_navigation = root.findViewById(R.id.m_back_navigation);
-        m_connect_startup_container = root.findViewById(R.id.m_connect_startup_container);
-        m_connect_launch_container = root.findViewById(R.id.m_connect_launch_container);
+        m_connect_startup_container = root.findViewById(R.id.m_device_launch_container);
+        m_connect_launch_container = root.findViewById(R.id.m_auto_connect_container);
         m_connect_type_UDP = root.findViewById(R.id.m_connect_type_UDP);
         m_connect_type_TCP = root.findViewById(R.id.m_connect_type_TCP);
         m_connect_type_AUTO = root.findViewById(R.id.m_connect_type_AUTO);
@@ -131,10 +135,12 @@ public class settingController extends Fragment {
             else if(v.getId()==R.id.m_back_navigation){
                 m_model.quit();
             }
-            else if(v.getId()==R.id.m_connect_startup_container){
+            else if(v.getId()==R.id.m_device_launch_container){
+                m_auto_start_value = !m_auto_start_value;
                 m_auto_start.toggle();
             }
-            else if(v.getId()==R.id.m_connect_launch_container){
+            else if(v.getId()==R.id.m_auto_connect_container){
+                m_auto_connect_value = !m_auto_connect_value;
                 m_auto_connect.toggle();
             }
             else if(v.getId()==R.id.m_connect_type_UDP){
@@ -147,6 +153,7 @@ public class settingController extends Fragment {
                 m_view_controller.onUpdateConnectionType(v.getId());
             }
             else if(v.getId()==R.id.m_auto_optimal_container){
+                m_auto_optimal_location_value = !m_auto_optimal_location_value;
                 m_auto_optimal_location.toggle();
                 m_view_controller.onDefaultServerToggle(m_auto_optimal_location.isChecked());
             }
@@ -196,17 +203,17 @@ public class settingController extends Fragment {
             return false;
         }
         else {
-            if(status.AUTO_CONNECT != m_auto_connect.isChecked()){
-                status.AUTO_CONNECT = m_auto_connect.isChecked();
+            if(status.AUTO_CONNECT != m_auto_connect_value){
+                status.AUTO_CONNECT = m_auto_connect_value;
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_CONNECT, status.AUTO_CONNECT), enums.PREFERENCES_ETYPE.SET_BOOL);
             }
-            if(status.AUTO_OPTIMAL_LOCATION != m_auto_optimal_location.isChecked()){
-                status.AUTO_OPTIMAL_LOCATION = m_auto_optimal_location.isChecked();
+            if(status.AUTO_OPTIMAL_LOCATION != m_auto_optimal_location_value){
+                status.AUTO_OPTIMAL_LOCATION = m_auto_optimal_location_value;
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_OPTIMAL_LOCATION, status.AUTO_OPTIMAL_LOCATION), enums.PREFERENCES_ETYPE.SET_BOOL);
                 proxyController.getInstance().onResetServer();
             }
-            if(status.AUTO_START != m_auto_start.isChecked()){
-                status.AUTO_START = m_auto_start.isChecked();
+            if(status.AUTO_START != m_auto_start_value){
+                status.AUTO_START = m_auto_start_value;
                 pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_START, status.AUTO_START), enums.PREFERENCES_ETYPE.SET_BOOL);
             }
             if(status.CONNECTION_TYPE != 1 && m_tcp_connection.isChecked()){
@@ -225,6 +232,37 @@ public class settingController extends Fragment {
                 sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
             }
             return true;
+        }
+    }
+
+    public void onSaveData(){
+        if(status.AUTO_CONNECT != m_auto_connect_value){
+            status.AUTO_CONNECT = m_auto_connect_value;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_CONNECT, status.AUTO_CONNECT), enums.PREFERENCES_ETYPE.SET_BOOL);
+        }
+        if(status.AUTO_OPTIMAL_LOCATION != m_auto_optimal_location_value){
+            status.AUTO_OPTIMAL_LOCATION = m_auto_optimal_location_value;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_OPTIMAL_LOCATION, status.AUTO_OPTIMAL_LOCATION), enums.PREFERENCES_ETYPE.SET_BOOL);
+            proxyController.getInstance().onResetServer();
+        }
+        if(status.AUTO_START != m_auto_start_value){
+            status.AUTO_START = m_auto_start_value;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_START, status.AUTO_START), enums.PREFERENCES_ETYPE.SET_BOOL);
+        }
+        if(status.CONNECTION_TYPE != 1 && m_tcp_connection.isChecked()){
+            status.CONNECTION_TYPE = 1;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 1), enums.PREFERENCES_ETYPE.SET_INT);
+            sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
+        }
+        else if(status.CONNECTION_TYPE != 0 && m_udp_connection.isChecked()){
+            status.CONNECTION_TYPE = 0;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 0), enums.PREFERENCES_ETYPE.SET_INT);
+            sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
+        }
+        else if(status.CONNECTION_TYPE != 2 && m_def_connection.isChecked()){
+            status.CONNECTION_TYPE = 2;
+            pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.CONNECTION_TYPE, 2), enums.PREFERENCES_ETYPE.SET_INT);
+            sharedControllerManager.getInstance().getProxyController().onSettingChanged(true);
         }
     }
 

@@ -1,27 +1,27 @@
 /*arm Versions*/
-project.ext.arm_vname = '35'
-project.ext.arm_vcode = 35
+project.ext.arm_vname = '60'
+project.ext.arm_vcode = 60
 
 /*aarch Versions*/
-project.ext.aarch_vname = '36'
-project.ext.aarch_vcode = 36
+project.ext.aarch_vname = '61'
+project.ext.aarch_vcode = 61
 
 /*x86 Versions*/
-project.ext.x86_vname = '37'
-project.ext.x86_vcode = 37
+project.ext.x86_vname = '62'
+project.ext.x86_vcode = 62
 
 /*x64 Versions*/
-project.ext.x64_vname = '38'
-project.ext.x64_vcode = 38
+project.ext.x64_vname = '63'
+project.ext.x64_vcode = 63
 
 /*Dimension*/
 project.ext.dimen = 'abi'
 
 /*Abi*/
-project.ext.armeabi = 'x86'
-project.ext.arm64 = 'x86'
+project.ext.armeabi = 'armeabi-v7a'
+project.ext.arm64 = 'arm64-v8a'
 project.ext.x86 = 'x86'
-project.ext.x64 = 'x86'
+project.ext.x64 = 'x86_64'
 
 /*General*/
 project.ext.androidSupportLibraryVersion = '30.0.0'
@@ -59,8 +59,8 @@ project.ext.androidx = 'androidx.appcompat:appcompat:1.1.0'
 project.ext.material = 'com.google.android.material:material:1.1.0'
 project.ext.constraintlayout = 'androidx.constraintlayout:constraintlayout:1.1.3'
 project.ext.ads_lite = 'com.google.android.gms:play-services-ads-lite:19.2.0'
-project.ext.hydra = 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.2.0'
-project.ext.openvpn = 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.2.0'
+project.ext.hydra = 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.3.0'
+project.ext.openvpn = 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.3.0'
 project.ext.analytics = 'com.flurry.android:analytics:12.4.0@aar'
 project.ext.flagkit = 'com.jwang123.flagkit:flagkit:1.0'
 project.ext.networkmanager = 'com.github.jumadeveloper:networkmanager:0.0.2'

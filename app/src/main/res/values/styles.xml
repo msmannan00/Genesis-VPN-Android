@@ -9,6 +9,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@xml/splash_gradient</item>
         <item name="android:statusBarColor">#000000</item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
     </style>
     <style name="WsmVisitorReception.SplashScreen" parent="@android:style/Theme.Material.Light">
         <item name="colorPrimary">@color/colorPrimary</item>

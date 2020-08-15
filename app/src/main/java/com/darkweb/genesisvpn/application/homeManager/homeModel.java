@@ -66,43 +66,39 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
+            m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
             boolean m_response =helperMethods.openFragment(p_fragment_conteiner, new aboutController(), m_context, false);
-            new Handler().postDelayed(() -> {
-                m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
-            }, m_delay);
+            m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
         }
     }
 
     void onSettings(int m_delay, FrameLayout p_fragment_container){
+        m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
             boolean m_response =  helperMethods.openFragment(p_fragment_container, new settingController(), m_context, false);
-            new Handler().postDelayed(() -> {
-                m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
-            }, m_delay);
+            m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
         }
     }
 
     void onPromotion(int m_delay, FrameLayout p_fragment_conteiner){
+        m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
             boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new promotionController(), m_context, false);
-            new Handler().postDelayed(() -> {
-                m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
-            }, m_delay);
+            m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.OPEN_FRAGMENT);
         }
     }
 
     void onAppManager(int m_delay, FrameLayout p_fragment_conteiner){
+        m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
             boolean m_response = helperMethods.openFragment(p_fragment_conteiner, new appController(), m_context, false);
-            new Handler().postDelayed(() -> {
-                m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
-            }, m_delay);
+            m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
         }
     }
 
@@ -110,7 +106,7 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
-            new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_IP_LOCATION), m_delay);
+            new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_IP_LOCATION), 0);
         }
     }
 
@@ -118,7 +114,7 @@ class homeModel
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
-            new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_SPEED_TEST), m_delay);
+            new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_SPEED_TEST), 0);
         }
     }
 
@@ -127,10 +123,11 @@ class homeModel
         {
             if(p_registeration_status == REGISTERATION.LOADING_SERVER_SUCCESS){
                 m_isUIBlocked = true;
+                m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
                 boolean m_response = helperMethods.openFragmentWithBundle(p_fragment_conteiner, new serverController(), m_context, keys.REQUEST_TYPE, false);
+                m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
                 new Handler().postDelayed(() -> {
-                    m_event.invokeObserver(Collections.singletonList(m_response), enums.ETYPE.OPEN_FRAGMENT);
-                }, p_delay);
+                }, 0);
             }
             else if(p_registeration_status == REGISTERATION.LOADING_SERVER_FAILURE){
                 m_event.invokeObserver(Arrays.asList(strings.SE_SERVER_FAILURE, strings.SE_REQUEST_FAILURE, p_delay), enums.ETYPE.HOME_ALERT);
