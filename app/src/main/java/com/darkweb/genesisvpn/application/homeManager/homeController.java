@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.MenuItem;
@@ -390,7 +389,7 @@ public class homeController extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_popup_home_navigation, menu);
         return true;
     }
 
@@ -479,25 +478,25 @@ public class homeController extends FragmentActivity {
 
                 if (id[0] == R.id.nav_app)
                 {
-                    onAppManager(700);
+                    onAppManager();
                 }
                 else if (id[0] == R.id.speed_test)
                 {
-                    m_model.onSpeedTest(500);
+                    m_model.onSpeedTest();
                 }
                 else if (id[0] == R.id.nav_ip_address)
                 {
-                    m_model.onLocation(500);
+                    m_model.onLocation();
                 }
                 else if (id[0] == R.id.nav_promotion)
                 {
-                    onPromotionOpen(500);
+                    onPromotionOpen();
                 }
                 else if (id[0] == R.id.nav_about)
                 {
                     m_view_controller.onAlertDismiss();
                     onPopupDismiss();
-                    m_model.onAboutUS(500,m_fragment_container);
+                    m_model.onAboutUS(m_fragment_container);
                 }
                 else if (id[0] == R.id.server)
                 {
@@ -506,7 +505,7 @@ public class homeController extends FragmentActivity {
                 }
                 else if (id[0] == R.id.setting)
                 {
-                    onSettingManagerOpen(500);
+                    onSettingManagerOpen();
                 }
                 else if (id[0] == R.id.nav_share)
                 {
@@ -548,10 +547,10 @@ public class homeController extends FragmentActivity {
 
     /*EVENT HANDLERS OVERRIDE*/
 
-    public void onPromotionOpen(int p_delay){
+    public void onPromotionOpen(){
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
-        m_model.onPromotion(p_delay, m_fragment_container);
+        m_model.onPromotion(m_fragment_container);
     }
 
     public void onStartBeatAnimation(){
@@ -561,7 +560,7 @@ public class homeController extends FragmentActivity {
     public void onSettingManagerClick(View view){
         m_view_controller.onAlertDismiss();
         onPopupDismiss();
-        m_model.onSettings(500, m_fragment_container);
+        m_model.onSettings(m_fragment_container);
     }
 
     public void onStart(View view)
@@ -592,26 +591,26 @@ public class homeController extends FragmentActivity {
         onPopupDismiss();
     }
 
-    public void onSettingManagerOpen(int delay) {
+    public void onSettingManagerOpen() {
         onPopupDismiss();
-        m_model.onSettings(delay, m_fragment_container);
+        m_model.onSettings(m_fragment_container);
     }
 
     public void onSettingManager(View view) {
-        onSettingManagerOpen(0);
+        onSettingManagerOpen();
     }
 
 
-    public void onAppManager(int delay) {
+    public void onAppManager() {
         onPopupDismiss();
         m_view_controller.onAlertDismiss();
         if(constants.SYSTEM_APPS.size()>0){
-            m_model.onAppManager(delay, m_fragment_container);
+            m_model.onAppManager(m_fragment_container);
         }
     }
 
     public void onAppManager(View view) {
-        onAppManager(500);
+        onAppManager();
     }
 
     /*EVENT VIEW CALLBACK HANDLER*/
@@ -709,7 +708,7 @@ public class homeController extends FragmentActivity {
         m_view_controller.onSetFlag(location);
     }
 
-    public void onSetFlagInstant(String location)
+    public void onSetFlagInstant()
     {
         m_view_controller.onClearFlagInstant();
     }

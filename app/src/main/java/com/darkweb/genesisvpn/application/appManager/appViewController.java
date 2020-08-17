@@ -1,22 +1,13 @@
 package com.darkweb.genesisvpn.application.appManager;
 
 
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.constants.constants;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 

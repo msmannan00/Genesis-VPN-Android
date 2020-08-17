@@ -1,6 +1,5 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -20,7 +18,6 @@ import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
-import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.darkweb.genesisvpn.application.homeManager.homeController;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
@@ -30,25 +27,22 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.listViewHolder>
 {
     private Fragment m_context;
     private homeController UI_Thread_Context;
     private ArrayList<serverListRowModel> m_server_model = new ArrayList<>();
-    private enums.SERVER m_type;
     private ArrayList<serverListRowModel> m_server_model_async;
     private ViewPager2 m_pager;
     public static boolean m_type_response = false;
-    boolean isLoaded = false;
+    boolean isLoaded;
 
-    serverListAdapter(Fragment p_context, ArrayList<serverListRowModel> p_server_model, enums.SERVER p_type, ViewPager2 p_pager, boolean p_response_type) {
+    serverListAdapter(Fragment p_context, ArrayList<serverListRowModel> p_server_model, ViewPager2 p_pager, boolean p_response_type) {
         this.m_context = p_context;
         isLoaded = false;
-        m_type = p_type;
         m_pager = p_pager;
-        m_pager.setVisibility(View.INVISIBLE);;
+        m_pager.setVisibility(View.INVISIBLE);
         m_server_model_async = p_server_model;
         m_type_response = p_response_type;
         UI_Thread_Context = sharedControllerManager.getInstance().getHomeController();
@@ -57,7 +51,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
     }
 
     public void updateAsync(){
-        m_pager.setVisibility(View.INVISIBLE);;
+        m_pager.setVisibility(View.INVISIBLE);
         new Thread(){
             public void run(){
                 try {
@@ -67,7 +61,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                         UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_server_model.add(m_server_model_async.get(finalCounter));
                             serverListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
-                        },(long) 0));
+                        },0));
 
                         if(!isLoaded && counter==20 && m_pager.getVisibility() == View.INVISIBLE ){
                             isLoaded = true;
@@ -76,7 +70,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                                 m_pager.animate().cancel();
                                 m_pager.setAlpha(0);
                                 m_pager.animate().setDuration(250).alpha(1);
-                            },(long) 0));
+                            },0));
                         }
                         sleep(0);
                     }
@@ -91,7 +85,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                             m_pager.animate().cancel();
                             m_pager.setAlpha(0);
                             m_pager.animate().setDuration(250).alpha(1);
-                        },(long) 0));
+                        }, 0));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -152,7 +146,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
                     check.setVisibility(View.INVISIBLE);
                 }
             }else {
-                if(proxyController.getInstance().getServerName().equals(strings.EMPTY_STR) || proxyController.getInstance().getServerName().equals(strings.OPTIMAL_SERVER)){
+                if(proxyController.getInstance().getServerName().equals(strings.EMPTY_STR) || proxyController.getInstance().getServerName().equals(strings.HO_OPTIMAL_SERVER)){
                     check.setVisibility(View.VISIBLE);
                 }else {
                     check.setVisibility(View.INVISIBLE);
@@ -173,7 +167,7 @@ public class serverListAdapter extends RecyclerView.Adapter<serverListAdapter.li
             layout.setOnClickListener(view -> {
 
                 if(model.getCountryModel() == null){
-                    sharedControllerManager.getInstance().getHomeController().onChooseServer(strings.OPTIMAL_SERVER);
+                    sharedControllerManager.getInstance().getHomeController().onChooseServer(strings.HO_OPTIMAL_SERVER);
                 }else {
                     if(!m_type_response){
                         proxyController.getInstance().onSetServer(model.getCountryModel().getCountry());

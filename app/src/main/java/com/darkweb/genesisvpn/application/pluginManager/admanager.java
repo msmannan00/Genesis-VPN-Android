@@ -3,9 +3,6 @@ package com.darkweb.genesisvpn.application.pluginManager;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;

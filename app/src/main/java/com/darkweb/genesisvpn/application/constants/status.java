@@ -1,7 +1,5 @@
 package com.darkweb.genesisvpn.application.constants;
 
-import android.view.View;
-
 import com.darkweb.genesisvpn.application.serverManager.serverListRowModel;
 import java.util.ArrayList;
 

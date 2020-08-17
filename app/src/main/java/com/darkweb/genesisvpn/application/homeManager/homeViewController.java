@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -32,8 +31,6 @@ import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 import com.jwang123.flagkit.FlagKit;
-
-import java.util.Locale;
 
 class homeViewController {
 
@@ -174,11 +171,11 @@ class homeViewController {
         m_alert_dialog.setVisibility(View.GONE);
         m_alert_title.setTypeface(null, Typeface.BOLD);
         if(status.CONNECTION_TYPE == 1){
-            m_connection_toggle.setText("TCP");
+            m_connection_toggle.setText(strings.HO_TCP);
         }else if(status.CONNECTION_TYPE == 0){
-            m_connection_toggle.setText("UDP");
+            m_connection_toggle.setText(strings.HO_UDP);
         }else {
-            m_connection_toggle.setText("AUTO");
+            m_connection_toggle.setText(strings.HO_AUTO);
         }
 
         new Handler().postDelayed(() -> m_connect_base.setClickable(true), 500);
@@ -255,7 +252,6 @@ class homeViewController {
     public void onAutoConnect()
     {
         m_speed_base.setTranslationZ(35);
-        //m_connect_base.performClick();
         m_speed_base.setTranslationZ(125);
     }
 
@@ -274,36 +270,38 @@ class homeViewController {
         }
     }
 
+    @SuppressLint("RtlHardcoded")
     public void onOpenDrawer(){
         m_drawer.setEnabled(true);
         m_drawer.setClickable(true);
-        m_drawer.openDrawer(Gravity.LEFT); //Edit Gravity.START need API 14
+        m_drawer.openDrawer(Gravity.LEFT);
     }
 
+    @SuppressLint("RtlHardcoded")
     public void onCloseDrawer(){
         if(m_drawer!=null){
-            m_drawer.closeDrawer(Gravity.LEFT); //Edit Gravity.START need API 14
+            m_drawer.closeDrawer(Gravity.LEFT);
         }
     }
 
     public void onConnectionToggle(int p_connection){
         if(p_connection == 1){
-            m_connection_toggle.setText("TCP");
+            m_connection_toggle.setText(strings.HO_TCP);
         }else if(p_connection == 0){
-            m_connection_toggle.setText("UDP");
+            m_connection_toggle.setText(strings.HO_UDP);
         }else {
-            m_connection_toggle.setText("AUTO");
+            m_connection_toggle.setText(strings.HO_AUTO);
         }
     }
 
     public void onConnectionUpdate(){
         if(m_connection_toggle!=null){
             if(status.CONNECTION_TYPE == 1){
-                m_connection_toggle.setText("TCP");
+                m_connection_toggle.setText(strings.HO_TCP);
             }else if(status.CONNECTION_TYPE == 0){
-                m_connection_toggle.setText("UDP");
+                m_connection_toggle.setText(strings.HO_UDP);
             }else {
-                m_connection_toggle.setText("AUTO");
+                m_connection_toggle.setText(strings.HO_AUTO);
             }
         }
     }
@@ -395,6 +393,7 @@ class homeViewController {
         return m_alert_dialog.getAlpha() > 0;
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     void onUpdateDownloadSpeed(float val){
         if(val<0){
             val = 0;
@@ -408,6 +407,7 @@ class homeViewController {
         }
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     void onUpdateUploadSpeed(float val){
         if(val<0){
             val = 0;
@@ -441,8 +441,6 @@ class homeViewController {
             {
                 if(msg.what == messages.UPDATE_FLAG)
                 {
-
-                    Log.i("sppp","sppp:1:" + m_flag_status);
                     isFlagRemoved = false;
                     if(!m_flag_status.equals(strings.EMPTY_STR))
                     {
@@ -458,8 +456,6 @@ class homeViewController {
                 }
                 else if(msg.what == messages.REMOVE_FLAG)
                 {
-
-                    Log.i("sppp","sppp:2:" + m_flag_status);
                     if(m_flag.getAlpha()==0f)
                     {
                         m_flag.animate().alpha(1);
@@ -476,8 +472,6 @@ class homeViewController {
                 }
                 else if(msg.what == messages.REMOVE_FLAG_INSTANT)
                 {
-
-                    Log.i("sppp","sppp:3:" + m_flag_status);
                     if(m_flag.getAlpha()==0f)
                     {
                         m_flag.animate().setDuration(0).cancel();
@@ -523,9 +517,7 @@ class homeViewController {
 
     public void onResetFragmentAnimation(){
         m_ui_smoothner.animate().cancel();
-        m_ui_smoothner.animate().alpha(0).setDuration(200).withEndAction(() -> {
-            m_ui_smoothner.setVisibility(View.INVISIBLE);
-        }).start();
+        m_ui_smoothner.animate().alpha(0).setDuration(200).withEndAction(() -> m_ui_smoothner.setVisibility(View.INVISIBLE)).start();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -560,9 +552,7 @@ class homeViewController {
                 .scaleY(0.93f)
                 .scaleX(0.93f)
                 .alpha(0)
-                .setStartDelay(0).withEndAction(() -> {
-                    m_fragment_container.setVisibility(View.INVISIBLE);
-                }).start();
+                .setStartDelay(0).withEndAction(() -> m_fragment_container.setVisibility(View.INVISIBLE)).start();
 
         new Handler().postDelayed(() -> m_blocker.setClickable(false), 200);
 
@@ -571,14 +561,12 @@ class homeViewController {
     public void animateFlag(Drawable p_flag){
         try{
             if(m_flag.getAlpha()>=0.7f){
-                Log.i("FUZZ","FUZZ1");
                 m_flag.animate().cancel();
                 m_flag.animate().alpha(0).setDuration(150).withEndAction(() -> {
                     m_flag.animate().setDuration(350).alpha(1);
                     m_flag.setImageDrawable(p_flag);
                 }).start();
             }else {
-                Log.i("FUZZ","FUZZ2");
                 m_flag.animate().cancel();
                 m_flag.animate().alpha(0).setDuration(0).withEndAction(() -> {
                     m_flag.animate().setDuration(350).alpha(1).start();
@@ -594,17 +582,14 @@ class homeViewController {
             case MotionEvent.ACTION_DOWN:
                 m_connect_base.animate().alpha(0.5f).setInterpolator(new LinearInterpolator()).setDuration(100);
                 m_connect_animator.setTransitionName(strings.HO_TRANSITION_NAME_PAUSE);
-                //m_speed_base.setTranslationZ(140);
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                //m_speed_base.setTranslationZ(140);
                 break;
 
             case MotionEvent.ACTION_UP:
                 m_connect_base.animate().alpha(1f).setInterpolator(new LinearInterpolator()).setDuration(100);
                 m_connect_animator.setTransitionName(strings.HO_TRANSITION_NAME_START);
-                //m_speed_base.setTranslationZ(140);
                 break;
         }
     }

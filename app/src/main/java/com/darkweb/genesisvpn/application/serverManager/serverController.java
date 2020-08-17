@@ -18,7 +18,6 @@ import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,9 +29,8 @@ public class serverController extends Fragment {
 
     /*LOCAL VARIABLE DECLARATION*/
 
-    private boolean isRequestTypeResponse = false;
-    private boolean isRunning = false;
-    private boolean isChangedWhileRunning = false;
+    private boolean m_is_request_type_response = false;
+    private boolean m_is_changed_while_running = false;
     private View.OnClickListener m_on_click_listener;
     private serverViewController m_view_controller;
     private serverModel m_model;
@@ -46,7 +44,6 @@ public class serverController extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.server_view, null);
-        isRunning = true;
         initBundle();
         initializeDrawable();
         initializeModel();
@@ -57,14 +54,10 @@ public class serverController extends Fragment {
         return root;
     }
 
-    public void onInitialize(){
-
-    }
-
     public void initBundle(){
         if(this.getArguments() != null){
-            isRequestTypeResponse = this.getArguments().getBoolean(keys.REQUEST_TYPE, false);
-            serverFragment.m_type_response = isRequestTypeResponse;
+            m_is_request_type_response = this.getArguments().getBoolean(keys.REQUEST_TYPE, false);
+            serverFragment.m_type_response = m_is_request_type_response;
         }
         else {
             serverFragment.m_type_response = false;
@@ -89,7 +82,7 @@ public class serverController extends Fragment {
 
     public void onDataChanged(){
         if (sharedControllerManager.getInstance().getHomeController().isFragmentVisible(serverController.this.getClass().getName())) {
-            isChangedWhileRunning = true;
+            m_is_changed_while_running = true;
         }else {
             initializeModel();
             initViewPager();
@@ -104,7 +97,6 @@ public class serverController extends Fragment {
 
         m_list_model = serverListModel.getInstance();
         m_list_model.onInitialize(new serverListModelCallback());
-        //m_list_model.setRecentModel(status.RECENT_SERVERS);
     }
 
     public void initializeViews(View p_view){
@@ -130,12 +122,11 @@ public class serverController extends Fragment {
 
     public boolean onBackPressed()
     {
-        isRunning = false;
-        if(isRequestTypeResponse){
+        if(m_is_request_type_response){
             pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, status.DEFAULT_SERVER), enums.PREFERENCES_ETYPE.SET_STRING);
         }
-        if(isChangedWhileRunning){
-            isChangedWhileRunning = false;
+        if(m_is_changed_while_running){
+            m_is_changed_while_running = false;
             initializeModel();
             initViewPager();
         }

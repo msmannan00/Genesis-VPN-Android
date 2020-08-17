@@ -24,7 +24,6 @@ public class strings
     public static String HO_CONNECTING = "Connecting";
     public static String HO_CONNECTED = "Connected";
     public static String HO_DISCONNECTING = "Terminating";
-    public static String HO_CONNECTED_TO = "Connected To | ";
     public static String HO_PRIVACY_URL = "https://infogamesolstudios.blogspot.com/p/privacy-policy-function-var-html5.html";
     public static String HO_RATE_US_URL = "market://details?id=com.darkweb.genesisvpn";
     public static String HO_FONT_GOTHAM = "fonts/gotham_med.ttf";
@@ -39,7 +38,10 @@ public class strings
     public static String HO_CONNECTION_TCP =  "Use this connection in case if you are only interested in browsing or click TCP button to toggle";
     public static String HO_CONNECTION_UDP =  "Use this connection in case if you are only interested in video streaming or click UDP button to toggle";
     public static String HO_CONNECTION_AUTO = "Use this connection if you are interested on both browsing and streaming or click AUTO button to toggle";
-    public static String OPTIMAL_SERVER = "optimal_server";
+    public static String HO_OPTIMAL_SERVER = "optimal_server";
+    public static String HO_TCP = "TCP";
+    public static String HO_UDP = "UDP";
+    public static String HO_AUTO = "AUTO";
 
     /*APPLICATION FILTER*/
 

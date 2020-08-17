@@ -58,7 +58,7 @@ public class promotionController extends Fragment {
     }
 
     public void initializeViews(){
-        m_view_controller = new promotionViewController(getActivity(), new promotionViewCallback(), m_promotion_edit_text, m_alert_dialog, m_alert_title, m_alert_description, m_back_navigation, m_submit, m_alert_dismiss);
+        m_view_controller = new promotionViewController(getActivity(), new promotionViewCallback(), m_promotion_edit_text, m_alert_dialog, m_alert_title, m_alert_description);
     }
 
     public boolean onBackPressed(){

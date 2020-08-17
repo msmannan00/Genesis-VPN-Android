@@ -1,10 +1,6 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
-import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
-
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.flurry.android.FlurryAgent;
 
@@ -22,7 +18,6 @@ public class analyticmanager
         new FlurryAgent.Builder()
                 .withLogEnabled(true)
                 .build(p_context, "27Z4TFRQ4B49FRRTPP5W");
-
     }
 
 }

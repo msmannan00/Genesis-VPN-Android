@@ -1,16 +1,11 @@
 package com.darkweb.genesisvpn.application.pluginManager;
 
 import android.content.Context;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +35,7 @@ public class pluginManager
     /*ADVIEW HANDLER*/
     public Object onAdvertTrigger(List<Object> data, enums.AD_ETYPE p_event){
         if(p_event == enums.AD_ETYPE.INITIALIZE){
-            boolean m_ads_status = m_preference_manager.getBool(keys.ADS_DISABLED,false);;
+            boolean m_ads_status = m_preference_manager.getBool(keys.ADS_DISABLED,false);
             m_ad_manager.initialize(((FragmentActivity)data.get(0)).getApplicationContext(), m_ads_status, (com.google.android.gms.ads.AdView)data.get(1));
         }
         else if(p_event == enums.AD_ETYPE.DISABLE_ADS){

@@ -5,9 +5,7 @@ import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -72,11 +70,6 @@ public class serverListModel
     public ArrayList<serverListRowModel> getCountryModel()
     {
         return m_country_model;
-    }
-
-    public void setRecentModel(ArrayList<serverListRowModel> p_recent_model){
-        m_recent_model.clear();
-        m_recent_model.addAll(p_recent_model);
     }
 
     public ArrayList<serverListRowModel> getRecentModel()

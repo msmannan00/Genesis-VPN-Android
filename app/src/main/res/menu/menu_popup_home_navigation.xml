@@ -6,19 +6,17 @@
             android:id="@+id/action_server"
             android:onClick="onServer"
             android:orderInCategory="100"
-            android:title="@string/action_servers"
+            android:title="@string/server_action_servers"
             app:showAsAction="never" />
     </group>
     <item
         android:id="@+id/action_applications"
         android:orderInCategory="100"
         android:title="@string/action_applications"
-        android:onClick="onAppManager"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:orderInCategory="100"
         android:title="@string/action_setting"
-        android:onClick="onSettingManager"
         app:showAsAction="never" />
 </menu>

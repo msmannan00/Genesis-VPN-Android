@@ -1,7 +1,6 @@
 package com.darkweb.genesisvpn.application.appManager;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +8,13 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.darkweb.genesisvpn.R;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.homeManager.homeController;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
-
 import java.util.ArrayList;
 
 public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listViewHolder>
@@ -37,7 +33,6 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
         m_pager = p_pager;
         m_disabled_packages = p_disabled_packages;
         m_app_model_async = p_app_model;
-        //m_pager.setVisibility(View.INVISIBLE);
         UI_Thread_Context = sharedControllerManager.getInstance().getHomeController();
         updateAsync();
     }
@@ -52,7 +47,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                         UI_Thread_Context.runOnUiThread(() -> new Handler().postDelayed(() -> {
                             m_app_model.add(m_app_model_async.get(finalCounter));
                             appListAdapter.this.notifyItemRangeChanged(finalCounter, 1);
-                        },(long) 0));
+                        }, 0));
 
                         if(!isLoaded && counter==20 && m_pager.getVisibility() == View.INVISIBLE){
                             isLoaded = true;
@@ -61,7 +56,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                                 m_pager.animate().cancel();
                                 //m_pager.setAlpha(0);
                                 m_pager.animate().setDuration(250).alpha(1);
-                            },(long) 0));
+                            }, 0));
 
                         }
                         sleep(0);
@@ -73,7 +68,7 @@ public class appListAdapter extends RecyclerView.Adapter<appListAdapter.listView
                             m_pager.animate().cancel();
                             //m_pager.setAlpha(0);
                             m_pager.animate().setDuration(250).alpha(1);
-                        },(long) 0));
+                        }, 0));
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

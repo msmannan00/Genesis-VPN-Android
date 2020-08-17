@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import com.anchorfree.partner.api.ClientInfo;
 import com.anchorfree.partner.api.response.AvailableCountries;
@@ -65,7 +64,6 @@ public class proxyController{
     private boolean m_is_optimal_server = false;
     private boolean m_thread_running = false;
     private boolean m_vpn_initialized = false;
-    private boolean m_has_vpn_triggered = false;
 
     private int control_thread_counter = 0;
     private int last_exeption_counter = 0;
@@ -130,7 +128,6 @@ public class proxyController{
     public void onAutoConnectInitialization(){
         onHomeCommands(HOME_COMMANDS.ON_CONNECTING, null);
         m_auto_connect_request = true;
-        m_has_vpn_triggered = true;
         m_vpn_status = REQUEST.CONNECTING_VPN;
         onStop();
         onHomeCommands(HOME_COMMANDS.ON_CONNECTING, null);
@@ -175,7 +172,6 @@ public class proxyController{
     public void onTriggered(TRIGGER p_trigger_request){
 
         if(p_trigger_request == TRIGGER.TOOGLE){
-            m_has_vpn_triggered = true;
             switch (m_ui_status) {
                 case IDLE: {
                     m_ui_status = REQUEST.CONNECTING_VPN;
@@ -196,15 +192,9 @@ public class proxyController{
                     break;
                 }
                 case CONNECTING_CREDENTIALS:{
-                    if(m_request == REQUEST.IDLE){
-                        m_ui_status = REQUEST.DISCONNECTING;
-                        onHomeCommands(HOME_COMMANDS.ON_DISCONNECTING, null);
-                        m_request = REQUEST.IDLE;
-                    }else {
-                        m_ui_status = REQUEST.DISCONNECTING;
-                        onHomeCommands(HOME_COMMANDS.ON_DISCONNECTING, null);
-                        m_request = REQUEST.IDLE;
-                    }
+                    m_ui_status = REQUEST.DISCONNECTING;
+                    onHomeCommands(HOME_COMMANDS.ON_DISCONNECTING, null);
+                    m_request = REQUEST.IDLE;
                     break;
                 }
                 case CONNECTING_PERMISSIONS: {
@@ -411,7 +401,7 @@ public class proxyController{
                         server_name = status.DEFAULT_SERVER;
                     }
                 }
-            }else if(server_name.equals(strings.OPTIMAL_SERVER)){
+            }else if(server_name.equals(strings.HO_OPTIMAL_SERVER)){
                 server_name = UnifiedSDK.COUNTRY_OPTIMAL;
                 m_is_optimal_server = true;
             }
@@ -468,7 +458,7 @@ public class proxyController{
             if(status.CONNECTION_TYPE == 1){
                 m_transport = CaketubeTransport.TRANSPORT_ID_TCP;
             }
-            if(status.CONNECTION_TYPE == 2){
+            else if(status.CONNECTION_TYPE == 2){
                 m_transport = HydraTransport.TRANSPORT_ID;
             }
             else {
@@ -487,7 +477,7 @@ public class proxyController{
                         server_name = status.DEFAULT_SERVER;
                     }
                 }
-            }else if(server_name.equals(strings.OPTIMAL_SERVER)){
+            }else if(server_name.equals(strings.HO_OPTIMAL_SERVER)){
                 server_name = UnifiedSDK.COUNTRY_OPTIMAL;
                 m_is_optimal_server = true;
             }
@@ -592,7 +582,6 @@ public class proxyController{
     }
 
     public void onForceStop(){
-        m_has_vpn_triggered = true;
         m_request = REQUEST.IDLE;
         m_ui_status = REQUEST.CONNECTING_VPN;
     }
@@ -670,7 +659,7 @@ public class proxyController{
 
     public void onChooseServer(String p_get_country)
     {
-        m_home_instance.onSetFlagInstant(strings.EMPTY_STR);
+        m_home_instance.onSetFlagInstant();
         m_is_optimal_server = false;
         server_name = p_get_country;
         onHomeCommands(HOME_COMMANDS.ON_CONNECTING, null);
@@ -897,7 +886,7 @@ public class proxyController{
 
     public String getServerName(){
         if(m_is_optimal_server) {
-            return  strings.OPTIMAL_SERVER;
+            return  strings.HO_OPTIMAL_SERVER;
         }
         else {
             return server_name;
@@ -956,7 +945,7 @@ public class proxyController{
                     m_home_instance.onSetFlag(strings.EMPTY_STR);
                 }
                 else if(p_commands == HOME_COMMANDS.ON_CLEAR_FLAG_INSTANT){
-                    m_home_instance.onSetFlagInstant(strings.EMPTY_STR);
+                    m_home_instance.onSetFlagInstant();
                 }
                 else if(p_commands == HOME_COMMANDS.ON_MOVE_TASK_BACK){
                     m_home_instance.moveTaskToBack(true);

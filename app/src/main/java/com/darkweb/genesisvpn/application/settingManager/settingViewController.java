@@ -1,9 +1,6 @@
 package com.darkweb.genesisvpn.application.settingManager;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import com.darkweb.genesisvpn.R;
@@ -20,8 +16,6 @@ import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.jwang123.flagkit.FlagKit;
-
-import java.util.Locale;
 
 class settingViewController {
 
@@ -128,7 +122,7 @@ class settingViewController {
             onUpdateFlag();
             m_default_server_layout.setVisibility(View.VISIBLE);
             m_default_server_layout.animate().setDuration(250).alpha(1).withEndAction(() -> {
-            });;
+            });
         }
     }
 

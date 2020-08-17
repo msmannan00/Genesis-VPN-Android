@@ -61,7 +61,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="-1dp"
-                android:text="@string/action_servers"
+                android:text="@string/server_action_servers"
                 android:textColor="@color/white"
                 android:textSize="15.5sp" />
         </LinearLayout>

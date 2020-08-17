@@ -1,11 +1,8 @@
 package com.darkweb.genesisvpn.application.serverManager;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
-
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
-import com.darkweb.genesisvpn.application.helperManager.helperMethods;
 
 class serverModel
 {

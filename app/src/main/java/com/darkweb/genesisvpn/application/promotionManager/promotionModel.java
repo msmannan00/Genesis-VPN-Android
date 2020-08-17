@@ -1,13 +1,8 @@
 package com.darkweb.genesisvpn.application.promotionManager;
 
-import android.text.format.DateFormat;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
-
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
-
 import java.util.Calendar;
 
 class promotionModel
@@ -28,7 +23,7 @@ class promotionModel
     /*HANDLERS*/
 
     public boolean isPromoCodeValid(String m_promo){
-        int m_user_promo = 0;
+        int m_user_promo;
         try {
             if(m_promo.equals("imammehdi00")){
                 return true;

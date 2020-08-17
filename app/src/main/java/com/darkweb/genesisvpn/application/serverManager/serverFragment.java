@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.darkweb.genesisvpn.R;
-import com.darkweb.genesisvpn.application.constants.enums;
-import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.stateManager.sharedControllerManager;
 
 
@@ -62,7 +60,7 @@ public class serverFragment extends Fragment {
             serverListAdapter adapter;
 
             if(count == 0){
-                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getCountryModel(), enums.SERVER.ALL, m_pager, m_type_response);
+                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getCountryModel(), m_pager, m_type_response);
                 m_list_view.setAdapter(adapter);
 
                 if(m_list_model.getCountryModel().size()<=0){
@@ -72,7 +70,7 @@ public class serverFragment extends Fragment {
                 }
             }
             else if(count == 1){
-                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getRecentModel(), enums.SERVER.RECENT, m_pager, m_type_response);
+                adapter = new serverListAdapter(sharedControllerManager.getInstance().getServerController(), m_list_model.getRecentModel(), m_pager, m_type_response);
                 m_list_view.setAdapter(adapter);
 
                 if(m_list_model.getRecentModel().size()<=0){

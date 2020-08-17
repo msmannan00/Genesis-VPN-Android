@@ -3,10 +3,7 @@ package com.darkweb.genesisvpn.application.homeManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
-import android.view.View;
 import android.widget.FrameLayout;
-
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import com.darkweb.genesisvpn.application.aboutManager.aboutController;
 import com.darkweb.genesisvpn.application.appManager.appController;
@@ -62,7 +59,7 @@ class homeModel
         helperMethods.sendEmail(m_context);
     }
 
-    void onAboutUS(int m_delay, FrameLayout p_fragment_conteiner){
+    void onAboutUS(FrameLayout p_fragment_conteiner){
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
@@ -72,7 +69,7 @@ class homeModel
         }
     }
 
-    void onSettings(int m_delay, FrameLayout p_fragment_container){
+    void onSettings(FrameLayout p_fragment_container){
         m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
         if(!m_isUIBlocked)
         {
@@ -82,7 +79,7 @@ class homeModel
         }
     }
 
-    void onPromotion(int m_delay, FrameLayout p_fragment_conteiner){
+    void onPromotion(FrameLayout p_fragment_conteiner){
         m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
         if(!m_isUIBlocked)
         {
@@ -92,7 +89,7 @@ class homeModel
         }
     }
 
-    void onAppManager(int m_delay, FrameLayout p_fragment_conteiner){
+    void onAppManager(FrameLayout p_fragment_conteiner){
         m_event.invokeObserver(Collections.singletonList(false), enums.ETYPE.START_FRAGMENT_ANIMATION);
         if(!m_isUIBlocked)
         {
@@ -102,7 +99,7 @@ class homeModel
         }
     }
 
-    void onLocation(int m_delay){
+    void onLocation(){
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;
@@ -110,7 +107,7 @@ class homeModel
         }
     }
 
-    void onSpeedTest(int m_delay){
+    void onSpeedTest(){
         if(!m_isUIBlocked)
         {
             m_isUIBlocked = true;

@@ -78,11 +78,12 @@
 
     <!-- SERVER PAGE -->
 
-    <string name="action_servers">Server Location</string>
+    <string name="server_action_servers">Server Location</string>
 
     <!-- APPLICATION FILTER PAGE -->
 
-    <string name="application">Proxy Filter</string>
+    <string name="appfilter_title">Proxy Filter</string>
+    <string name="appfilter_no_application_found">No Application Found</string>
 
     <!-- APPLICATION GENERAL -->
 

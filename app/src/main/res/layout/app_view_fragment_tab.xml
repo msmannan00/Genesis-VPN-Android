@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="150dp"
-            android:text="No Application Found"
+            android:text="@string/appfilter_no_application_found"
             android:textSize="16sp"
             android:textColor="@color/white"
             android:textStyle="bold"
