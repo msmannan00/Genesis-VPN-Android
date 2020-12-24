@@ -6,11 +6,13 @@ import android.view.View;
 import com.androidstudy.networkmanager.Tovuti;
 import com.darkweb.genesisvpn.application.constants.enums;
 import com.darkweb.genesisvpn.application.constants.keys;
+import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class admanager
     /*Local Variables*/
     private boolean m_ads_disable = false;
     private boolean m_advert_initialize = false;
+    private InterstitialAd mInterstitialAd;
 
     /*Initializations*/
     public admanager(eventObserver.eventListener p_event){
@@ -41,28 +44,31 @@ public class admanager
         m_banner_ads = p_banner_ads;
         m_context = p_context;
         m_banner_ads.setVisibility(View.GONE);
+
+        final Runnable r = () -> {
+            mInterstitialAd = new InterstitialAd(m_context);
+            mInterstitialAd.setAdUnitId("ca-app-pub-5074525529134731/7636560716");
+            initializeListener();
+        };
+        m_failure_handler.postDelayed(r, 1000);
     }
 
-    public void initBannerAds()
+    public void initInterstitialAds()
     {
-        if(!m_advert_initialize){
-            m_advert_initialize = true;
+        if(!m_advert_initialize && status.LANDING_PAGE_SHOWN){
             if(!m_ads_disable){
                 Tovuti.from(m_context).monitor((connectionType, isConnected, isFast) -> {
                     if(isConnected){
                         List<String> testDeviceIds = Collections.singletonList("E6E822D3FE2DC52EE9947D1E042D20A9");
                         RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
                         MobileAds.setRequestConfiguration(configuration);
+
+                        final Runnable r = () -> {
+                            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                        };
+                        m_failure_handler.postDelayed(r, 1000);
                     }
                 });
-                final Runnable r = () -> {
-                    MobileAds.initialize(m_context, "ca-app-pub-5074525529134731~1412991199");
-                    AdRequest request = new AdRequest.Builder()
-                            .build();
-                    m_banner_ads.loadAd(request);
-                    initializeListener();
-                };
-                m_failure_handler.postDelayed(r, 1000);
             }
             else {
                 m_event.invokeObserver(Arrays.asList(keys.ADS_DISABLED, true), enums.ETYPE.ON_ADVERT_INITIALIZED);
@@ -73,22 +79,22 @@ public class admanager
 
     public void initializeListener(){
         m_event.invokeObserver(Arrays.asList(keys.ADS_DISABLED, true), enums.ETYPE.ON_ADVERT_INITIALIZED);
-        m_banner_ads.setAdListener(new AdListener() {
+        mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                m_banner_ads.setVisibility(View.VISIBLE);
+                m_advert_initialize = true;
+                mInterstitialAd.show();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                final Runnable r = () -> initBannerAds();
+                final Runnable r = () -> initInterstitialAds();
                 m_failure_handler.postDelayed(r, 5000);
             }
 
             @Override
             public void onAdOpened() {
-                m_banner_ads.setVisibility(View.VISIBLE);
             }
 
             @Override

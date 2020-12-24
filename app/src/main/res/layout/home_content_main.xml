@@ -103,7 +103,7 @@
         android:layout_centerHorizontal="true"
         android:translationZ="100dp"
         app:adSize="SMART_BANNER"
-        app:adUnitId="ca-app-pub-5074525529134731/8185518764"
+        app:adUnitId="ca-app-pub-5074525529134731~1412991199"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar" />
@@ -157,7 +157,7 @@
         android:translationZ="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/m_linear_layout_bar"
         app:layout_constraintVertical_bias="0.37" />
@@ -247,17 +247,18 @@
         style="@android:style/TextAppearance.DeviceDefault.Medium"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
         android:layout_marginTop="45dp"
         android:paddingTop="8dp"
 
         android:paddingBottom="8dp"
+        android:singleLine="true"
         android:text="@string/upload_text_default"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         android:translationZ="850dp"
+        app:layout_constraintEnd_toEndOf="@+id/m_speed_base"
         app:layout_constraintStart_toStartOf="@+id/m_speed_base"
         app:layout_constraintTop_toTopOf="@+id/m_speed_base" />
 
@@ -267,8 +268,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
-        android:paddingTop="8dp"
 
+        android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text="@string/download_text_default"
         android:textAlignment="center"
@@ -276,6 +277,7 @@
         android:textSize="14sp"
         android:textStyle="bold"
         android:translationZ="850dp"
+        app:layout_constraintEnd_toEndOf="@+id/p_upload"
         app:layout_constraintStart_toStartOf="@+id/p_upload"
         app:layout_constraintTop_toTopOf="@+id/m_speed_base" />
 
@@ -432,6 +434,20 @@
         android:contentDescription="@string/todo"
         android:focusable="true"
         android:translationZ="1525dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/m_blocker_landing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="1"
+        android:background="@color/colorPrimary"
+        android:contentDescription="@string/todo"
+        android:focusable="true"
+        android:translationZ="949dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

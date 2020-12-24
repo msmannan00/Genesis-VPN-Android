@@ -34,6 +34,8 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 import static com.darkweb.genesisvpn.application.constants.strings.SE_UNKNOWN_EXCEPTION;
 import static com.darkweb.genesisvpn.application.constants.strings.SE_VPN_PERMISSION;
 import static com.darkweb.genesisvpn.application.serverManager.serverListAdapter.m_type_response;
@@ -49,6 +51,12 @@ public class helperMethods
         }else {
             return p_exception.getCause().getLocalizedMessage();
         }
+    }
+
+    public static void openActivity( Class<?> cls,Context context){
+        Intent mIntent = new Intent(context, cls);
+        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(mIntent);
     }
 
     public static float pxToDp(Context p_context,float p_value){
@@ -72,7 +80,7 @@ public class helperMethods
                 .setType(strings.SH_TYPE)
                 .setChooserTitle(strings.SH_TITLE)
                 .setSubject(strings.SH_SUBJECT)
-                .setText(strings.SH_DESC + p_context.getPackageName())
+                .setText(strings.SH_DESC)
                 .startChooser();
     }
 

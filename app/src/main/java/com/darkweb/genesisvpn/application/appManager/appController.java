@@ -178,9 +178,17 @@ public class appController extends Fragment {
                     m_view_controller.onAlertDismiss();
                 }
                 else {
-                    getActivity().onBackPressed();
+                    onFragmentClose();
                 }
             }
+        }
+    }
+
+    public void onFragmentClose(){
+        if(status.LANDING_NAVIGATION==2){
+            getActivity().onBackPressed();
+        }else {
+            getActivity().onBackPressed();
         }
     }
 
@@ -191,5 +199,4 @@ public class appController extends Fragment {
         {
         }
     }
-
 }

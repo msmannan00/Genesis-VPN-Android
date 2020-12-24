@@ -154,7 +154,7 @@ public class proxyController{
             public void run(){
                 try {
                     while (true){
-                        sleep(1000);
+                        sleep(100);
                         handler.post(() -> {
                             onHomeCommands(HOME_COMMANDS.UPDATE_DOWNLOAD_SPEED, null);
                             onHomeCommands(HOME_COMMANDS.UPDATE_UPLOAD_SPEED, null);
@@ -361,6 +361,10 @@ public class proxyController{
     }
 
     public void onStart(){
+        if(status.APP_CLOSED){
+            onStop();
+            return;
+        }
         if(!m_user_registered){
             return;
         }
@@ -406,13 +410,18 @@ public class proxyController{
                 m_is_optimal_server = true;
             }
 
-            m_request_status.onConnectRequestStart();
+            if(!m_request_status.isConnectRequestCompleted()){
+                return;
+            }else {
+                m_request_status.onConnectRequestStart();
+            }
             List<String> fallbackOrder = new ArrayList<>();
             fallbackOrder.add(HydraTransport.TRANSPORT_ID);
             fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
             fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_UDP);
             unifiedSDK.getVPN().start(new SessionConfig.Builder()
                     .withReason(TrackingConstants.GprReasons.M_UI)
+                    .captivePortalBlockBypass(true)
                     .withTransportFallback(fallbackOrder)
                     .withTransport(m_transport)
                     .exceptApps(status.DISABLED_APPS)
@@ -483,7 +492,11 @@ public class proxyController{
             }
 
             try {
-                m_request_status.onConnectRequestStart();
+                if(!m_request_status.isConnectRequestCompleted()){
+                    return;
+                }else {
+                    m_request_status.onConnectRequestStart();
+                }
                 List<String> fallbackOrder = new ArrayList<>();
                 fallbackOrder.add(HydraTransport.TRANSPORT_ID);
                 fallbackOrder.add(CaketubeTransport.TRANSPORT_ID_TCP);
@@ -493,6 +506,7 @@ public class proxyController{
                         .withReason(TrackingConstants.GprReasons.M_UI)
                         .withTransportFallback(fallbackOrder)
                         .withTransport(m_transport)
+                        .captivePortalBlockBypass(true)
                         .exceptApps(status.DISABLED_APPS)
                         .keepVpnOnReconnect(true)
                         .build(), new CompletableCallback() {
@@ -571,11 +585,13 @@ public class proxyController{
                 }
                 m_RegisterationStatus = REGISTERATION.REGISTERATION_SUCCESS;
                 m_user_registered = true;
-                // m_user_registered = true;
             }
 
             @Override
             public void failure(@NonNull VpnException e) {
+                if(e.getMessage().equals("NetworkRelatedException")){
+                    // m_user_registered = true;
+                }
                 m_RegisterationStatus = REGISTERATION.REGISTERATION_FAILURE;
             }
         });

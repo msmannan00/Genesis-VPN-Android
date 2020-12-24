@@ -50,6 +50,6 @@
     <color name="alert_negative_press">#561010</color>
     <color name="alert_positive">#24c270</color>
     <color name="alert_negative">#c22424</color>
-    <color name="alert_default">#2466c2</color>
+    <color name="alert_default">#0c2241</color>
 
 </resources>

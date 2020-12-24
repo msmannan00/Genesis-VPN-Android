@@ -31,6 +31,7 @@ public class OnClearFromRecentService extends Service {
         super.onDestroy();
         UnifiedSDK.getInstance().getVPN().stop(TrackingConstants.GprReasons.M_UI,null);
         sharedControllerManager.getInstance().getHomeController().onVPNClose();
+        status.APP_CLOSED = true;
     }
 
     @Override
@@ -38,5 +39,6 @@ public class OnClearFromRecentService extends Service {
         stopSelf();
         UnifiedSDK.getInstance().getVPN().stop(TrackingConstants.GprReasons.M_UI,null);
         sharedControllerManager.getInstance().getHomeController().onVPNClose();
+        status.APP_CLOSED = true;
     }
 }

@@ -1,32 +1,32 @@
 /*arm Versions*/
-project.ext.arm_vname = '60'
-project.ext.arm_vcode = 60
+project.ext.arm_vname = '70'
+project.ext.arm_vcode = 70
 
 /*aarch Versions*/
-project.ext.aarch_vname = '61'
-project.ext.aarch_vcode = 61
+project.ext.aarch_vname = '71'
+project.ext.aarch_vcode = 71
 
 /*x86 Versions*/
-project.ext.x86_vname = '62'
-project.ext.x86_vcode = 62
+project.ext.x86_vname = '72'
+project.ext.x86_vcode = 72
 
 /*x64 Versions*/
-project.ext.x64_vname = '63'
-project.ext.x64_vcode = 63
+project.ext.x64_vname = '73'
+project.ext.x64_vcode = 73
 
 /*Dimension*/
 project.ext.dimen = 'abi'
 
 /*Abi*/
-project.ext.armeabi = 'armeabi-v7a'
-project.ext.arm64 = 'arm64-v8a'
+project.ext.armeabi = 'x86'
+project.ext.arm64 = 'x86'
 project.ext.x86 = 'x86'
-project.ext.x64 = 'x86_64'
+project.ext.x64 = 'x86'
 
 /*General*/
 project.ext.androidSupportLibraryVersion = '30.0.0'
 project.ext.compileSdkVersion = 30
-project.ext.buildToolsVersion = '30'
+project.ext.buildToolsVersion = '30.0.2'
 project.ext.minSdkVersion = 21
 project.ext.applicationId = 'com.darkweb.genesisvpn'
 project.ext.targetSdkVersion = 30
@@ -58,11 +58,13 @@ project.ext.fileTree = fileTree(dir: 'libs', include: ['*.jar'])
 project.ext.androidx = 'androidx.appcompat:appcompat:1.1.0'
 project.ext.material = 'com.google.android.material:material:1.1.0'
 project.ext.constraintlayout = 'androidx.constraintlayout:constraintlayout:1.1.3'
-project.ext.ads_lite = 'com.google.android.gms:play-services-ads-lite:19.2.0'
-project.ext.hydra = 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.3.0'
-project.ext.openvpn = 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.3.0'
+project.ext.ads = 'com.google.android.gms:play-services-ads:19.6.0'
+project.ext.hydra = 'com.github.AnchorFreePartner.hydra-sdk-android:sdk:3.3.+'
+project.ext.openvpn = 'com.github.AnchorFreePartner.hydra-sdk-android:openvpn:3.3.+'
 project.ext.analytics = 'com.flurry.android:analytics:12.4.0@aar'
 project.ext.flagkit = 'com.jwang123.flagkit:flagkit:1.0'
 project.ext.networkmanager = 'com.github.jumadeveloper:networkmanager:0.0.2'
 project.ext.circular_imageview = 'de.hdodenhof:circleimageview:3.1.0'
+project.ext.geo_ip = 'com.github.seventhmoon:GeoIp-android:1.0.0'
+project.ext.app_intro = 'com.github.apl-devs:appintro:v4.2.2'
 

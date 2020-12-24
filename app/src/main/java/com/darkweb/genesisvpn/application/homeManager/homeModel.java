@@ -99,11 +99,15 @@ class homeModel
         }
     }
 
-    void onLocation(){
+    void onLocation(String mServerName){
         if(!m_isUIBlocked)
         {
-            m_isUIBlocked = true;
-            new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_IP_LOCATION), 0);
+            if(!mServerName.equals(strings.EMPTY_STR)){
+                m_isUIBlocked = true;
+                new Handler().postDelayed(() -> helperMethods.onOpenURL(m_context, strings.HO_IP_LOCATION + mServerName), 0);
+            }else {
+                m_event.invokeObserver(Arrays.asList(strings.SE_LOCATION_FAILURE_INFO, strings.SE_LOCATION_FAILURE, (long)700), enums.ETYPE.HOME_ALERT);
+            }
         }
     }
 

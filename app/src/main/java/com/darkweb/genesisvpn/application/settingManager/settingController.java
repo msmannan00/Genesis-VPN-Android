@@ -2,6 +2,7 @@ package com.darkweb.genesisvpn.application.settingManager;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.darkweb.genesisvpn.application.constants.status;
 import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.landingManager.landingController;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
 import com.darkweb.genesisvpn.application.serverManager.serverController;
@@ -197,7 +199,7 @@ public class settingController extends Fragment {
         m_view_controller.onUpdateFlag();
     }
 
-    public boolean onBackPressed(){
+        public boolean onBackPressed(){
         if(m_view_controller.isAlertViewShwoing()){
             m_view_controller.onAlertDismiss();
             return false;
@@ -273,7 +275,11 @@ public class settingController extends Fragment {
             m_view_controller.onAlertDismiss();
         }
         else {
-            getActivity().onBackPressed();
+            if(status.LANDING_NAVIGATION==1){
+                getActivity().onBackPressed();
+            }else {
+                getActivity().onBackPressed();
+            }
         }
     }
 

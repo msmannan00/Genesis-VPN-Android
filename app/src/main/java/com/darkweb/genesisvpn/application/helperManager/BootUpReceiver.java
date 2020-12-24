@@ -22,11 +22,12 @@ public class BootUpReceiver extends BroadcastReceiver {
         boolean m_is_auto_start_enabled = m_prefs.getBoolean(keys.AUTO_START, false);
 
         if(m_is_auto_start_enabled){
-            Intent i = new Intent(context, homeController.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
-
-            proxyController.getInstance().initHydraOnBootLoad();
+            if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+                Intent i = new Intent(context, homeController.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+                proxyController.getInstance().initHydraOnBootLoad();
+            }
         }
     }
 }

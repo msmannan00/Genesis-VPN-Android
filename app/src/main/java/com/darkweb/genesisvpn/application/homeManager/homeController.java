@@ -24,6 +24,7 @@ import com.darkweb.genesisvpn.application.constants.strings;
 import com.darkweb.genesisvpn.application.helperManager.OnClearFromRecentService;
 import com.darkweb.genesisvpn.application.helperManager.eventObserver;
 import com.darkweb.genesisvpn.application.helperManager.helperMethods;
+import com.darkweb.genesisvpn.application.landingManager.landingController;
 import com.darkweb.genesisvpn.application.pluginManager.pluginManager;
 import com.darkweb.genesisvpn.application.promotionManager.promotionController;
 import com.darkweb.genesisvpn.application.proxyManager.proxyController;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class homeController extends FragmentActivity {
 
@@ -70,6 +72,7 @@ public class homeController extends FragmentActivity {
     ImageView m_speed_base;
     ImageView m_connect_loading;
     ImageView m_blocker;
+    ImageView m_blocker_landing;
     ImageButton m_flag;
 
     homeViewController m_view_controller;
@@ -77,6 +80,7 @@ public class homeController extends FragmentActivity {
     ConstraintLayout m_alert_dialog;
     com.google.android.gms.ads.AdView m_banner_ads;
     proxyController m_proxy_controller;
+    String m_current_location = strings.EMPTY_STR;
 
     /*INITIALIZATIONS*/
 
@@ -94,6 +98,7 @@ public class homeController extends FragmentActivity {
         initializeVPN();
         initializeFragment();
         postInitializations();
+        initLandingPage();
     }
 
     private void postInitializations() {
@@ -110,6 +115,13 @@ public class homeController extends FragmentActivity {
     public void initializeBoot(){
 
     }
+
+    public void initLandingPage(){
+        if(!status.LANDING_PAGE_SHOWN){
+            helperMethods.openActivity(landingController.class, getBaseContext());
+            this.overridePendingTransition(0, 0);
+        }
+   }
 
     public void initializeVPN(){
         m_proxy_controller.onStartVPN();
@@ -154,6 +166,7 @@ public class homeController extends FragmentActivity {
         status.AUTO_START = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.AUTO_START, false), enums.PREFERENCES_ETYPE.GET_BOOL);
         status.DISABLED_APPS = (ArrayList<String>)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DISABLED_APPS, null), enums.PREFERENCES_ETYPE.GET_SET);
         status.DEFAULT_SERVER = (String) pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, ""), enums.PREFERENCES_ETYPE.GET_STRING);
+        status.LANDING_PAGE_SHOWN = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.LANDING_PAGE_CONNECT, false), enums.PREFERENCES_ETYPE.GET_BOOL);
 
         m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial, m_dismiss_alert_btn, m_fragment_container, m_blocker, m_ui_smoothner);
 
@@ -199,6 +212,7 @@ public class homeController extends FragmentActivity {
         m_fragment_container = findViewById(R.id.m_fragment_container);
         m_blocker = findViewById(R.id.m_blocker);
         m_ui_smoothner = findViewById(R.id.m_ui_smoothner);
+        m_blocker_landing = findViewById(R.id.m_blocker_landing);
 
         m_model = new homeModel(this, new homeModelCallback());
     }
@@ -236,7 +250,7 @@ public class homeController extends FragmentActivity {
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         View parent = view.getRootView();
         popupWindow.setAnimationStyle(R.style.popup_window_animation);
-        popupWindow.showAtLocation(parent, Gravity.TOP|Gravity.END,(int)helperMethods.pxToDp(this,0),(int)helperMethods.pxToDp(this,70));
+        popupWindow.showAtLocation(parent, Gravity.TOP|Gravity.END,(int)helperMethods.pxToDp(this,0),(int)helperMethods.pxToDp(this,00));
     }
 
     public void onOpenDrawer(View view){
@@ -308,6 +322,10 @@ public class homeController extends FragmentActivity {
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if(status.LANDING_NAVIGATION==1 || status.LANDING_NAVIGATION==2){
+            helperMethods.openActivity(landingController.class, sharedControllerManager.getInstance().getHomeController());
+        }
 
         if (count < 1 && getSupportFragmentManager().getFragments().size()==0 || m_fragment_container.getVisibility() == View.INVISIBLE) {
             if(m_drawer.isDrawerOpen(GravityCompat.START)){
@@ -428,6 +446,13 @@ public class homeController extends FragmentActivity {
         if(m_model!=null){
             m_model.onResetUIBlock();
         }
+        if(!status.LANDING_PAGE_SHOWN){
+            m_blocker_landing.setVisibility(View.VISIBLE);
+            m_blocker_landing.setAlpha(1);
+        }else {
+            m_blocker_landing.setVisibility(View.GONE);
+            m_blocker_landing.setAlpha(0);
+        }
     }
 
     @Override
@@ -486,7 +511,8 @@ public class homeController extends FragmentActivity {
                 }
                 else if (id[0] == R.id.nav_ip_address)
                 {
-                    m_model.onLocation();
+                    Locale loc = new Locale("",m_current_location);
+                    m_model.onLocation(loc.getDisplayCountry());
                 }
                 else if (id[0] == R.id.nav_promotion)
                 {
@@ -613,6 +639,12 @@ public class homeController extends FragmentActivity {
         onAppManager();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+        super.onSaveInstanceState(outState);
+    }
+
     /*EVENT VIEW CALLBACK HANDLER*/
 
     public class homeModelCallback implements eventObserver.eventListener{
@@ -623,7 +655,7 @@ public class homeController extends FragmentActivity {
             if(p_event_type == enums.ETYPE.HOME_ALERT){
                 String m_message = p_data.get(0).toString();
                 boolean isStopButtonActive = true;
-                if(m_message.equals(strings.SE_SERVER_MESSAGE_DESC)){
+                if(m_message.equals(strings.SE_SERVER_MESSAGE_DESC) || m_message.equals(strings.SE_LOCATION_FAILURE_INFO)){
                     isStopButtonActive = false;
                     m_message = "" + p_data.get(0);
                 }else {
@@ -632,7 +664,9 @@ public class homeController extends FragmentActivity {
 
                 boolean finalIsStopButtonActive = isStopButtonActive;
                 String finalM_message = m_message;
-                new Handler().postDelayed(() -> m_view_controller.onShowAlert(finalM_message,(String) p_data.get(1), true, finalIsStopButtonActive),(long) p_data.get(2));
+                new Handler().postDelayed(() -> {
+                    m_view_controller.onShowAlert(finalM_message, (String) p_data.get(1), true, finalIsStopButtonActive);
+                },(long) p_data.get(2));
             }
             else if(p_event_type == enums.ETYPE.OPEN_FRAGMENT){
                 boolean m_Response = (boolean)p_data.get(0);
@@ -705,6 +739,7 @@ public class homeController extends FragmentActivity {
 
     public void onSetFlag(String location)
     {
+        m_current_location = location;
         m_view_controller.onSetFlag(location);
     }
 

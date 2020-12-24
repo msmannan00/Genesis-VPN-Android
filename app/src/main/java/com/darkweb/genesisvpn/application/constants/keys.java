@@ -7,6 +7,7 @@ public class keys {
 
     public static String AUTO_OPTIMAL_LOCATION = "auto_optimal_location";
     public static String AUTO_CONNECT = "auto_connect";
+    public static String LANDING_PAGE_CONNECT = "LANDING_PAGE_CONNECT";
     public static String AUTO_START = "auto_start";
     public static String CONNECTION_TYPE = "auto_reset";
 

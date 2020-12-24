@@ -33,7 +33,7 @@ android {
             versionName project.ext.arm_vname
             dimension project.ext.dimen
             ndk {
-                abiFilter project.armeabi
+                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
             }
         }
         aarch64 {
@@ -41,7 +41,7 @@ android {
             versionName project.ext.aarch_vname
             dimension project.ext.dimen
             ndk {
-                abiFilter project.arm64
+                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
             }
         }
         x86 {
@@ -49,7 +49,7 @@ android {
             versionName project.ext.x86_vname
             dimension project.ext.dimen
             ndk {
-                abiFilter project.x86
+                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
             }
         }
         x86_64 {
@@ -57,7 +57,7 @@ android {
             versionName project.ext.x64_vname
             dimension project.ext.dimen
             ndk {
-                abiFilter project.x64
+                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
             }
         }
     }
@@ -83,7 +83,7 @@ dependencies {
     implementation project.ext.constraintlayout
 
     /*VPN Libraries*/
-    implementation project.ext.ads_lite
+    implementation project.ext.ads
     implementation project.ext.hydra
     implementation project.ext.openvpn
 
@@ -91,9 +91,11 @@ dependencies {
     implementation project.ext.analytics
 
     /*Helper Libraries*/
+    implementation project.ext.geo_ip
     implementation project.ext.flagkit
     implementation project.ext.networkmanager
     implementation project.ext.circular_imageview
+    implementation project.app_intro
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
 

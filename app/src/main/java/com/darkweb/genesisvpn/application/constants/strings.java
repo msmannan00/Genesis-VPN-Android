@@ -12,7 +12,7 @@ public class strings
     public static String SH_TYPE = "text/plain";
     public static String SH_TITLE = "Hi! Check out this Awesome App";
     public static String SH_SUBJECT = "Hi! Check out this Awesome App";
-    public static String SH_DESC = "Genesis VPN | Ultimate Security | https://play.google.com/store/apps/details?id";
+    public static String SH_DESC = "Genesis VPN | Ultimate Security | https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.darkweb.genesisvpn";
 
     /*CONTACT*/
 
@@ -30,7 +30,7 @@ public class strings
     public static String HO_TRANSITION_NAME_START = "start";
     public static String HO_TRANSITION_NAME_PAUSE = "pause";
     public static String HO_ERROR_OCCURED = "Error Occured | ";
-    public static String HO_IP_LOCATION = "https://whatismycountry.com/";
+    public static String HO_IP_LOCATION = "https://www.privateinternetaccess.com/pages/whats-my-ip/?q=";
     public static String HO_SPEED_TEST = "https://www.speedtest.net/";
     public static String HO_CONNECTION_TITLE_TCP = "TCP Connection Info";
     public static String HO_CONNECTION_TITLE_UDP = "UDP Connection Info";
@@ -62,6 +62,8 @@ public class strings
     public static String SE_REQUEST_INITIALIZING = "Initializing Please Wait !";
     public static String SE_VPN_POOR_NETWORK = "Network Exception Error. Internet Connection Might be Down or Poor";
     public static String SE_PERMISSION_CANCELLED = "Network Exception Error. Internet Connection Might be Down or Poor";
+    public static String SE_LOCATION_FAILURE = "Vpn Not Connected";
+    public static String SE_LOCATION_FAILURE_INFO = "You are not connected to VPN service at the time. Connect to see your live location and try again";
 
     /*ADS MESSAGES*/
 

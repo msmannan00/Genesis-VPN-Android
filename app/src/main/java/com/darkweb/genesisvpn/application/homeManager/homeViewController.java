@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -393,31 +394,55 @@ class homeViewController {
         return m_alert_dialog.getAlpha() > 0;
     }
 
+
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
+
+    int mSpeedCount=0;
+    float mPrevSpeed=0;
     void onUpdateDownloadSpeed(float val){
+        Log.i("SUPPPP11",val + ":SUPPPP11");
         if(val<0){
             val = 0;
         }
         val = val / 1000;
-        if(val<1000){
-            m_download_speed.setText(String.format("%.2f", val) + " / ↓ kbps");
-        }else {
-            val = val/1000;
-            m_download_speed.setText(String.format("%.2f", val) + " / ↓ mbps");
+        mSpeedCount+=1;
+        if(mPrevSpeed<val){
+            mPrevSpeed = val;
+        }
+        if(mSpeedCount>20){
+            if(val<1000){
+                m_download_speed.setText(String.format("%.1f", mPrevSpeed) + " / ↓ kbps");
+            }else {
+                val = val/1000000;
+                m_download_speed.setText(String.format("%.1f", mPrevSpeed) + " / ↓ mbps");
+            }
+            mSpeedCount=0;
+            mPrevSpeed = val;
         }
     }
 
+    int mSpeedCountUp=0;
+    float mPrevSpeedUp=0;
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     void onUpdateUploadSpeed(float val){
         if(val<0){
             val = 0;
         }
         val = val / 1000;
-        if(val<1000){
-            m_upload_speed.setText(String.format("%.2f", val) + " / ↑ kbps");
-        }else {
-            val = val/1000;
-            m_upload_speed.setText(String.format("%.2f", val) + " / ↑ mbps");
+        mSpeedCountUp+=1;
+        if(mPrevSpeedUp<val){
+            mPrevSpeedUp = val;
+        }
+
+        if(mSpeedCountUp>20) {
+            if (val < 1000) {
+                m_upload_speed.setText(String.format("%.1f", mPrevSpeedUp) + " / ↑ kbps");
+            } else {
+                val = val / 1000;
+                m_upload_speed.setText(String.format("%.1f", mPrevSpeedUp) + " / ↑ mbps");
+            }
+            mSpeedCountUp=0;
+            mPrevSpeedUp = val;
         }
     }
 

@@ -14,10 +14,22 @@
     <string name="home_connecting">Connecting</string>
     <string name="unconnected_text">Unconnected | Choose Location</string>
 
+    <!-- Landing Page -->
+    <string name="LANDING_BRIDGES_INFO" translatable="false">"Explore VPN Settings"</string>
+    <string name="LANDING_FILTER_INFO" translatable="false">"Filter apps which can use VPN"</string>
+    <string name="LANDING_MORE" translatable="false">"TELL ME MORE"</string>
+    <string name="LANDING_VPN_SETUP" translatable="false">"You can enable any app to go through Tor using our built-in VPN"</string>
+    <string name="LANDING_VPN_SETUP_SUB_INFO" translatable="false">"This won\'t make you anonymous, but it will help get through firewalls"</string>
+    <string name="LANDING_VPN_CHOOSE_APPS" translatable="false">"CHOOSE APPS"</string>
+    <string name="LANDING_HELLO" translatable="false">"Hello"</string>
+    <string name="LANDING_WELCOME" translatable="false">"Welcome to Genesis VPN"</string>
+    <string name="LANDING_BROWSE_INFO" translatable="false">"Browse the internet how you expect you should"</string>
+    <string name="LANDING_NO_TRACKING" translatable="false">"No tracking. No censorship"</string>
+
     <!-- MENU PAGE -->
 
     <string name="menu_share">Share</string>
-    <string name="menu_app">Proxy Filter</string>
+    <string name="menu_app">Application Proxy Filter</string>
     <string name="menu_about">About Genesis</string>
     <string name="menu_promotion">Promotion Code</string>
     <string name="menu_location">IP Address &amp; Location</string>
@@ -82,7 +94,7 @@
 
     <!-- APPLICATION FILTER PAGE -->
 
-    <string name="appfilter_title">Proxy Filter</string>
+    <string name="appfilter_title">Application Proxy Filter</string>
     <string name="appfilter_no_application_found">No Application Found</string>
 
     <!-- APPLICATION GENERAL -->
@@ -90,8 +102,8 @@
     <string name="dashboard">Genesis VPN</string>
     <string name="homepage">Change Location</string>
     <string name="about_text">About Us</string>
-    <string name="upload_text_default">0.00 / ↑ kbps</string>
-    <string name="download_text_default">0.00 / ↓ kbps</string>
+    <string name="upload_text_default">0.0 / ↑ kbps</string>
+    <string name="download_text_default">0.0 / ↓ kbps</string>
     <string name="submit">Submit</string>
     <string name="todo">TODO</string>
     <string name="tcp_default">TCP</string>
