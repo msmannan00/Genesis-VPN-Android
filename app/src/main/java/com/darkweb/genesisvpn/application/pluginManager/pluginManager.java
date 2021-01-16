@@ -45,7 +45,7 @@ public class pluginManager
             return m_ad_manager.isAdDisabled();
         }
         else if(p_event == enums.AD_ETYPE.SHOW_ADVERT){
-            m_ad_manager.initInterstitialAds();
+            m_ad_manager.onShowAdvert();
         }
         return null;
     }

@@ -33,7 +33,7 @@ android {
             versionName project.ext.arm_vname
             dimension project.ext.dimen
             ndk {
-                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
+                abiFilters project.ext.armeabi
             }
         }
         aarch64 {
@@ -41,7 +41,7 @@ android {
             versionName project.ext.aarch_vname
             dimension project.ext.dimen
             ndk {
-                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
+                abiFilters project.ext.arm64
             }
         }
         x86 {
@@ -49,7 +49,7 @@ android {
             versionName project.ext.x86_vname
             dimension project.ext.dimen
             ndk {
-                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
+                abiFilters project.ext.x86
             }
         }
         x86_64 {
@@ -57,7 +57,7 @@ android {
             versionName project.ext.x64_vname
             dimension project.ext.dimen
             ndk {
-                abiFilters 'armeabi-v7a','arm64-v8a', 'x86', 'x86_64'
+                abiFilters project.ext.x64
             }
         }
     }

@@ -1,27 +1,27 @@
 /*arm Versions*/
-project.ext.arm_vname = '70'
-project.ext.arm_vcode = 70
+project.ext.arm_vname = '85'
+project.ext.arm_vcode = 85
 
 /*aarch Versions*/
-project.ext.aarch_vname = '71'
-project.ext.aarch_vcode = 71
+project.ext.aarch_vname = '86'
+project.ext.aarch_vcode = 86
 
 /*x86 Versions*/
-project.ext.x86_vname = '72'
-project.ext.x86_vcode = 72
+project.ext.x86_vname = '87'
+project.ext.x86_vcode = 87
 
 /*x64 Versions*/
-project.ext.x64_vname = '73'
-project.ext.x64_vcode = 73
+project.ext.x64_vname = '88'
+project.ext.x64_vcode = 88
 
 /*Dimension*/
 project.ext.dimen = 'abi'
 
 /*Abi*/
-project.ext.armeabi = 'x86'
-project.ext.arm64 = 'x86'
+project.ext.armeabi = 'armeabi-v7a'
+project.ext.arm64 = 'arm64-v8a'
 project.ext.x86 = 'x86'
-project.ext.x64 = 'x86'
+project.ext.x64 = 'x86_64'
 
 /*General*/
 project.ext.androidSupportLibraryVersion = '30.0.0'

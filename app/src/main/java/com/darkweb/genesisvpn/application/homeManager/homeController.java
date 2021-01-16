@@ -105,6 +105,7 @@ public class homeController extends FragmentActivity {
         boolean isAutoBoot = getIntent().getBooleanExtra(keys.IS_AUTO_BOOT, false);
         if(status.AUTO_CONNECT || isAutoBoot){
             proxyController.getInstance().onAutoConnectInitialization();
+            onLoadAdvert();
         }
     }
 
@@ -157,7 +158,6 @@ public class homeController extends FragmentActivity {
         m_speed_base.setTranslationZ(35);
 
         pluginManager.getInstance().onPreferenceTrigger(Collections.singletonList(this), enums.PREFERENCES_ETYPE.INITIALIZE);
-        pluginManager.getInstance().onAdvertTrigger(Arrays.asList(this, m_banner_ads), enums.AD_ETYPE.INITIALIZE);
         pluginManager.getInstance().onAnalyticsTrigger(Collections.singletonList(this), enums.ANALYTIC_ETYPE.INITIALIZE);
 
         m_speed_base.setTranslationZ(35);
@@ -168,12 +168,8 @@ public class homeController extends FragmentActivity {
         status.DEFAULT_SERVER = (String) pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.DEFAULT_SERVER, ""), enums.PREFERENCES_ETYPE.GET_STRING);
         status.LANDING_PAGE_SHOWN = (boolean)pluginManager.getInstance().onPreferenceTrigger(Arrays.asList(keys.LANDING_PAGE_CONNECT, false), enums.PREFERENCES_ETYPE.GET_BOOL);
 
+        pluginManager.getInstance().onAdvertTrigger(Arrays.asList(this, m_banner_ads), enums.AD_ETYPE.INITIALIZE);
         m_view_controller = new homeViewController(new homeViewCallback(),m_connect_base, m_connect_animator, m_connect_loading, m_flag /*, m_location_info*/, m_connect_label, m_alert_dialog,m_alert_title, m_alert_description, this, m_download_speed, m_upload_speed, m_connection_toggle, m_stop_alert_btn, m_drawer, m_speed_base, m_connect_animator_initial, m_dismiss_alert_btn, m_fragment_container, m_blocker, m_ui_smoothner);
-
-        if(!status.AUTO_CONNECT){
-            onLoadAdvert();
-        }
-
         m_speed_base.setTranslationZ(35);
     }
 
@@ -591,6 +587,7 @@ public class homeController extends FragmentActivity {
 
     public void onStart(View view)
     {
+        onLoadAdvert();
         m_proxy_controller.onTriggered(TRIGGER.TOOGLE);
     }
 
@@ -686,9 +683,6 @@ public class homeController extends FragmentActivity {
         @Override
         public void invokeObserver(List<Object> p_data, enums.ETYPE p_event_type)
         {
-            if(p_event_type == enums.ETYPE.SHOW_ADVERT){
-                pluginManager.getInstance().onAdvertTrigger(Arrays.asList(this, m_banner_ads), enums.AD_ETYPE.SHOW_ADVERT);
-            }
         }
     }
 
@@ -714,7 +708,6 @@ public class homeController extends FragmentActivity {
     {
         m_view_controller.onConnected();
         proxyController.getInstance().onUpdateFlagStatus();
-        onLoadAdvert();
     }
 
     public void onIdle()

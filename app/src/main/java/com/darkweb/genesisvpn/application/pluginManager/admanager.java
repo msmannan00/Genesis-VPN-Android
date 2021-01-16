@@ -31,6 +31,7 @@ public class admanager
     /*Local Variables*/
     private boolean m_ads_disable = false;
     private boolean m_advert_initialize = false;
+    private boolean m_show_advert = false;
     private InterstitialAd mInterstitialAd;
 
     /*Initializations*/
@@ -51,6 +52,7 @@ public class admanager
             initializeListener();
         };
         m_failure_handler.postDelayed(r, 1000);
+        initInterstitialAds();
     }
 
     public void initInterstitialAds()
@@ -83,8 +85,12 @@ public class admanager
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                m_advert_initialize = true;
-                mInterstitialAd.show();
+                if(!m_advert_initialize){
+                    m_advert_initialize = true;
+                    if(m_show_advert){
+                        mInterstitialAd.show();
+                    }
+                }
             }
 
             @Override
@@ -109,7 +115,14 @@ public class admanager
             public void onAdClosed() {
             }
         });
+    }
 
+    public void onShowAdvert(){
+        if(m_advert_initialize && !m_ads_disable){
+            mInterstitialAd.show();
+        }else {
+            m_show_advert = true;
+        }
     }
 
     public boolean isAdDisabled(){
